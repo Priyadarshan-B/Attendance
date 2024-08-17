@@ -61,9 +61,9 @@ function App() {
       <Routes>
         <Route path="*" element={<Error />} />
         <Route path="/attendance" element={<Login />} />
-        <Route path="/attendace/login" element={<Login />} />
+        <Route path="/attendance/login" element={<Login />} />
         <Route
-          path="/welcome"
+          path="attendance/welcome"
           element={
             <ProtectedRoute>
               <Welcome />
@@ -71,7 +71,7 @@ function App() {
           }
         />
         <Route
-          path="/attendace/attendence"
+          path="/attendance/attendence"
           element={
             <ProtectedRoute>
               <Attendence />
@@ -79,7 +79,7 @@ function App() {
           }
         />
         <Route
-          path="/attendace/approval"
+          path="/attendance/approval"
           element={
             <ProtectedRoute>
               <Approvals />
@@ -87,7 +87,7 @@ function App() {
           }
         />
         <Route
-          path="/attendace/add"
+          path="/attendance/add"
           element={
             <ProtectedRoute>
               <Dashboard />
@@ -95,7 +95,7 @@ function App() {
           }
         />
         <Route
-          path="/attendace/dashboard"
+          path="/attendance/dashboard"
           element={
             <ProtectedRoute>
               <StuDashboard />
@@ -103,7 +103,7 @@ function App() {
           }
         />
         <Route
-          path="/attendace/timetable"
+          path="/attendance/timetable"
           element={
             <ProtectedRoute>
               <TimeUpload />
@@ -111,7 +111,7 @@ function App() {
           }
         />
         <Route
-          path="/attendace/mentor_map"
+          path="/attendance/mentor_map"
           element={
             <ProtectedRoute>
               <MentorMapping />
@@ -119,7 +119,7 @@ function App() {
           }
         />
         <Route
-          path="/attendace/holidays"
+          path="/attendance/holidays"
           element={
             <ProtectedRoute>
               <Holidays />
@@ -127,7 +127,7 @@ function App() {
           }
         />
         <Route
-          path="/attendace/sem-dates"
+          path="/attendance/sem-dates"
           element={
             <ProtectedRoute>
               <SemDates />
@@ -135,7 +135,7 @@ function App() {
           }
         />
         <Route
-          path="/attendace/change-type"
+          path="/attendance/change-type"
           element={
             <ProtectedRoute>
               <Nip />
@@ -143,7 +143,7 @@ function App() {
           }
         />
         <Route
-          path="/attendace/map-student"
+          path="/attendance/map-student"
           element={
             <ProtectedRoute>
               <MapStudent />
@@ -151,7 +151,7 @@ function App() {
           }
         />
         <Route
-          path="/attendace/leave"
+          path="/attendance/leave"
           element={
             <ProtectedRoute>
               <Leave />
