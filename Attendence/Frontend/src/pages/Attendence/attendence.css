@@ -1,0 +1,121 @@
+.attendance-container {
+  max-width: 100%;
+  background-color: #f4f6fa;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.att-table{
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+}
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+/* .custom-table thead {
+  color: white;
+  border-radius: 10px;
+} */
+.custom-table thead  :first-child {
+  border-radius: 10px 0px 0px 0px;
+}
+
+.custom-table thead  :last-child{
+  border-radius:  0px 10px 0px 0px
+}
+
+.custom-table th, 
+.custom-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #00000065;
+  text-align: left;
+  color: black;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #ffffff;
+}
+
+.custom-table tbody tr {
+  transition: background-color 0.2s ease-in-out;
+}
+
+.time-slots {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  background-color: #f4f6fa;
+  border-radius: 10px;
+  gap: 15px;
+  /* border-top: 1px solid #ddd; */
+}
+
+.time-slot {
+  margin-right: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.time-slot span{
+  color: black;
+}
+.time-slot input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.flex-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.flex-box h4 {
+  margin: 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+}
+
+.pagination button {
+  background-color: #9fd3c7;
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #9be3d2;
+}
+
+.pagination select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+}
+
+.pagination span {
+  margin: 0 10px;
+  color: black;
+}

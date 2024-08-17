@@ -1,0 +1,15 @@
+.nip-form{
+    background-color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    border-radius: 5px;
+}
+
+.nip{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 10px;
+}
