@@ -45,6 +45,9 @@ CREATE TABLE `holidays` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `holidays` (`id`, `dates`, `status`) VALUES
+(1,	'2024-08-15',	'1'),
+(2,	'2024-10-02',	'1');
 
 DROP TABLE IF EXISTS `leave`;
 CREATE TABLE `leave` (
@@ -142,6 +145,18 @@ CREATE TABLE `resources` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `resources` (`id`, `name`, `icon_path`, `path`, `order_by`, `status`) VALUES
+(1,	'Approval',	'\"\"',	'/approval',	1,	'1'),
+(2,	'Students',	'\"\"',	'/student',	2,	'0'),
+(3,	'Attendence',	'\"\"',	'/attendence',	3,	'1'),
+(4,	'Dashboard',	'\"\"',	'/dashboard',	1,	'1'),
+(5,	'Time Table',	'\"\"',	'/timetable',	4,	'0'),
+(6,	'Leave Apply',	'\"\"',	'/leave',	2,	'1'),
+(7,	'Mentor Map',	'\"\"',	'/mentor_map',	5,	'0'),
+(8,	'Holidays',	'\"\"',	'/holidays',	6,	'0'),
+(9,	'Semester Dates',	'\"\"',	'/sem-dates',	9,	'0'),
+(10,	'Groups',	'\"\"',	'/group',	5,	'1'),
+(11,	'Others',	'\"\"',	'/add',	3,	'1');
 
 DROP TABLE IF EXISTS `role_resources`;
 CREATE TABLE `role_resources` (
@@ -156,6 +171,18 @@ CREATE TABLE `role_resources` (
   CONSTRAINT `role_resources_ibfk_2` FOREIGN KEY (`resources_id`) REFERENCES `resources` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `role_resources` (`id`, `role_id`, `resources_id`, `status`) VALUES
+(1,	1,	1,	'1'),
+(2,	1,	2,	'1'),
+(3,	2,	3,	'0'),
+(4,	1,	3,	'1'),
+(5,	2,	4,	'1'),
+(6,	1,	5,	'1'),
+(7,	2,	6,	'1'),
+(8,	1,	7,	'1'),
+(9,	1,	8,	'1'),
+(10,	1,	9,	'1'),
+(11,	1,	11,	'1');
 
 DROP TABLE IF EXISTS `role_student_map`;
 CREATE TABLE `role_student_map` (
@@ -247,6 +274,16 @@ CREATE TABLE `time_slots` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `time_slots` (`id`, `label`, `start_time`, `end_time`, `status`) VALUES
+(1,	'8:45AM - 9:45AM',	'8:45AM',	'9:45AM',	'1'),
+(2,	'9:45AM - 10:45AM',	'9:45AM',	'10:45AM',	'1'),
+(3,	'11:00AM - 12:00PM',	'11:00AM',	'12:00PM',	'1'),
+(4,	'12:00PM - 1:00PM',	'12:00PM',	'1:00PM',	'1'),
+(5,	'1:00PM - 2:00PM',	'1:00PM',	'2:00PM',	'1'),
+(6,	'2:00PM - 3:00PM',	'2:00PM',	'3:00PM',	'1'),
+(7,	'3:00PM - 4:00PM',	'3:00PM',	'4:00PM',	'1'),
+(8,	'4:00PM - 5:00PM',	'4:00PM',	'5:00PM',	'0'),
+(9,	'5:00PM - 6:00PM',	'5.00PM',	'6.00PM',	'0');
 
 DROP TABLE IF EXISTS `type`;
 CREATE TABLE `type` (
@@ -257,4 +294,4 @@ CREATE TABLE `type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- 2024-08-17 09:02:59
+-- 2024-08-17 09:38:06
