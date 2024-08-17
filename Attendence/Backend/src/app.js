@@ -44,9 +44,9 @@ app.use(cors(cors_config));
 app.use(morgan_config);
 
 // routes
-app.use("/auth", resources_route);
-app.use("/auth", auth_route);
-app.use(routes);
+app.use("/attendance/api/auth", resources_route);
+app.use("/attendance/api/auth", auth_route);
+app.use("/attendance/api",routes);
 
 // schedule the cron job for update_7_days
 cron.schedule('8 0 * * 3', async () => {
