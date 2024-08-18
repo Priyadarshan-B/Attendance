@@ -19,7 +19,7 @@ function Error() {
         >
           OOPS! PAGE NOT FOUND
         </p>
-        <Link style={{ fontWeight: "700" }} to="/login">
+        <Link style={{ fontWeight: "700" }} to="attendance/login">
           BACK TO LOGIN
         </Link>
       </div>

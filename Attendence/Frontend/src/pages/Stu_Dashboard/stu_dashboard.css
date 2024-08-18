@@ -58,11 +58,9 @@
 }
 .att_det_others{
     margin-top: 20px;
-    /* border: 1px solid #ddd; */
     padding: 15px;
     border-radius: 8px;
     background-color: #f4f6fa;
-    /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; */
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -115,6 +113,7 @@
 .guage{
     display: flex;
     flex-direction: column;
+    align-items: center;
     flex: 1;
     background-color: white;
     padding: 15px;
@@ -153,15 +152,25 @@
     .att_det_others{
         width: 100%;
     }
+    .leave-details{
+        min-width: 100%;
+    }
+
    
 }
 @media (max-width:900px){
     .att_det{
         flex-wrap: wrap;
+        flex-direction: column ;
     }
 }
 
-
+.type2-table{
+    background-color: #f4f6fa;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+}
 
 
 
@@ -206,4 +215,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .dropdown{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 10px;
+    background-color: #f4f6fa;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .label-dropdown{
+    flex: 1;
   }

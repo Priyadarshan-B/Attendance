@@ -16,6 +16,7 @@ import Holidays from "./pages/Holidays/holidays";
 import SemDates from "./pages/Forms/semDates/sem_dates";
 import Nip from "./pages/Forms/nip/nip";
 import MapStudent from "./pages/Forms/mapStudent/mapStudent";
+import Student from "./pages/Students/student";
 import Error from "./pages/error";
 
 const ProtectedRoute = ({ children }) => {
@@ -44,7 +45,7 @@ const ProtectedRoute = ({ children }) => {
   }, [roleId, token]);
 
   if (loading) return <div>Loading...</div>;
-if (location.pathname === "/welcome"){
+if (location.pathname === "/attendance/welcome"){
   return children
 }
 
@@ -63,7 +64,7 @@ function App() {
         <Route path="/attendance" element={<Login />} />
         <Route path="/attendance/login" element={<Login />} />
         <Route
-          path="attendance/welcome"
+          path="/attendance/welcome"
           element={
             <ProtectedRoute>
               <Welcome />
@@ -71,7 +72,7 @@ function App() {
           }
         />
         <Route
-          path="/attendance/attendence"
+          path="/attendance/attendance"
           element={
             <ProtectedRoute>
               <Attendence />
@@ -83,6 +84,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Approvals />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendance/student"
+          element={
+            <ProtectedRoute>
+              <Student />
             </ProtectedRoute>
           }
         />

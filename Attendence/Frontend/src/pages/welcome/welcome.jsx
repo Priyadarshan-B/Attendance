@@ -32,9 +32,12 @@ const Welcome = () => {
       };
       console.log("Saved JSON data:", savedData);
       if(role === 1){
-      navigate("/approval");}
+      navigate("/attendance/approval");}
+        else if(role === 2) {
+          navigate('/attendance/dashboard')
+        }
         else{
-          navigate('/dashboard')
+          navigate('/attendance/student')
         }
     }
   }, [searchParams, navigate]);
