@@ -53,7 +53,7 @@ if (location.pathname === "/attendance/welcome"){
     return children;
   }
 
-  return <Navigate to="/attendace/error" />;
+  return <Navigate to="/attendance/error" />;
 };
 
 function App() {
