@@ -93,7 +93,7 @@ cron.schedule('22 10 * * *', async () => {
   }
 });
 
-cron.schedule('0 15 * * *', async () => {
+cron.schedule('10 12 * * *', async () => {
   try {
       console.log('Executing update_biometrics cron job...');
       await update_biometrics();
