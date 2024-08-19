@@ -45,11 +45,11 @@ function SideBar(props) {
     const fetchSidebarItems = async () => {
       try {
         // Decrypt the role from cookies
-        const encryptedRole = Cookies.get('role');
-        const bytes = CryptoJS.AES.decrypt(encryptedRole, 'secretKey123'); // Use the same secret key used for encryption
-        const decryptedRole = bytes.toString(CryptoJS.enc.Utf8);
+        const encryptedGmail = Cookies.get('gmail');
+        const bytes = CryptoJS.AES.decrypt(encryptedGmail, 'secretKey123');
+        const decryptedGmail = bytes.toString(CryptoJS.enc.Utf8);
 
-        const response = await requestApi("GET", `/auth/resources?role=${decryptedRole}`);
+        const response = await requestApi("GET", `/auth/resources?gmail=${decryptedGmail}`);
         if (response.success) {
           setSidebarItems(response.data);
         } else {

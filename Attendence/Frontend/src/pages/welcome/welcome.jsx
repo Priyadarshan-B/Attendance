@@ -33,13 +33,17 @@ const Welcome = () => {
         Cookies.set("gmail", encryptedGmail);
 
         const roleCookie = Cookies.get("role");
+        const gmailCookie = Cookies.get("gmail")
 
-        if (roleCookie) {
+        if (gmailCookie) {
           const decryptedRoleBytes = CryptoJS.AES.decrypt(roleCookie, secretKey);
           const decryptedRole = decryptedRoleBytes.toString(CryptoJS.enc.Utf8);
           const roleInt = parseInt(decryptedRole, 10);
 
-          requestApi("GET", `/auth/resources?role=${roleInt}`)
+          const decryptGmail = CryptoJS.AES.decrypt(gmailCookie, secretKey)
+          const decryptedGmail = decryptGmail.toString(CryptoJS.enc.Utf8)
+
+          requestApi("GET", `/auth/resources?gmail=${decryptedGmail}`)
             .then((response) => {
               const allowedRoutes = response.data.map((route) => route.path);
 
@@ -54,7 +58,7 @@ const Welcome = () => {
               }
             })
             .catch((error) => {
-              // console.error("Failed to fetch allowed routes", error);
+              console.error("Failed to fetch allowed routes", error);
               navigate("/attendance/error");
             });
         } else {

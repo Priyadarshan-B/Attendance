@@ -79,30 +79,33 @@ function Body() {
         console.error("Error fetching student details:", error);
       }
     };
-
+  
     const fetchAttendancePercent = async () => {
       try {
         const response = await requestApi("GET", `/percent?student=${id}`);
     
-        // Extract data from response
-        const { present_days, absent_days, total_days, current_days, attendance_percentage } = response.data;
+        const { present_days, absent_days, total_days, current_days, attendance_percentage, present_absent } = response.data;
     
-        // Set the attendance data
         setAttendancePercent({
           present_days : parseInt(present_days),
           absent_days,
           total_days,
           current_days,
           attendance_percentage,
+          present_absent
         });
-        // Convert the attendance percentage to a number and update the state
+    
         setPercent(parseFloat(attendance_percentage));
     
         console.log("Attendance Percentage:", attendance_percentage);
+    
       } catch (error) {
         console.error("Error fetching attendance percent details:", error);
       }
     };
+   
+    
+    
     const fetchAttendanceRecords = async () => {
       try {
         const response = await requestApi(
@@ -285,6 +288,9 @@ function Body() {
     setRowPage(parseInt(event.target.value, 10));
     setPageNip(0);
   };
+
+
+
   return (
     <div>
       <h3>Biometric Details - {roll} </h3>
@@ -322,10 +328,10 @@ function Body() {
               boxShadow: "rgba(0, 0, 0, 0.09) 0px 3px 12px",
             }}
           >
-            <div className="detail-row">
+            {/* <div className="detail-row">
               <div className="detail-label">Name:</div>
               <div className="detail-value">{studentDetails.name}</div>
-            </div>
+            </div> */}
             <div className="detail-row">
               <div className="detail-label">Register Number:</div>
               <div className="detail-value">
@@ -360,6 +366,31 @@ function Body() {
                 </div>
               </div>
             )}
+            
+            <div className="detail-row">
+  <div className="detail-label">Today's Attendance:</div>
+  <div
+    className="time"
+    style={{
+      fontSize: "17px",
+      fontWeight: "600",
+    }}
+  >
+    {attendancePercent.present_absent && attendancePercent.present_absent.length > 0 &&
+      attendancePercent.present_absent.map((attendance, index) => {
+        const forenoonStatus = attendance.forenoon === "1" ? "P" : "A";
+        const afternoonStatus = attendance.afternoon === "1" ? "P" : "A";
+        return (
+          <h4 key={index}>
+            {forenoonStatus} | {afternoonStatus}
+          </h4>
+        );
+      })
+    }
+  </div>
+</div>
+
+          
           </div>
         </div>
         <div className="attendance-percent-container">
@@ -500,7 +531,7 @@ function Body() {
           </div>
           <div className="radial-chart">
             <h3>
-              <center>Attendance Count</center>
+              <center>Today's Biometrics</center>
             </h3>
             <Chart
               options={radialChartData.options}

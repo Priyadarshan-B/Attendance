@@ -51,10 +51,10 @@ class Body extends Component {
                 <div className="button-container">
                     <button className="nav-button" onClick={() => this.setPage('MentorMapping')}>Mentor Mapping</button>
                     <button className="nav-button" onClick={() => this.setPage('Holidays')}>Holidays</button>
-                    <button className="nav-button" onClick={() => this.setPage('SemDates')}>Sem Dates</button>
-                    <button className="nav-button" onClick={() => this.setPage('Nip')}>Change Type</button>
-                    <button className="nav-button" onClick={() => this.setPage('MapStudent')}>Map Student</button>
-                    <button className="nav-button" onClick={() => this.setPage('TimeSlot')}>Add Slots</button>
+                    <button className="nav-button" onClick={() => this.setPage('SemDates')}>Semester Dates</button>
+                    <button className="nav-button" onClick={() => this.setPage('Nip')}>Change Student Type</button>
+                    <button className="nav-button" onClick={() => this.setPage('MapStudent')}>Map Role Student</button>
+                    <button className="nav-button" onClick={() => this.setPage('TimeSlot')}>Add Time Slots</button>
 
                 </div>
                 <div className="page-container">

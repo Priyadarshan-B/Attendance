@@ -293,7 +293,7 @@ exports.checkAndInsertAttendance = async (req, res) => {
             AND DATE(attendance) = ?
             AND status = '1'
             GROUP BY DATE(attendance)
-            HAVING COUNT(DISTINCT slot) = (SELECT COUNT(*) FROM time_slots WHERE status = '1');
+            HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE status = '1');
             `;
             const roleStudentRecords = await get_database(roleStudentQuery, [
               roleStudentId,

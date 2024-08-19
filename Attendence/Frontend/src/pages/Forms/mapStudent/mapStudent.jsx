@@ -4,9 +4,11 @@ import "../../../components/applayout/styles.css";
 import requestApi from "../../../components/utils/axios";
 import Select from "react-select"; 
 import Button from "../../../components/Button/Button";
+import toast from "react-hot-toast";
 import './mapStudent.css'
+
 function MapStudent() {
-  return <Body/>
+  return <Body />;
 }
 
 function Body() {
@@ -14,11 +16,10 @@ function Body() {
   const [students, setStudents] = useState([]);
   const [selectedRole, setSelectedRole] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
 
-  // Fetch roles for single select dropdown
   useEffect(() => {
-    requestApi
-      ("GET","/map-role")
+    requestApi("GET", "/map-role")
       .then((response) => {
         const formattedRoles = response.data.map((role) => ({
           value: role.id,
@@ -31,21 +32,21 @@ function Body() {
       });
   }, []);
 
-  // Fetch students for multi-select dropdown
   useEffect(() => {
-    requestApi
-      ("GET","/get-type2")
-      .then((response) => {
-        const formattedStudents = response.data.map((student) => ({
-          value: student.id,
-          label: `${student.name} - ${student.register_number}`,
-        }));
-        setStudents(formattedStudents);
-      })
-      .catch((error) => {
-        console.error("Error fetching students:", error);
-      });
-  }, []);
+    if (selectedYear) {
+      requestApi("GET", `/all-students?year=${selectedYear.value}`)
+        .then((response) => {
+          const formattedStudents = response.data.map((student) => ({
+            value: student.id,
+            label: `${student.name} - ${student.register_number}`,
+          }));
+          setStudents(formattedStudents);
+        })
+        .catch((error) => {
+          console.error("Error fetching students:", error);
+        });
+    }
+  }, [selectedYear]); // Dependency on selectedYear
 
   // Handle form submission
   const handleSubmit = () => {
@@ -54,17 +55,28 @@ function Body() {
       studentIds: selectedStudents.map((student) => student.value),
     };
 
-    requestApi
-      ("POST","/map-role", payload)
+    requestApi("POST", "/map-role", payload)
       .then((response) => {
         console.log("Mapping successful:", response.data);
-        // Handle success (e.g., show a notification or reset the form)
+        toast.success("Role Mapped successfully!");
+
+        setSelectedRole(null);
+        setSelectedStudents([]);
+        setSelectedYear(null)
       })
       .catch((error) => {
         console.error("Error in mapping students to role:", error);
-        // Handle error (e.g., show an error message)
+        toast.error("Error in mapping students to role");
       });
+
   };
+  
+  const yearOptions = [
+    { value: "I", label: "I" },
+    { value: "II", label: "II" },
+    { value: "III", label: "III" },
+    { value: "IV", label: "IV" },
+  ];
 
   return (
     <div className="map-student-container">
@@ -77,7 +89,17 @@ function Body() {
           options={roles}
           value={selectedRole}
           onChange={setSelectedRole}
-          placeholder="Select "
+          placeholder="Select Role"
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="role-select">Select Year</label>
+        <Select
+          id="role-select"
+          options={yearOptions}
+          value={selectedYear}
+          onChange={setSelectedYear}
+          placeholder="Select Year"
         />
       </div>
       <div className="form-group">
@@ -91,9 +113,7 @@ function Body() {
           isMulti
         />
       </div>
-      <Button  onClick={handleSubmit}
-        label='Submit'
-      />
+      <Button onClick={handleSubmit} label="Submit" />
     </div>
   );
 }

@@ -3,7 +3,9 @@ import requestApi from "../../../components/utils/axios";
 import Select from "react-select";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
+import InputBox from "../../../components/TextBox/textbox";
 import Buttons from "../../../components/Button/Button";
+import toast from "react-hot-toast";
 import {
   Table,
   TableBody,
@@ -23,17 +25,20 @@ function MentorMapping() {
 
 function Body() {
   const [mentors, setMentors] = useState([]);
-  const deid = Cookies.get("id");
-  const secretKey = "secretKey123";
-  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8)
+  // const deid = Cookies.get("id");
+  // const secretKey = "secretKey123";
+  // const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8)
   const [students, setStudents] = useState([]);
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [showMentorList, setShowMentorList] = useState(false);
   const [mentorList, setMentorList] = useState([]);
+  const [filteredMentorList, setFilteredMentorList] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   useEffect(() => {
     const fetchMentors = async () => {
@@ -74,8 +79,16 @@ function Body() {
         student: selectedStudents.map((student) => student.value),
       });
       console.log("Mapping saved successfully:", response.data);
+      toast.success("Mentor Mapped successfully!");
+      setSelectedMentor(null)
+      setSelectedStudents([])
+      setSelectedYear([])
+
+
     } catch (error) {
       console.error("Error saving mapping:", error);
+      toast.error("Mentor Mapped is Failed");
+
     }
   };
 
@@ -85,6 +98,9 @@ function Body() {
       try {
         const response = await requestApi("GET", "/mentor-map");
         setMentorList(response.data);
+        setFilteredMentorList(response.data)
+
+        
       } catch (error) {
         console.error("Error fetching mentor list:", error);
       }
@@ -95,8 +111,12 @@ function Body() {
     try {
       await requestApi("DELETE", `/mentor/${id}`);
       setMentorList((prevList) => prevList.filter((mentor) => mentor.id !== id));
+      toast.success("Mentor Mapped Deleted successfully!");
+
     } catch (error) {
       console.error("Error deleting mentor:", error);
+      toast.error("Error deleting Mentor Mapping");
+
     }
   };
 
@@ -125,6 +145,18 @@ function Body() {
     { value: "III", label: "III" },
     { value: "IV", label: "IV" },
   ];
+
+  const handleSearch = (event) => {
+    const value = event.target.value.toLowerCase();
+    setSearchTerm(value);
+    const filtered = mentorList.filter(
+      (student) =>
+        student.mentor.toLowerCase().includes(value) ||
+      student.student.toLowerCase().includes(value) ||
+        student.register_number.toLowerCase().includes(value)
+    );
+    setFilteredMentorList(filtered);
+  };
 
   return (
     <div>
@@ -179,50 +211,58 @@ function Body() {
       </div>
 
       {showMentorList && (
-        <Paper>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell><b>ID</b></TableCell>
-                  <TableCell><b>Mentor</b></TableCell>
-                  <TableCell><b>Student</b></TableCell>
-                  <TableCell><b>Register Number</b></TableCell>
-                  <TableCell><b>Actions</b></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {mentorList
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => (
-                    <TableRow key={row.id}>
-                      <TableCell>{index+1}</TableCell>
-                      <TableCell>{row.mentor}</TableCell>
-                      <TableCell>{row.student}</TableCell>
-                      <TableCell>{row.register_number}</TableCell>
-                      <TableCell>
-                        <Button
-                          // variant="contained"
-                          // color="secondary"
-                          onClick={() => handleDelete(row.id)}
-                        >
-                          Delete
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            component="div"
-            count={mentorList.length}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+        <div>
+          <div>
+          <InputBox
+            value={searchTerm}
+            onChange={handleSearch}
+            placeholder="Search.."
           />
-        </Paper>
+                </div>
+                <br />
+          <Paper>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell><b>ID</b></TableCell>
+                    <TableCell><b>Mentor</b></TableCell>
+                    <TableCell><b>Student</b></TableCell>
+                    <TableCell><b>Register Number</b></TableCell>
+                    <TableCell><b>Actions</b></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredMentorList
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => (
+                      <TableRow key={row.id}>
+                        <TableCell>{index+1}</TableCell>
+                        <TableCell>{row.mentor}</TableCell>
+                        <TableCell>{row.student}</TableCell>
+                        <TableCell>{row.register_number}</TableCell>
+                        <TableCell>
+                          <Button
+                            onClick={() => handleDelete(row.id)}
+                          >
+                            Delete
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              component="div"
+              count={mentorList.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        </div>
       )}
     </div>
   );

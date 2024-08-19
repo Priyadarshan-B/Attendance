@@ -109,7 +109,7 @@ function Body() {
         );
         setAttendancePercent(attendanceResponse.data);
         setPercent(parseFloat(attendanceResponse.data.attendance_percentage));
-
+        
         const attendanceRecordsResponse = await requestApi(
           "GET",
           `/type2_attendence?student=${selectedStudent}`
@@ -157,9 +157,6 @@ function Body() {
     (detail) => detail.date !== todayDate
   );
 
-  // if(otherAttendance.length <=0){
-  //   return <div>No Data Found</div>
-  // }
   const timeIntervals = [
     { start: "08:00:00 AM", end: "10:00:00 AM" },
     { start: "12:00:00 PM", end: "03:00:00 PM" },
@@ -318,7 +315,7 @@ function Body() {
                 <br />
                 <div>
                   <LiquidGauge
-                    value={percent}
+                    value={percent ?? 0}
                     width={200}
                     height={150}
                     waveFrequency={2}
@@ -388,7 +385,7 @@ function Body() {
               <hr />
               <br />
 
-              <div className="attendance-summary">
+              {<div className="attendance-summary">
                 <div className="summary-item">
                   <div className="icons-flex">
                     <EventAvailableTwoToneIcon
@@ -400,8 +397,8 @@ function Body() {
                     <p>
                       <h4>Present</h4>
                     </p>
-                    <b>{attendancePercent.present_days}</b>
-                  </div>
+                    <b>{attendancePercent?.present_days ?? "N/A"}</b>
+                    </div>
                 </div>
                 <div className="summary-item">
                   <div className="icons-flex">
@@ -414,7 +411,7 @@ function Body() {
                     <p>
                       <h4>Absent</h4>
                     </p>
-                    <b>{attendancePercent.absent_days}</b>
+                    <b>{attendancePercent?.absent_days ?? "N/A"}</b>
                   </div>
                 </div>
                 <div className="summary-item">
@@ -431,7 +428,7 @@ function Body() {
                     <p>
                       <h4>Total Days</h4>
                     </p>
-                    <b>{attendancePercent.current_days}</b>
+                    <b>{attendancePercent?.current_days ?? "N/A"}</b>
                   </div>
                 </div>
                 <div className="summary-item">
@@ -448,7 +445,7 @@ function Body() {
                     <p>
                       <h4>Total Days (Sem)</h4>
                     </p>
-                    <b>{attendancePercent.total_days}</b>
+                    <b>{attendancePercent?.total_days ?? "N/A"}</b>
                   </div>
                 </div>
                 <div className="summary-item">
@@ -465,10 +462,10 @@ function Body() {
                     <p>
                       <h4>Attendance (%)</h4>
                     </p>
-                    <b>{attendancePercent.attendance_percentage}</b>
+                    <b>{attendancePercent?.attendance_percentage ?? "N/A"}</b>
                   </div>
                 </div>
-              </div>
+              </div>}
             </div>
           </div>
 
@@ -480,14 +477,14 @@ function Body() {
                 leaveDetails.map((leave, index) => (
                   <div key={index} className="leave-row">
                     <div className="space">
-                      <b>Type:</b> {leave.type} <br />
+                      <b>Type:</b> {leave?.type ?? "N/A"} <br />
                     </div>
                     <div className="space">
                       <b>From:</b>{" "}
-                      {formatLeaveDate(leave.from_date, leave.from_time)} <br />
+                      {formatLeaveDate(leave?.from_date ?? "N/A", leave?.from_time?? "N/A")} <br />
                     </div>
                     <div className="space">
-                      <b>To:</b> {formatLeaveDate(leave.to_date, leave.to_time)}
+                      <b>To:</b> {formatLeaveDate(leave?.to_date ?? "N/A", leave?.to_time ?? "N/A")}
                     </div>
                     <hr style={{ width: "100%" }} />
                   </div>
@@ -512,7 +509,7 @@ function Body() {
                 {todayAttendance.length > 0 ? (
                   todayAttendance.map((detail, index) => (
                     <div key={index} className="attendance-row">
-                      <b>Time</b> - {detail.time}
+                      <b>Time</b> - {detail?.time ?? "N/A"}
                     </div>
                   ))
                 ) : (
@@ -524,11 +521,11 @@ function Body() {
                   <center>Attendance Count</center>
                 </h3>
                 <Chart
-                  options={radialChartData.options}
-                  series={radialChartData.series}
-                  type="radialBar"
-                  height={300}
-                />
+  options={radialChartData?.options ?? {}}
+  series={radialChartData?.series ?? []}
+  type="radialBar"
+  height={300}
+/>
               </div>
             </div>
 

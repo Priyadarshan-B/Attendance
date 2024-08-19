@@ -107,12 +107,21 @@ exports.get_attendance_details = async (req, res) => {
     const absentDays = currentDays - counted_days;
     const attendancePercentage = (present_days / currentDays) * 100;
 
+    const presentAbsent = `
+    SELECT forenoon,afternoon
+    FROM attendance
+    WHERE student =? AND
+    date = CURRENT_DATE()
+    AND status ='1';
+    `
+    const preAb = await get_database(presentAbsent, [student])
     res.json({
       present_days,
       absent_days: absentDays,
       total_days: totalDays,
       current_days: currentDays,
       attendance_percentage: attendancePercentage.toFixed(2),
+      present_absent:preAb,
     });
   } catch (err) {
     console.error("Error calculating attendance details", err);

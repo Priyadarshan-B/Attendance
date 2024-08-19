@@ -1,11 +1,13 @@
 const express = require('express')
 const mentor = require('../Controllers/mentor/mentor')
+const student = require('../Controllers/student/student')
 const bio_attendence = require('../Controllers/attendence/biometric')
 const attendence_details = require('../Controllers/attendence/attendence')
 const student_details = require('../Controllers/student/student')
 const uploadTime = require('../Controllers/arr_time_uploads/time_upload')
 const arrear_attendence = require('../Controllers/attendence/arrear')
 const slots = require('../Controllers/Slots/slot')
+const session = require('../Controllers/Slots/session')
 const leave = require('../Controllers/leave/leave')
 const dates = require('../Controllers/holidays/holidays')
 const semDates = require('../Controllers/sem_dates/semDates')
@@ -28,6 +30,10 @@ router.post("/mentor-mapping",mentor.post_mentor_map)
 router.get('/leave', mentor.get_leave)
 router.put('/leave', mentor.update_leave)
 router.put('/reject-leave', mentor.update_reject_leave)
+
+//student
+router.get('/student-year', student.get_all_students)
+router.get('/student', student.get_student_details)
 
 
 //bio-att
@@ -55,9 +61,10 @@ router.put('/arr-attendence',arrear_attendence.delete_arrear_stu_att)
 router.get('/slots', slots.get_slots)
 router.post('/slots', slots.post_slots)
 router.put('/slots', slots.update_slots)
+router.get('/session',session.get_session)
 
 // leave
-router.get('/leave', leave.get_leave_type)
+router.get('/leave-type', leave.get_leave_type)
 router.get('/leave-student',leave.get_student_leave)
 
 // holidays

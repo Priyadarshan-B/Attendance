@@ -83,7 +83,7 @@ cron.schedule('8 0 * * 3', async () => {
         console.error('Error during scheduled update_7_days:', error);
     }
 });
-cron.schedule('22 10 * * *', async () => {
+cron.schedule('43 00 * * *', async () => {
   try {
       console.log('Executing update_biometrics cron job...');
       await update_biometrics();

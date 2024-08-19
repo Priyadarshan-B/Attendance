@@ -61,11 +61,11 @@ exports.post_changeStu_type1 = async (req, res)=>{
         const query = `
         UPDATE students
         SET type = 1
-        WHERE id = (?)
+        WHERE id IN (?)
         AND status = '1';
         `
-        const changeType = await post_database(query, [ids])
-        res.json(changeType)
+        const changeType2 = await post_database(query, [ids])
+        res.json(changeType2)
       }
       catch(err){
         console.error("Error Updating Student type1", err);

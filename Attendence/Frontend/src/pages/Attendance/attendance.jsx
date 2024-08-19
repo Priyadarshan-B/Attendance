@@ -5,11 +5,12 @@ import requestApi from "../../components/utils/axios";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 import InputBox from "../../components/TextBox/textbox";
-import "./attendence.css";
+import "./attendance.css";
+import toast from "react-hot-toast";
 import RoleAttendance from "./roleAttendance";
 
 function Attendance() {
-  return <AppLayout rId={1} body={<Body />} />
+  return <AppLayout  body={<Body />} />
         
 }
 
@@ -110,12 +111,16 @@ function Body() {
           student: studentId,
           slot: slotId,
         });
+        toast.success("Attendance Logged")
+
       } else {
         await requestApi("POST", "/arr-attendence", {
           faculty: id,
           student: studentId,
           slot: slotId,
         });
+        toast.success("Attendance Logged")
+
       }
 
       setAttendanceData((prev) => {
@@ -129,17 +134,23 @@ function Body() {
         }
       });
     } catch (error) {
+      toast.error("Failed to Log Attendance")
+
       console.error("Error handling attendance data:", error);
 
       if (error.response && error.response.data) {
-        alert(
-          `Error: ${
-            error.response.data.error ||
-            "An error occurred while handling attendance."
-          }`
-        );
+        // alert(
+        //   `Error: ${
+        //     error.response.data.error ||
+        //     "An error occurred while handling attendance."
+        //   }`
+        // );
+      toast.error("Failed to Log Attendance")
+
       } else {
-        alert("Student is not approved.");
+        // alert("Student is not approved.");
+      toast.error(" Attendance Status is not approved.")
+
       }
     }
   };
@@ -188,13 +199,13 @@ function Body() {
   return (
     <div className="attendance-container">
       <h2>Students Attendance (Hour)</h2>
-
+{/* 
       <div
         onClick={() => setShowRoleAttendance(true)}
         style={{ cursor: "pointer", color: "blue" }}
       >
         Role Based Attendance
-      </div>
+      </div> */}
 
       <div className="flex-box">
         <h4>NIP / Re Appear Student List</h4>

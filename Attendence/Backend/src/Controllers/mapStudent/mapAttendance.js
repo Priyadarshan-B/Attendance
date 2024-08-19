@@ -5,16 +5,28 @@ exports.get_role_student = async (req, res)=>{
     if(!role){
         return res.status(400).json({ error: "Role id is required." });
     }
+    const checkRole = `
+    SELECT role FROM roles_faculty
+    WHERE mentor = ?
+    AND status ='1';
+    `
+    const roleId = await get_database(checkRole, [role]) 
+    console.log(roleId)
+    if (roleId.length === 0) {
+        return res.status(404).json({ error: "Role not found or inactive." });
+    }
+
+    const roleValue = roleId[0].role;
     try{
         const query = `
       SELECT s.id, s.name, s.register_number
 FROM role_student_map rs
 INNER JOIN students s
 ON rs.student = s.id
-WHERE rs.role_attendance = ?
+WHERE rs.role = ?
 AND rs.status = '1';
         `
-        const get_stu = await get_database(query, [role])
+        const get_stu = await get_database(query, [roleValue])
         res.json(get_stu)
     }
     catch(err){
@@ -24,31 +36,42 @@ AND rs.status = '1';
 }
 
 exports.post_attendance = async (req, res) => {
-    const { role, student, slot } = req.body;
+    const { role, student, session } = req.body;
 
-    if (!role || !student || !slot) {
-        return res.status(400).json({ error: "Role, student, and slot IDs are required." });
+    if (!role || !student || !session) {
+        return res.status(400).json({ error: "Role, student, and session IDs are required." });
+    }
+    const checkRole = `
+    SELECT role FROM roles_faculty
+    WHERE mentor = ?
+    AND status ='1';
+    `
+    const roleId = await get_database(checkRole, [role]) 
+    console.log(roleId)
+    if (roleId.length === 0) {
+        return res.status(404).json({ error: "Role not found or inactive." });
     }
 
+    const roleValue = roleId[0].role;
+
+
     try {
-        // Fetch student map ID
         const query = `
             SELECT id FROM role_student_map 
-            WHERE role_attendance = ? 
+            WHERE role = ? 
             AND student = ? 
             AND status = '1';
         `;
-        const fetchId = await get_database(query, [role, student]);
+        const fetchId = await get_database(query, [roleValue, student]);
 
         if (fetchId.length > 0) {
             const studentMapId = fetchId[0].id;
             
-            // Insert a new record into the roles_student table
             const insertQuery = `
-                INSERT INTO roles_student (student_map, slot, attendance)
+                INSERT INTO roles_student (student_map, session, attendance)
                 VALUES (?, ?, CURRENT_TIMESTAMP);
             `;
-            const insertAtt = await post_database(insertQuery, [studentMapId, slot]);
+            const insertAtt = await post_database(insertQuery, [studentMapId, session]);
 
             res.json({ success: true, data: insertAtt });
         } else {

@@ -3,8 +3,8 @@ const { get_database, post_database } = require("../../config/db_utils");
 exports.get_map_role = async (req, res)=>{
     try{
         const query = `
-        SELECT * FROM roles_attendance
-        WHERE status = '1'
+        SELECT * FROM roles 
+        WHERE status = '2'
         ;
         `
         const mapRole = await get_database(query)
@@ -25,7 +25,7 @@ exports.post_map_role = async (req, res) => {
 
     try {
         const query = `
-            INSERT INTO role_student_map(role_attendance, student) 
+            INSERT INTO role_student_map(role, student) 
             VALUES (?, ?);
         `;
 

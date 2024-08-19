@@ -5,7 +5,8 @@ import Cookies from "js-cookie";
 import requestApi from "./components/utils/axios";
 import Login from "./pages/auth/Login/Login";
 import Welcome from "./pages/welcome/welcome";
-import Attendence from "./pages/Attendence/attendence";
+import Attendence from "./pages/Attendance/attendance";
+import RoleAttendance from "./pages/Attendance/roleAttendance";
 import Approvals from "./pages/Approvals/approval";
 import StuDashboard from "./pages/Stu_Dashboard/stu_dashboard";
 import TimeUpload from "./pages/Time_Upload/time_upload";
@@ -20,6 +21,8 @@ import Student from "./pages/Students/student";
 import AdminDashboard from "./pages/Admin_Dashboard/admin_dashboard";
 import Error from "./pages/error";
 import CryptoJS from "crypto-js";
+import { Toaster } from "react-hot-toast";
+
 
 const decryptData = (encryptedData, secretKey) => {
   try {
@@ -39,19 +42,21 @@ const ProtectedRoute = ({ children }) => {
   const secretKey = "secretKey123"; 
   const encryptedToken = Cookies.get("token");
   const encryptedRole = Cookies.get("role");
+  const encryptedGmail = Cookies.get('gmail');
 
   const token = decryptData(encryptedToken, secretKey);
   const roleId = decryptData(encryptedRole, secretKey);
+  const gmail = decryptData(encryptedGmail, secretKey)
 
   useEffect(() => {
-    if (!token || !roleId) {
+    if (!token || !gmail) {
       setLoading(false);
       return;
     }
 
     const fetchAllowedRoutes = async () => {
       try {
-        const response = await requestApi("GET", `/auth/resources?role=${roleId}`);
+        const response = await requestApi("GET", `/auth/resources?gmail=${gmail}`);
         
         console.log("Allowed Routes Response:", response.data);
 
@@ -67,7 +72,7 @@ const ProtectedRoute = ({ children }) => {
     };
 
     fetchAllowedRoutes();
-  }, [roleId, token]);
+  }, [gmail, token]);
 
   // console.log("Allowed Routes:", allowedRoutes);
 
@@ -77,7 +82,7 @@ const ProtectedRoute = ({ children }) => {
     return children;
   }
 
-  if (!token || !roleId) {
+  if (!token || !gmail) {
     return <Navigate to="/attendance/login" />;
   }
 
@@ -92,8 +97,12 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
+    
     <BrowserRouter>
+      <Toaster position="top-center" reverseOrder={false} />
+
       <Routes>
+
         <Route path="*" element={<Error />} />
         <Route path="/attendance" element={<Login />} />
         <Route path="/attendance/login" element={<Login />} />
@@ -110,6 +119,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Attendence />
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/attendance/role_attendance"
+          element={
+            <ProtectedRoute>
+              <RoleAttendance />
             </ProtectedRoute>
           }
         />

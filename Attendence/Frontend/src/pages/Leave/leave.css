@@ -5,20 +5,24 @@
     justify-content: center;
     align-content: center;
     gap: 16px;
-    max-width: 600px; 
     margin: auto; 
     padding: 20px; 
-    background-color: white;
+    background-color: #ffffff;
     border-radius: 5px;
 }
 
+.leave-form{
+    background-color: #f4f6fa;
+    padding: 20px;
+    border-radius: 10px;
+}
 .form-container > div {
     display: flex;
     flex-direction: column;
 }
 
 .form-container .MuiTextField-root {
-    margin-bottom: 16px; /* Adds spacing below each TextField */
+    margin-bottom: 16px;
 }
 
 .form-container .react-select__control {
