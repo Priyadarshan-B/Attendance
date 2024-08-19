@@ -6,12 +6,15 @@ import Button from "../Button/Button";
 import LogoutIcon from '@mui/icons-material/Logout';
 import QueryStatsTwoToneIcon from '@mui/icons-material/QueryStatsTwoTone';
 import Cookies from "js-cookie";
+import CryptoJS from "crypto-js";
 import requestApi from "../utils/axios";
 
 
 function TopBar(props) {
   const [modalOpen, setModalOpen] = useState(false);
-  const name = Cookies.get('name').toUpperCase() || '';
+  const name = Cookies.get('name');
+  const secretKey = "secretKey123";
+  const dename= CryptoJS.AES.decrypt(name, secretKey).toString(CryptoJS.enc.Utf8)
   const handleOpenModal = () => {
     setModalOpen(true);
   };
@@ -25,7 +28,7 @@ function TopBar(props) {
       
       Cookies.remove("token");
       console.log(Cookies.get('token'));
-      window.location.href = "/login";
+      window.location.href = "/attendance/login";
     } catch (error) {
       console.error("Logout failed", error);
     }
@@ -59,7 +62,7 @@ function TopBar(props) {
       </div>
       <div className="topbar-right-content">
         <div>
-          <p className="user-name">{name}</p>
+          <p className="user-name">{dename}</p>
         </div>
         <div onClick={handleOpenModal}>
           <LogoutIcon sx={{ color: "#1c0c6a", cursor: "pointer" }} />

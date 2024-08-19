@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AppLayout from "../../../components/applayout/AppLayout";
 import "../../../components/applayout/styles.css";
 import requestApi from "../../../components/utils/axios";
-import Select from "react-select";  // React Select for dropdowns
+import Select from "react-select"; 
 import Button from "../../../components/Button/Button";
 import './mapStudent.css'
 function MapStudent() {

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AppLayout from "../../components/applayout/AppLayout";
 import "../../components/applayout/styles.css";
-import Cookies from "js-cookie";
 import requestApi from "../../components/utils/axios";
 import "../Stu_Dashboard/stu_dashboard.css";
 import Chart from "react-apexcharts";
@@ -121,7 +120,12 @@ function Body() {
           "GET",
           `/att-details?student=${studentResponse.data[0].register_number}`
         );
-        setAttendanceDetails(attendanceDetailsResponse.data);
+        if (attendanceDetailsResponse.data.error) {
+          setAttendanceDetails([]);
+          console.log(attendanceDetailsResponse.data.error); 
+        } else {
+          setAttendanceDetails(attendanceDetailsResponse.data);
+        }
 
         const leaveDetailsResponse = await requestApi(
           "GET",
@@ -153,6 +157,9 @@ function Body() {
     (detail) => detail.date !== todayDate
   );
 
+  // if(otherAttendance.length <=0){
+  //   return <div>No Data Found</div>
+  // }
   const timeIntervals = [
     { start: "08:00:00 AM", end: "10:00:00 AM" },
     { start: "12:00:00 PM", end: "03:00:00 PM" },
@@ -265,7 +272,7 @@ function Body() {
     <div>
       <div className="dropdown">
         <div className="label-dropdown">
-          <h5>Year</h5>
+          <h4>Year</h4>
           <div
             style={{
               flex: "1",
@@ -279,7 +286,7 @@ function Body() {
           </div>
         </div>
         <div className="label-dropdown">
-          <h5>Student</h5>
+          <h4>Student</h4>
           <div
             style={{
               flex: "1",
@@ -377,7 +384,6 @@ function Body() {
               </div>
             </div>
             <div className="attendance-percent-container">
-              <br />
               <h3>Attendance Details</h3>
               <hr />
               <br />
@@ -392,7 +398,7 @@ function Body() {
                       }}
                     />
                     <p>
-                      <h3>Present</h3>
+                      <h4>Present</h4>
                     </p>
                     <b>{attendancePercent.present_days}</b>
                   </div>
@@ -406,7 +412,7 @@ function Body() {
                       }}
                     />
                     <p>
-                      <h3>Absent</h3>
+                      <h4>Absent</h4>
                     </p>
                     <b>{attendancePercent.absent_days}</b>
                   </div>
@@ -418,12 +424,12 @@ function Body() {
                         src={calendar}
                         alt="Total Days"
                         style={{
-                          width: "50px",
+                          width: "45px",
                         }}
                       ></img>
                     </div>
                     <p>
-                      <h3>Total Days</h3>
+                      <h4>Total Days</h4>
                     </p>
                     <b>{attendancePercent.current_days}</b>
                   </div>
@@ -435,12 +441,12 @@ function Body() {
                         src={calendar}
                         alt="Total Days"
                         style={{
-                          width: "50px",
+                          width: "45px",
                         }}
                       ></img>
                     </div>
                     <p>
-                      <h3>Total Days</h3>
+                      <h4>Total Days (Sem)</h4>
                     </p>
                     <b>{attendancePercent.total_days}</b>
                   </div>
@@ -452,12 +458,12 @@ function Body() {
                         src={calendar}
                         alt="Total Days"
                         style={{
-                          width: "50px",
+                          width: "45px",
                         }}
                       ></img>
                     </div>
                     <p>
-                      <h3>Attendance (%)</h3>
+                      <h4>Attendance (%)</h4>
                     </p>
                     <b>{attendancePercent.attendance_percentage}</b>
                   </div>
@@ -531,48 +537,46 @@ function Body() {
                 <center>Biometric History</center>
               </h3>
               <br />
-              <div
-                style={{
-                  width: "100%",
-                }}
-              >
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>
-                          <b>Date</b>
-                        </TableCell>
-                        <TableCell>
-                          <b>Time</b>
-                        </TableCell>
+              {otherAttendance.length > 0 ?(<div style={{
+            width:'100%'
+          }}>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <b>Date</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Time</b>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {otherAttendance
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((detail, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{detail.date}</TableCell>
+                        <TableCell>{detail.time}</TableCell>
                       </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {otherAttendance
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
-                        .map((detail, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{detail.date}</TableCell>
-                            <TableCell>{detail.time}</TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                  <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={otherAttendance.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
-                </TableContainer>
-              </div>
+                    ))}
+                </TableBody>
+              </Table>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={otherAttendance.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableContainer>
+          </div>):(
+              <p>No attendance recorded for today.</p>
+
+          )}
             </div>
           </div>
 

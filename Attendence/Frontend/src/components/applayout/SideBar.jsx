@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./styles.css";
 import { Link, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
+import CryptoJS from "crypto-js";
 import requestApi from "../utils/axios";
 import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
 import LibraryBooksTwoToneIcon from '@mui/icons-material/LibraryBooksTwoTone';
@@ -43,8 +44,12 @@ function SideBar(props) {
   useEffect(() => {
     const fetchSidebarItems = async () => {
       try {
-        const role = Cookies.get('role');
-        const response = await requestApi("GET", `/auth/resources?role=${role}`);
+        // Decrypt the role from cookies
+        const encryptedRole = Cookies.get('role');
+        const bytes = CryptoJS.AES.decrypt(encryptedRole, 'secretKey123'); // Use the same secret key used for encryption
+        const decryptedRole = bytes.toString(CryptoJS.enc.Utf8);
+
+        const response = await requestApi("GET", `/auth/resources?role=${decryptedRole}`);
         if (response.success) {
           setSidebarItems(response.data);
         } else {
@@ -85,7 +90,6 @@ function SideBar(props) {
             onClick={() => setActiveItem(item.name)}
           >
             <Link className="link" to={item.path}>
-              {/* Dynamically render the icon component */}
               {getIconComponent(item.icon_path) && React.createElement(getIconComponent(item.icon_path), { sx: { marginRight: "10px", color:"#1c0c6a" } })}
               {item.name}
             </Link>

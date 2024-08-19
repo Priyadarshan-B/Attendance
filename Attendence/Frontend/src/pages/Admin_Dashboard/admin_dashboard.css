@@ -1,0 +1,23 @@
+.charts{
+    background-color: #f4f6fa;
+    padding: 15px 10px 15px 10px;
+    border-radius: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.chart{
+    flex: 1;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.present{
+    flex: 1;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.sdds{
+    color: #D8E3F0;
+}

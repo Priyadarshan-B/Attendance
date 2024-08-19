@@ -15,6 +15,7 @@ const nip_att = require('../Controllers/nip/attendence')
 const map_role = require('../Controllers/mapStudent/mapStudent')
 const attendance = require('../Controllers/attendence/attendace_count')
 const role_student = require('../Controllers/mapStudent/mapAttendance')
+const dashboard = require('../Controllers/Dashboard/dashboard')
 
 const router = express.Router()
 
@@ -35,6 +36,7 @@ router.put("/att-disapprove",bio_attendence.mentor_no_att_approve)
 
 //att_details
 router.get('/att-details',attendence_details.get_attendence_n_arrear)
+router.post('/attendance', attendence_details.get_AttendanceCount)
 
 //stu_details
 router.get('/student-details', student_details.get_student_details)
@@ -89,5 +91,8 @@ router.post('/att-count', attendance.checkAndInsertAttendance)
 router.get('/role-student', role_student.get_role_student)
 router.post('/role-student', role_student.post_attendance)
 router.put('/role-student', role_student.delete_role_stu_att)
+
+//dashboard
+router.get('/dashboard',dashboard.get_dashboard_details)
 
 module.exports = router

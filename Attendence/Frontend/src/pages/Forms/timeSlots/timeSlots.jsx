@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import requestApi from "../../../components/utils/axios";
-import '../style.css';
+import Button from "../../../components/Button/Button";
+import './timeSlots.css';
 
 const TimeSlotForm = ({ onClose }) => {
   const [label, setLabel] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [status, setStatus] = useState("1");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await requestApi("POST", "/slots", { label, start_time: startTime, end_time: endTime, status });
-      alert("Time slot added successfully!");
-    
+      await requestApi("POST", "/slots", { label, start_time: startTime, end_time: endTime });
+      console.log("Posted Successfully")
+      setLabel("");
+      setStartTime("");
+      setEndTime("");
     } catch (error) {
       console.error("Error saving time slot:", error);
     }
@@ -21,7 +23,7 @@ const TimeSlotForm = ({ onClose }) => {
 
   return (
     <div className="time-slot-form-container">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="time-form">
         <h2>Add Time Slot</h2>
         <div className="form-group">
           <label htmlFor="label">Label</label>
@@ -29,6 +31,7 @@ const TimeSlotForm = ({ onClose }) => {
             id="label"
             type="text"
             value={label}
+            placeholder="Eg.8.45AM - 9.45AM"
             onChange={(e) => setLabel(e.target.value)}
             required
           />
@@ -39,6 +42,7 @@ const TimeSlotForm = ({ onClose }) => {
             id="start_time"
             type="text"
             value={startTime}
+            placeholder="Eg.8.45AM"
             onChange={(e) => setStartTime(e.target.value)}
             required
           />
@@ -48,15 +52,17 @@ const TimeSlotForm = ({ onClose }) => {
           <input
             id="end_time"
             type="text"
+            placeholder="Eg.9.45AM"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
             required
           />
         </div>
-    
-        <button type="submit" className="submit-button">
-          Add Time Slot
-        </button>
+
+        <Button
+        type="submit"
+        label="Add Time Slots"
+        />
       </form>
     </div>
   );

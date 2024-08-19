@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AppLayout from "../../components/applayout/AppLayout";
 import "../../components/applayout/styles.css";
 import Cookies from "js-cookie";
+import CryptoJS from "crypto-js";
 import requestApi from "../../components/utils/axios";
 import "./stu_dashboard.css";
 import Chart from "react-apexcharts";
@@ -26,8 +27,11 @@ function StuDashboard() {
 }
 
 function Body() {
-  const roll = Cookies.get("roll");
-  const id = Cookies.get("id");
+  const deroll = Cookies.get("roll");
+  const deid = Cookies.get("id");
+  const secretKey = "secretKey123";
+  const roll = CryptoJS.AES.decrypt(deroll, secretKey).toString(CryptoJS.enc.Utf8)
+  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8)
   const [studentDetails, setStudentDetails] = useState(null);
   const [attendanceDetails, setAttendanceDetails] = useState([]);
   const [leaveDetails, setLeaveDetails] = useState([]);
@@ -113,15 +117,19 @@ function Body() {
 
     const fetchAttendanceDetails = async () => {
       try {
-        const response = await requestApi(
-          "GET",
-          `/att-details?student=${roll}`
-        );
-        setAttendanceDetails(response.data);
+        const response = await requestApi("GET", `/att-details?student=${roll}`);
+        if (response.data.error) {
+          setAttendanceDetails([]);
+          console.log(response.data.error); 
+        } else {
+          setAttendanceDetails(response.data);
+        }
       } catch (error) {
         console.error("Error fetching attendance details:", error);
+        setAttendanceDetails([]); 
       }
     };
+    
 
     const fetchLeaveDetails = async () => {
       try {
@@ -151,6 +159,7 @@ function Body() {
     return <div>Loading...</div>;
   }
 
+
   const todayDate = new Date()
     .toLocaleDateString("en-GB")
     .split("/")
@@ -161,6 +170,10 @@ function Body() {
   const otherAttendance = attendanceDetails.filter(
     (detail) => detail.date !== todayDate
   );
+
+  // if(otherAttendance.length <=0){
+  //   return <div>No Data Found</div>
+  // }
 
   const timeIntervals = [
     { start: "08:00:00 AM", end: "10:00:00 AM" },
@@ -214,8 +227,8 @@ function Body() {
           hollow: {
             size: "50%",
           },
-          startAngle: 0,
-          endAngle: 360,
+          startAngle: -135,
+          endAngle: 135,
           track: {
             background: "#d1e1f5",
             strokeWidth: "100%",
@@ -236,6 +249,13 @@ function Body() {
             },
           },
         },
+       
+      },
+      fill: {
+        colors: ["#00E396"],
+      },
+      stroke: {
+        lineCap: "round",
       },
       labels: [`${uniqueIntervals}/3`],
     },
@@ -283,7 +303,6 @@ function Body() {
                 waveFrequency={2}
                 waveAmplitude={5}
                 waveAnimation={true}
-                // waveAnimateTime = {1000}
                 waveCount={10}
                 circleStyle={{
                   fill: "#55e77a",
@@ -344,7 +363,6 @@ function Body() {
           </div>
         </div>
         <div className="attendance-percent-container">
-          <br />
           <h3>Attendance Details</h3>
           <hr />
           <br />
@@ -359,7 +377,7 @@ function Body() {
                   }}
                 />
                 <p>
-                  <h3>Present</h3>
+                  <h4>Present</h4>
                 </p>
                 <b>{attendancePercent.present_days}</b>
               </div>
@@ -373,7 +391,7 @@ function Body() {
                   }}
                 />
                 <p>
-                  <h3>Absent</h3>
+                  <h4>Absent</h4>
                 </p>
                 <b>{attendancePercent.absent_days}</b>
               </div>
@@ -385,12 +403,12 @@ function Body() {
                     src={calendar}
                     alt="Total Days"
                     style={{
-                      width: "50px",
+                      width: "45px",
                     }}
                   ></img>
                 </div>
                 <p>
-                  <h3>Total Days</h3>
+                  <h4>Total Days</h4>
                 </p>
                 <b>{attendancePercent.current_days}</b>
               </div>
@@ -402,12 +420,12 @@ function Body() {
                     src={calendar}
                     alt="Total Days"
                     style={{
-                      width: "50px",
+                      width: "45px",
                     }}
                   ></img>
                 </div>
                 <p>
-                  <h3>Total Days</h3>
+                  <h4>Total Days (Sem)</h4>
                 </p>
                 <b>{attendancePercent.total_days}</b>
               </div>
@@ -419,12 +437,12 @@ function Body() {
                     src={calendar}
                     alt="Total Days"
                     style={{
-                      width: "50px",
+                      width: "45px",
                     }}
                   ></img>
                 </div>
                 <p>
-                  <h3>Attendance (%)</h3>
+                  <h4>Attendance (%)</h4>
                 </p>
                 <b>{attendancePercent.attendance_percentage}</b>
               </div>
@@ -498,44 +516,51 @@ function Body() {
             <center>Biometric History</center>
           </h3>
           <br />
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>
-                    <b>Date</b>
-                  </TableCell>
-                  <TableCell>
-                    <b>Time</b>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {otherAttendance
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((detail, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{detail.date}</TableCell>
-                      <TableCell>{detail.time}</TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={otherAttendance.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </TableContainer>
+          {otherAttendance.length > 0 ?(<div style={{
+            width:'100%'
+          }}>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <b>Date</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Time</b>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {otherAttendance
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((detail, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{detail.date}</TableCell>
+                        <TableCell>{detail.time}</TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={otherAttendance.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableContainer>
+          </div>):(
+              <p>No attendance recorded for today.</p>
+
+          )}
         </div>
       </div>
 
       {studentDetails.type === 2 && (
-        <div>
+        <div className="type2-table">
           <h3>NIP/ Re-Appear Attendance Records</h3>
           {attendanceRecords.length > 0 ? (
             <TableContainer component={Paper}>

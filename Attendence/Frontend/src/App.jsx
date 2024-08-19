@@ -17,39 +17,73 @@ import SemDates from "./pages/Forms/semDates/sem_dates";
 import Nip from "./pages/Forms/nip/nip";
 import MapStudent from "./pages/Forms/mapStudent/mapStudent";
 import Student from "./pages/Students/student";
+import AdminDashboard from "./pages/Admin_Dashboard/admin_dashboard";
 import Error from "./pages/error";
+import CryptoJS from "crypto-js";
+
+const decryptData = (encryptedData, secretKey) => {
+  try {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+    const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+    return decryptedData;
+  } catch (error) {
+    console.error("Decryption error:", error);
+    return null;
+  }
+};
 
 const ProtectedRoute = ({ children }) => {
   const [allowedRoutes, setAllowedRoutes] = useState([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
-  const token = Cookies.get("token");
-  const roleId = Cookies.get("role");
+  const secretKey = "secretKey123"; 
+  const encryptedToken = Cookies.get("token");
+  const encryptedRole = Cookies.get("role");
+
+  const token = decryptData(encryptedToken, secretKey);
+  const roleId = decryptData(encryptedRole, secretKey);
 
   useEffect(() => {
+    if (!token || !roleId) {
+      setLoading(false);
+      return;
+    }
+
     const fetchAllowedRoutes = async () => {
       try {
-        {
-          const response = await requestApi("GET", `/auth/resources?role=${roleId}`);
-          const routes = response.data.map((route) => route.path);
-          setAllowedRoutes(routes);
-        }
+        const response = await requestApi("GET", `/auth/resources?role=${roleId}`);
+        
+        console.log("Allowed Routes Response:", response.data);
+
+        const routes = response.data.map((route) => route.path);
+        setAllowedRoutes(routes);
+
+        console.log("Allowed Routes After State Update:", routes);
       } catch (error) {
         console.error("Failed to fetch allowed routes", error);
       } finally {
-        setLoading(false);
+        setLoading(false); 
       }
     };
 
     fetchAllowedRoutes();
   }, [roleId, token]);
 
-  if (loading) return <div>Loading...</div>;
-if (location.pathname === "/attendance/welcome"){
-  return children
-}
+  // console.log("Allowed Routes:", allowedRoutes);
 
-  if ( token &&  allowedRoutes.includes(location.pathname)) {
+  if (loading) return <div>Loading...</div>;
+
+  if (location.pathname === "/attendance/welcome") {
+    return children;
+  }
+
+  if (!token || !roleId) {
+    return <Navigate to="/attendance/login" />;
+  }
+
+  console.log("Current Location:", location.pathname);
+
+  if (allowedRoutes.length > 0 && allowedRoutes.includes(location.pathname)) {
     return children;
   }
 
@@ -80,18 +114,26 @@ function App() {
           }
         />
         <Route
-          path="/attendance/approval"
+          path="/attendance/admin"
           element={
             <ProtectedRoute>
-              <Approvals />
+              <AdminDashboard />
             </ProtectedRoute>
           }
         />
-        <Route
+         <Route
           path="/attendance/student"
           element={
             <ProtectedRoute>
               <Student />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendance/approval"
+          element={
+            <ProtectedRoute>
+              <Approvals />
             </ProtectedRoute>
           }
         />

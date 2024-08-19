@@ -3,6 +3,7 @@ import AppLayout from "../../components/applayout/AppLayout";
 import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
 import Cookies from "js-cookie";
+import CryptoJS from "crypto-js";
 import {
   Table,
   TableBody,
@@ -59,6 +60,8 @@ function Body() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const id = Cookies.get("id");
+  const secretKey = "secretKey123";
+  const deid = CryptoJS.AES.decrypt(id, secretKey).toString(CryptoJS.enc.Utf8)
   const [searchTerm, setSearchTerm] = useState("");
   const [openApprovePopup, setOpenApprovePopup] = useState(false);
   const [selectedStudentIndex, setSelectedStudentIndex] = useState(null);
@@ -67,7 +70,7 @@ function Body() {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
-    requestApi("GET", `/mentor-students?mentor=${id}`)
+    requestApi("GET", `/mentor-students?mentor=${deid}`)
       .then((response) => {
         if (Array.isArray(response.data)) {
           setStudents(response.data);

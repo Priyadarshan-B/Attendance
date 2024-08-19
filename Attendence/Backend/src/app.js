@@ -6,8 +6,10 @@ const passport = require("passport");
 const session = require("express-session");
 const passportConfig = require("./config/passport");
 const cron = require('node-cron');
+const {get_database, post_database} = require('./config/db_utils')
 const { update_7_days } = require('./Controllers/attendence/biometric'); 
 const {update_biometrics} = require('./Controllers/attendence/biometric')
+const {get_AttendanceCount} = require('./Controllers/attendence/attendence')
 
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
@@ -48,7 +50,31 @@ app.use("/attendance/api/auth", resources_route);
 app.use("/attendance/api/auth", auth_route);
 app.use("/attendance/api",routes);
 
-// schedule the cron job for update_7_days
+const processAttendanceForAllStudents = async () => {
+  try {
+    const studentsQuery = 'SELECT id FROM students';
+    const students = await get_database(studentsQuery);
+
+    if (students.length === 0) {
+      console.log("No students found.");
+      return;
+    }
+
+    for (const student of students) {
+      const studentId = student.id;
+      await get_AttendanceCount(
+        { query: { studentId } }, 
+        { status: () => ({ json: () => {} }) }
+      );
+    }
+
+    console.log("Attendance processing completed for all students.");
+  } catch (error) {
+    console.error("Error processing attendance for all students:", error);
+  }
+};
+
+
 cron.schedule('8 0 * * 3', async () => {
     try {
         console.log('Executing update_7_days cron job...');
@@ -57,24 +83,43 @@ cron.schedule('8 0 * * 3', async () => {
         console.error('Error during scheduled update_7_days:', error);
     }
 });
-cron.schedule('0 10 * * *', async () => {
+cron.schedule('22 10 * * *', async () => {
   try {
       console.log('Executing update_biometrics cron job...');
       await update_biometrics();
+      await processAttendanceForAllStudents();
   } catch (error) {
       console.error('Error during scheduled update_biometrics:', error);
   }
 });
 
-cron.schedule('10 15 * * *', async () => {
+cron.schedule('0 15 * * *', async () => {
   try {
       console.log('Executing update_biometrics cron job...');
       await update_biometrics();
+      await processAttendanceForAllStudents();
   } catch (error) {
       console.error('Error during scheduled update_biometrics:', error);
   }
 });
 
+cron.schedule('0 15 * * *', async () => {
+  try {
+      console.log('Executing update_biometrics cron job...');
+      await update_biometrics();
+      await processAttendanceForAllStudents();
+  } catch (error) {
+      console.error('Error during scheduled update_biometrics:', error);
+  }
+});cron.schedule('0 18 * * *', async () => {
+  try {
+      console.log('Executing update_biometrics cron job...');
+      await update_biometrics();
+      await processAttendanceForAllStudents();
+  } catch (error) {
+      console.error('Error during scheduled update_biometrics:', error);
+  }
+});
 // listen port
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

@@ -3,6 +3,7 @@ import AppLayout from "../../components/applayout/AppLayout";
 import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
 import Cookies from "js-cookie";
+import CryptoJS from "crypto-js";
 import InputBox from "../../components/TextBox/textbox";
 import "./attendence.css";
 import RoleAttendance from "./roleAttendance";
@@ -24,8 +25,9 @@ function Body() {
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedRow, setExpandedRow] = useState(null);
 
-  const id = Cookies.get("id");
-
+  const deid = Cookies.get("id");
+  const secretKey = "secretKey123";
+  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8)
   useEffect(() => {
     const fetchData = async () => {
       try {

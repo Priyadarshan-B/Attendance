@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import AppLayout from "../../../components/applayout/AppLayout";
-import "../../../components/applayout/styles.css";
 import requestApi from "../../../components/utils/axios";
 import Select from "react-select";
 import Cookies from "js-cookie";
+import CryptoJS from "crypto-js";
 import Buttons from "../../../components/Button/Button";
 import {
   Table,
@@ -24,7 +23,9 @@ function MentorMapping() {
 
 function Body() {
   const [mentors, setMentors] = useState([]);
-  const id = Cookies.get("id");
+  const deid = Cookies.get("id");
+  const secretKey = "secretKey123";
+  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8)
   const [students, setStudents] = useState([]);
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -69,7 +70,7 @@ function Body() {
     e.preventDefault();
     try {
       const response = await requestApi("POST", `/mentor-mapping`, {
-        mentor: `${id}`,
+        mentor: selectedMentor.value,
         student: selectedStudents.map((student) => student.value),
       });
       console.log("Mapping saved successfully:", response.data);
@@ -132,7 +133,7 @@ function Body() {
 
       <div className="mentor-mapping-container">
         <form onSubmit={handleSubmit}>
-          {/* <div className="form-group">
+          <div className="form-group">
             <label htmlFor="mentor-select">Select Faculty(Mentor):</label>
             <Select
               id="mentor-select"
@@ -140,7 +141,7 @@ function Body() {
               onChange={setSelectedMentor}
               value={selectedMentor}
             />
-          </div> */}
+          </div>
           <div className="form-group">
             <label htmlFor="year-select">Select Year:</label>
             <Select
