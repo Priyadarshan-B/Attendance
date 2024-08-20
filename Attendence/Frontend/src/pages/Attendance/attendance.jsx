@@ -175,24 +175,39 @@ function Body() {
   const renderTimeSlots = (row) => {
     return (
       <div className="time-slots">
-        {timeSlots.map((slot) => (
-          <div key={slot.id} className="time-slot">
-            <input
-              type="checkbox"
-              checked={attendanceData.some(
-                (record) =>
-                  record.student === row.id && record.slot === slot.id
-              )}
-              onChange={(event) =>
-                handleCheckboxClick(event, row.id, slot.id)
-              }
-              disabled={false}
-              onClick={(event) => event.stopPropagation()} // Prevent event bubbling to row click
-            />
-            <span>{slot.label}</span>
-          </div>
-        ))}
-      </div>
+  {timeSlots.map((slot) => (
+    <div key={slot.id} className="time-slot checkbox-wrapper-4">
+      <input
+        className="inp-cbx"
+        id={slot.id}
+        type="checkbox"
+        checked={attendanceData.some(
+          (record) =>
+            record.student === row.id && record.slot === slot.id
+        )}
+        onChange={(event) =>
+          handleCheckboxClick(event, row.id, slot.id)
+        }
+        disabled={false}
+        onClick={(event) => event.stopPropagation()} 
+      />
+      <label className="cbx" htmlFor={slot.id}>
+        <span>
+          <svg width="12px" height="10px">
+            <use xlinkHref="#check-4"></use>
+          </svg>
+        </span>
+        <span>{slot.label}</span>
+      </label>
+      <svg className="inline-svg">
+        <symbol id="check-4" viewBox="0 0 12 10">
+          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+        </symbol>
+      </svg>
+    </div>
+  ))}
+</div>
+
     );
   };
 

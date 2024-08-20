@@ -25,6 +25,8 @@ function Body() {
   const secretKey = "secretKey123";
   const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8)
 
+  const derole = Cookies.get("role")
+  const role = CryptoJS.AES.decrypt(derole, secretKey).toString(CryptoJS.enc.Utf8)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -76,7 +78,7 @@ function Body() {
 
       if (isChecked) {
         await requestApi("POST", "/role-student", {
-          role: id, 
+          role: role, 
           student: studentId,
           session: sessionId,
         });
@@ -84,7 +86,7 @@ function Body() {
       } else {
         console.log(sessionId , id)
         await requestApi("POST", "/role-student", {
-          role: id, 
+          role: role, 
           student: studentId,
           session: sessionId,
         });
@@ -154,36 +156,64 @@ function Body() {
               <th>Name</th>
               <th>Register Number</th>
               {sessions.map((session) => (
-                <th key={session.id}>{session.Attendance}</th>
+                <th key={session.id}>Attendance</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {filterData
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => (
-                <tr key={row.id}>
-                  <td>{page * rowsPerPage + index + 1}</td>
-                  <td>{row.name}</td>
-                  <td>{row.register_number}</td>
-                  {sessions.map((session) => (
-                    <td key={session.id}>
-                      <input
-                        type="checkbox"
-                        checked={attendanceData.some(
-                          (record) =>
-                            record.student === row.id &&
-                            record.session === session.id
-                        )}
-                        onChange={(event) =>
-                          handleCheckboxClick(event, row.id, session.id)
-                        }
-                        disabled={false}
-                      />
-                    </td>
-                  ))}
-                </tr>
-              ))}
+          {filterData
+  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+  .map((row, index) => (
+    <tr key={row.id}>
+      <td>{page * rowsPerPage + index + 1}</td>
+      <td>{row.name}</td>
+      <td>{row.register_number}</td>
+      {sessions.map((session) => (
+        <td key={session.id}>
+          <div className="checkbox-wrapper-12">
+            <div className="cbx">
+              <input
+                id={`cbx-${row.id}-${session.id}`}
+                type="checkbox"
+                checked={attendanceData.some(
+                  (record) =>
+                    record.student === row.id &&
+                    record.session === session.id
+                )}
+                onChange={(event) =>
+                  handleCheckboxClick(event, row.id, session.id)
+                }
+                disabled={false}
+              />
+              <label htmlFor={`cbx-${row.id}-${session.id}`}></label>
+              <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
+                <path d="M2 8.36364L6.23077 12L13 2"></path>
+              </svg>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+              <defs>
+                <filter id="goo-12">
+                  <feGaussianBlur
+                    in="SourceGraphic"
+                    stdDeviation="4"
+                    result="blur"
+                  ></feGaussianBlur>
+                  <feColorMatrix
+                    in="blur"
+                    mode="matrix"
+                    values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7"
+                    result="goo-12"
+                  ></feColorMatrix>
+                  <feBlend in="SourceGraphic" in2="goo-12"></feBlend>
+                </filter>
+              </defs>
+            </svg>
+          </div>
+        </td>
+      ))}
+    </tr>
+  ))}
+
           </tbody>
         </table>
         <div className="pagination">

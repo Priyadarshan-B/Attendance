@@ -1,4 +1,17 @@
 .map-student-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.map-student{
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.map-table{
     background-color: white;
     padding: 10px;
+    border-radius: 10px;
 }

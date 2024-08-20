@@ -122,7 +122,8 @@ exports.post_mentor_map = async (req, res) => {
       const checkQuery = `
         SELECT COUNT(*) AS count
         FROM mentor_student
-        WHERE mentor = ? AND student = ?;
+        WHERE mentor = ? AND student = ? 
+        AND status = '1';
       `;
       const [existingMapping] = await get_database(checkQuery, [mentor, s]);
 
@@ -238,5 +239,25 @@ exports.update_reject_leave = async(req, res)=>{
   catch(err){
     console.error("Error Updating  student leave reject", err);
     res.status(500).json({ error: "Error Updating student leave reject" });
+  }
+}
+
+exports.delete_mentorMap = async(req, res) =>{
+  const id = req.query.id
+  if(!id){
+    res.status(400).json({error:"Id is required.."})
+  }
+  try{
+    const query = `
+    UPDATE mentor_student
+    SET status = '0'
+    WHERE id = ?
+    `
+    const deleteMap = await post_database(query, [id])
+    res.json(deleteMap)
+  }
+  catch(err){
+    console.error("Error Deleteing  Mentor Map", err);
+    res.status(500).json({ error: "Error Deleteing  Mentor Map" });
   }
 }

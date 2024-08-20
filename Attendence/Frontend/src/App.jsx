@@ -1,4 +1,3 @@
-// App.js
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -19,6 +18,7 @@ import Nip from "./pages/Forms/nip/nip";
 import MapStudent from "./pages/Forms/mapStudent/mapStudent";
 import Student from "./pages/Students/student";
 import AdminDashboard from "./pages/Admin_Dashboard/admin_dashboard";
+import LeaveDetails from "./pages/Approvals/leave_approval";
 import Error from "./pages/error";
 import CryptoJS from "crypto-js";
 import { Toaster } from "react-hot-toast";
@@ -49,14 +49,14 @@ const ProtectedRoute = ({ children }) => {
   const gmail = decryptData(encryptedGmail, secretKey)
 
   useEffect(() => {
-    if (!token || !gmail) {
+    if (!token || !roleId) {
       setLoading(false);
       return;
     }
 
     const fetchAllowedRoutes = async () => {
       try {
-        const response = await requestApi("GET", `/auth/resources?gmail=${gmail}`);
+        const response = await requestApi("GET", `/auth/resources?role=${roleId}`);
         
         console.log("Allowed Routes Response:", response.data);
 
@@ -72,7 +72,7 @@ const ProtectedRoute = ({ children }) => {
     };
 
     fetchAllowedRoutes();
-  }, [gmail, token]);
+  }, [roleId, token]);
 
   // console.log("Allowed Routes:", allowedRoutes);
 
@@ -82,7 +82,7 @@ const ProtectedRoute = ({ children }) => {
     return children;
   }
 
-  if (!token || !gmail) {
+  if (!token || !roleId) {
     return <Navigate to="/attendance/login" />;
   }
 
@@ -199,6 +199,14 @@ function App() {
           element={
             <ProtectedRoute>
               <SemDates />
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/attendance/leave_approval"
+          element={
+            <ProtectedRoute>
+              <LeaveDetails />
             </ProtectedRoute>
           }
         />

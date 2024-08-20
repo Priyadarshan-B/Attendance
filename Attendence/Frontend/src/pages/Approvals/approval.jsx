@@ -168,7 +168,7 @@ function Body() {
         alignItems:'center'
       }}>
       <h2>Students Attendance Approvals</h2>
-      <div
+      {/* <div
         onClick={() => setShowLeave(true)}
         style={{ cursor: "pointer", color: "black" , backgroundColor:'#9fd3c7',
         padding:'8px',
@@ -177,7 +177,7 @@ function Body() {
          }}
       >
         Leave Approval
-      </div>
+      </div> */}
 </div>
         <div>
           <InputBox

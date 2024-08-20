@@ -38,21 +38,21 @@ AND rs.status = '1';
 exports.post_attendance = async (req, res) => {
     const { role, student, session } = req.body;
 
-    if (!role || !student || !session) {
-        return res.status(400).json({ error: "Role, student, and session IDs are required." });
-    }
-    const checkRole = `
-    SELECT role FROM roles_faculty
-    WHERE mentor = ?
-    AND status ='1';
-    `
-    const roleId = await get_database(checkRole, [role]) 
-    console.log(roleId)
-    if (roleId.length === 0) {
-        return res.status(404).json({ error: "Role not found or inactive." });
-    }
+    // if (!role || !student || !session) {
+    //     return res.status(400).json({ error: "Role, student, and session IDs are required." });
+    // }
+    // const checkRole = `
+    // SELECT role FROM roles_faculty
+    // WHERE mentor = ?
+    // AND status ='1';
+    // `
+    // const roleId = await get_database(checkRole, [role]) 
+    // console.log(roleId)
+    // if (roleId.length === 0) {
+    //     return res.status(404).json({ error: "Role not found or inactive." });
+    // }
 
-    const roleValue = roleId[0].role;
+    // const roleValue = roleId[0].role;
 
 
     try {
@@ -62,7 +62,7 @@ exports.post_attendance = async (req, res) => {
             AND student = ? 
             AND status = '1';
         `;
-        const fetchId = await get_database(query, [roleValue, student]);
+        const fetchId = await get_database(query, [role, student]);
 
         if (fetchId.length > 0) {
             const studentMapId = fetchId[0].id;

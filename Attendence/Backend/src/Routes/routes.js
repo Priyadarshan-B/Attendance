@@ -18,7 +18,7 @@ const map_role = require('../Controllers/mapStudent/mapStudent')
 const attendance = require('../Controllers/attendence/attendace_count')
 const role_student = require('../Controllers/mapStudent/mapAttendance')
 const dashboard = require('../Controllers/Dashboard/dashboard')
-
+const roleMap = require('../Controllers/Roles/roles')
 const router = express.Router()
 
 router.get("/mentor-students",mentor.get_students)
@@ -30,6 +30,7 @@ router.post("/mentor-mapping",mentor.post_mentor_map)
 router.get('/leave', mentor.get_leave)
 router.put('/leave', mentor.update_leave)
 router.put('/reject-leave', mentor.update_reject_leave)
+router.put('/mentor-map', mentor.delete_mentorMap)
 
 //student
 router.get('/student-year', student.get_all_students)
@@ -90,6 +91,8 @@ router.get('/type2_attendence', nip_att.get_att_slots)
 //mapStudent
 router.get('/map-role',map_role.get_map_role)
 router.post('/map-role', map_role.post_map_role)
+router.get('/role-student',map_role.get_role_student_map)
+router.put('/role-student', map_role.delete_Role_student_map)
 
 //count
 router.post('/att-count', attendance.checkAndInsertAttendance)
@@ -102,4 +105,7 @@ router.put('/role-student', role_student.delete_role_stu_att)
 //dashboard
 router.get('/dashboard',dashboard.get_dashboard_details)
 
+
+// role amp
+router.get('/role-map', roleMap.get_all_roles_map)
 module.exports = router

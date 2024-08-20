@@ -293,7 +293,7 @@ function Body() {
 
   return (
     <div>
-      <h3>Biometric Details - {roll} </h3>
+      {/* <h3>Biometric Details - {roll} </h3> */}
       <div className="attendance-percentage-and-status">
         <div className="student-details-container">
           <div

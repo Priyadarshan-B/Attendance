@@ -43,7 +43,7 @@ const Welcome = () => {
           const decryptGmail = CryptoJS.AES.decrypt(gmailCookie, secretKey)
           const decryptedGmail = decryptGmail.toString(CryptoJS.enc.Utf8)
 
-          requestApi("GET", `/auth/resources?gmail=${decryptedGmail}`)
+          requestApi("GET", `/auth/resources?role=${roleInt}`)
             .then((response) => {
               const allowedRoutes = response.data.map((route) => route.path);
 
@@ -52,9 +52,13 @@ const Welcome = () => {
               } else if (roleInt === 2 && allowedRoutes.includes("/attendance/dashboard")) {
                 navigate("/attendance/dashboard");
               } else if (roleInt === 3 && allowedRoutes.includes("/attendance/admin"))  {
-                navigate("/attendance/admin");
-              } else {
-                navigate("/attendance/error");
+                navigate("/attendance/admin");}
+              //  else if(roleInt === 4 || 5|| 6){
+              //   navigate("/attendance/role_attendance")
+              //  }
+              
+              else {
+                navigate("/attendance/role_attendance");
               }
             })
             .catch((error) => {

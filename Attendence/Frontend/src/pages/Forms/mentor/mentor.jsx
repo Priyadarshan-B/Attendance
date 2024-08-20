@@ -109,9 +109,10 @@ function Body() {
 
   const handleDelete = async (id) => {
     try {
-      await requestApi("DELETE", `/mentor/${id}`);
+      await requestApi("PUT", `/mentor-map?id=${id}`);
       setMentorList((prevList) => prevList.filter((mentor) => mentor.id !== id));
       toast.success("Mentor Mapped Deleted successfully!");
+      handleShowMentorList()
 
     } catch (error) {
       console.error("Error deleting mentor:", error);
@@ -166,7 +167,7 @@ function Body() {
       <div className="mentor-mapping-container">
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="mentor-select">Select Faculty(Mentor):</label>
+            <label htmlFor="mentor-select"> Faculty(Mentor):</label>
             <Select
               id="mentor-select"
               options={mentorOptions}
@@ -175,7 +176,7 @@ function Body() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="year-select">Select Year:</label>
+            <label htmlFor="year-select"> Year:</label>
             <Select
               id="year-select"
               options={yearOptions}
@@ -184,7 +185,7 @@ function Body() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="students-select">Select Students:</label>
+            <label htmlFor="students-select">Students:</label>
             <Select
               id="students-select"
               options={studentOptions}
