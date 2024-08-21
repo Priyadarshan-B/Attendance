@@ -58,12 +58,12 @@ const ProtectedRoute = ({ children }) => {
       try {
         const response = await requestApi("GET", `/auth/resources?role=${roleId}`);
         
-        console.log("Allowed Routes Response:", response.data);
+        // console.log("Allowed Routes Response:", response.data);
 
         const routes = response.data.map((route) => route.path);
         setAllowedRoutes(routes);
 
-        console.log("Allowed Routes After State Update:", routes);
+        // console.log("Allowed Routes After State Update:", routes);
       } catch (error) {
         console.error("Failed to fetch allowed routes", error);
       } finally {
@@ -86,7 +86,7 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/attendance/login" />;
   }
 
-  console.log("Current Location:", location.pathname);
+  // console.log("Current Location:", location.pathname);
 
   if (allowedRoutes.length > 0 && allowedRoutes.includes(location.pathname)) {
     return children;
