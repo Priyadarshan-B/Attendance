@@ -33,16 +33,22 @@
 
 .status-button{
   border: none;
-  padding: 8px;
-  border-radius: 20px;
-  font-weight: 500;
-  width: 90px;
+  padding: 5px 10px 7px 10px;
+  border-radius: 50px;
+  font-weight: 700;
   cursor: pointer;
   text-align: center;
+  
+ 
 }
 
-h2{
-  margin: 0;
+  h2{
+    margin: 0;
+  }
+
+.time{
+  background-color: rgba(147, 169, 188, 0.352);
+  border-radius: 5px;
 }
 
 .leave-container {

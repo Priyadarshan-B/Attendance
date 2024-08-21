@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import requestApi from "../../../components/utils/axios";
 import Select from "react-select";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import InputBox from "../../../components/TextBox/textbox";
 import Buttons from "../../../components/Button/Button";
 import toast from "react-hot-toast";
+import {  Delete } from "@mui/icons-material";
+import debounce from "lodash/debounce";
+
 import {
   Table,
   TableBody,
@@ -16,20 +17,20 @@ import {
   Paper,
   Button,
   TablePagination,
+  IconButton,
 } from "@mui/material";
 import "./mentor.css";
+import Popup from "../../../components/popup/popup";
 
 function MentorMapping() {
-  return <Body/>
+  return <Body />;
 }
 
 function Body() {
   const [mentors, setMentors] = useState([]);
-  // const deid = Cookies.get("id");
-  // const secretKey = "secretKey123";
-  // const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8)
   const [students, setStudents] = useState([]);
   const [selectedMentor, setSelectedMentor] = useState(null);
+  const [selectedSubMentor, setSelectedSubMentor] = useState(null); // New state for Sub-Mentor
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [showMentorList, setShowMentorList] = useState(false);
@@ -38,7 +39,8 @@ function Body() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [openPopup, setOpenPopup] = useState(false); // State for the popup
+  const [deleteId, setDeleteId] = useState(null); // State to hold the ID of the item to delete
 
   useEffect(() => {
     const fetchMentors = async () => {
@@ -75,20 +77,19 @@ function Body() {
     e.preventDefault();
     try {
       const response = await requestApi("POST", `/mentor-mapping`, {
-        mentor: selectedMentor.value,
+        mentor: selectedMentor?.value,
+        subMentor: selectedSubMentor?.value,
         student: selectedStudents.map((student) => student.value),
       });
       console.log("Mapping saved successfully:", response.data);
       toast.success("Mentor Mapped successfully!");
-      setSelectedMentor(null)
-      setSelectedStudents([])
-      setSelectedYear([])
-
-
+      setSelectedMentor(null);
+      setSelectedSubMentor(null);
+      setSelectedStudents([]);
+      setSelectedYear(null);
     } catch (error) {
       console.error("Error saving mapping:", error);
-      toast.error("Mentor Mapped is Failed");
-
+      toast.error("Mentor Mapping Failed");
     }
   };
 
@@ -98,26 +99,31 @@ function Body() {
       try {
         const response = await requestApi("GET", "/mentor-map");
         setMentorList(response.data);
-        setFilteredMentorList(response.data)
-
-        
+        setFilteredMentorList(response.data);
       } catch (error) {
         console.error("Error fetching mentor list:", error);
       }
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await requestApi("PUT", `/mentor-map?id=${id}`);
-      setMentorList((prevList) => prevList.filter((mentor) => mentor.id !== id));
-      toast.success("Mentor Mapped Deleted successfully!");
-      handleShowMentorList()
+  const handleDelete = (id) => {
+    setDeleteId(id); // Set the ID of the item to delete
+    setOpenPopup(true); // Open the popup
+  };
 
+  const handleConfirmDelete = async () => {
+    try {
+      await requestApi("PUT", `/mentor-map?id=${deleteId}`);
+      setMentorList((prevList) =>
+        prevList.filter((mentor) => mentor.id !== deleteId)
+      );
+      toast.success("Mentor Mapping Deleted successfully!");
+      handleShowMentorList();
     } catch (error) {
       console.error("Error deleting mentor:", error);
       toast.error("Error deleting Mentor Mapping");
-
+    } finally {
+      setOpenPopup(false); // Close the popup
     }
   };
 
@@ -147,13 +153,17 @@ function Body() {
     { value: "IV", label: "IV" },
   ];
 
+  const subMentorOptions = mentorOptions.filter(
+    (option) => option.value !== selectedMentor?.value
+  );
+
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchTerm(value);
     const filtered = mentorList.filter(
       (student) =>
         student.mentor.toLowerCase().includes(value) ||
-      student.student.toLowerCase().includes(value) ||
+        student.student.toLowerCase().includes(value) ||
         student.register_number.toLowerCase().includes(value)
     );
     setFilteredMentorList(filtered);
@@ -173,6 +183,17 @@ function Body() {
               options={mentorOptions}
               onChange={setSelectedMentor}
               value={selectedMentor}
+              isClearable
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="sub-mentor-select"> Sub-Faculty(Mentor):</label>
+            <Select
+              id="sub-mentor-select"
+              options={subMentorOptions}
+              onChange={setSelectedSubMentor}
+              value={selectedSubMentor}
+              isClearable
             />
           </div>
           <div className="form-group">
@@ -194,43 +215,52 @@ function Body() {
               isMulti
             />
           </div>
-        <Buttons
-        type="submit"
-        label="Submit Mapping"
-        />
+          <Buttons type="submit" label="Submit Mapping" />
         </form>
       </div>
 
-      <div style={{
-        display:'flex',
-        justifyContent:'right'
-      }}>
+      <div style={{ display: "flex", justifyContent: "right" }}>
         <Buttons
-        onClick={handleShowMentorList}
-        label={showMentorList ? "Hide Mentor List" : "Show Mentor Mapping List"}
+          onClick={handleShowMentorList}
+          label={
+            showMentorList ? "Hide Mentor List" : "Show Mentor Mapping List"
+          }
         />
       </div>
 
       {showMentorList && (
         <div>
           <div>
-          <InputBox
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="Search.."
-          />
-                </div>
-                <br />
+            <InputBox
+              value={searchTerm}
+              onChange={handleSearch}
+              placeholder="Search.."
+            />
+          </div>
+          <br />
           <Paper>
             <TableContainer>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell><b>ID</b></TableCell>
-                    <TableCell><b>Mentor</b></TableCell>
-                    <TableCell><b>Student</b></TableCell>
-                    <TableCell><b>Register Number</b></TableCell>
-                    <TableCell><b>Actions</b></TableCell>
+                    <TableCell>
+                      <b>ID</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Mentor</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Sub-Mentor</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Student</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Register Number</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Actions</b>
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -238,16 +268,20 @@ function Body() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => (
                       <TableRow key={row.id}>
-                        <TableCell>{index+1}</TableCell>
+                        <TableCell>{index + 1}</TableCell>
                         <TableCell>{row.mentor}</TableCell>
+                        <TableCell>{row.sub_mentor || "N/A"}</TableCell>
                         <TableCell>{row.student}</TableCell>
                         <TableCell>{row.register_number}</TableCell>
                         <TableCell>
-                          <Button
+                          <IconButton
                             onClick={() => handleDelete(row.id)}
+                            sx={{
+                              color: "red",
+                            }}
                           >
-                            Delete
-                          </Button>
+                            <Delete />
+                          </IconButton>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -265,6 +299,13 @@ function Body() {
           </Paper>
         </div>
       )}
+
+      <Popup
+        open={openPopup}
+        onClose={() => setOpenPopup(false)}
+        onConfirm={handleConfirmDelete}
+        text="Are you sure you want to delete this mentor mapping?"
+      />
     </div>
   );
 }

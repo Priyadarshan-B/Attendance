@@ -3,7 +3,7 @@ const {get_database,post_database} = require('../../config/db_utils')
 exports.get_sem_dates = async(req, res)=>{
     try{
         const query = `
-        SELECT year, from_date, to_date
+        SELECT id, year, from_date, to_date
         FROM sem_date
         WHERE status = '1';
         `
@@ -41,3 +41,47 @@ exports.post_sem_dates = async (req, res) => {
         res.status(500).json({ error: "Error saving semester dates" });
     }
 };
+
+exports.update_dates = async(req, res)=>{
+    const {id, from_date, to_date} = req.body
+    if(!id || !from_date || !to_date){
+        res.status(400).json({error: "Id and dates are required.."})
+    }
+    try{
+        const query = `
+        UPDATE sem_date
+        SET from_date = ?,
+        to_date = ?
+        WHERE id = ? AND 
+        status = '1'
+        `
+        const updateDate = await post_database(query, [from_date,to_date, id])
+        res.json(updateDate)
+    }
+    catch(err){
+        console.error("Error Updating Sem dates:", err);
+        res.status(500).json({ error: "Error Updating semester dates" });
+    }
+
+}
+exports.delete_dates = async(req, res)=>{
+    const {id }= req.body
+    if(!id ){
+        res.status(400).json({error: "Id required.."})
+    }
+    try{
+        const query = `
+        UPDATE sem_date
+        SET status = '0'
+        WHERE id = ? AND 
+        status = '1'
+        `
+        const updateDate = await post_database(query, [id])
+        res.json(updateDate)
+    }
+    catch(err){
+        console.error("Error Updating Sem dates:", err);
+        res.status(500).json({ error: "Error Updating semester dates" });
+    }
+
+}

@@ -10,7 +10,7 @@ const {get_database, post_database} = require('./config/db_utils')
 const { update_7_days } = require('./Controllers/attendence/biometric'); 
 const {update_biometrics} = require('./Controllers/attendence/biometric')
 const {get_AttendanceCount} = require('./Controllers/attendence/attendence')
-
+const {get_attendance_details} = require('./Controllers/Percentage/percentage')
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 //routes
@@ -60,10 +60,15 @@ const processAttendanceForAllStudents = async () => {
       return;
     }
 
-    for (const student of students) {
-      const studentId = student.id;
+    for (const stud of students) {
+      const studentId = stud.id;
+      const student = stud.id
       await get_AttendanceCount(
         { query: { studentId } }, 
+        { status: () => ({ json: () => {} }) }
+      );
+      await get_attendance_details(
+        { query: { student} }, 
         { status: () => ({ json: () => {} }) }
       );
     }
@@ -93,7 +98,7 @@ cron.schedule('43 00 * * *', async () => {
   }
 });
 
-cron.schedule('30 12 * * *', async () => {
+cron.schedule('32 14 * * *', async () => {
   try {
       console.log('Executing update_biometrics cron job...');
       await update_biometrics();

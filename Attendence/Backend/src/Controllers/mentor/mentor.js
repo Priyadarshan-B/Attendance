@@ -23,11 +23,11 @@ exports.get_students = async (req, res) => {
   }
   try {
     const query = `
-   SELECT s.id, s.name, s.register_number, s.att_status
-FROM students s
-JOIN mentor_student ms ON s.id = ms.student
-WHERE ms.mentor = ?
-AND s.status = '1';
+    SELECT s.id, s.name, s.register_number, s.att_status
+  FROM students s
+  JOIN mentor_student ms ON s.id = ms.student
+  WHERE ms.mentor = ?
+  AND ms.status = '1';
 
     `;
 
@@ -88,13 +88,22 @@ AND s.status = '1';
 exports.get_mentor_map = async(req, res) => {
   try{
     const query = `
-      SELECT mentor_student.id, mentor.name AS mentor, students.name AS student , students.register_number
-      FROM mentor_student
-      INNER JOIN mentor
-      on mentor_student.mentor = mentor.id
-      INNER JOIN students
-      ON mentor_student.student = students.id
-      WHERE mentor_student.status = '1';
+      SELECT 
+    mentor_student.id, 
+    mentor.name AS mentor, 
+    sub_mentor.name AS sub_mentor, 
+    students.name AS student, 
+    students.register_number
+FROM 
+    mentor_student
+INNER JOIN 
+    mentor ON mentor_student.mentor = mentor.id
+LEFT JOIN 
+    mentor AS sub_mentor ON mentor_student.sub_mentor = sub_mentor.id
+INNER JOIN 
+    students ON mentor_student.student = students.id
+WHERE 
+    mentor_student.status = '1';
     `
     const get_mentor_map = await get_database(query)
     res.json(get_mentor_map)
@@ -107,7 +116,7 @@ exports.get_mentor_map = async(req, res) => {
 
 
 exports.post_mentor_map = async (req, res) => {
-  const { mentor, student } = req.body;
+  const { mentor,sub_mentor, student } = req.body;
   
   if (!Array.isArray(student) || student.length === 0) {
     return res.status(400).json({ error: "Student array is required and must not be empty." });
@@ -122,7 +131,7 @@ exports.post_mentor_map = async (req, res) => {
       const checkQuery = `
         SELECT COUNT(*) AS count
         FROM mentor_student
-        WHERE mentor = ? AND student = ? 
+        WHERE mentor = ? AND student = ? AND sub_mentor=? 
         AND status = '1';
       `;
       const [existingMapping] = await get_database(checkQuery, [mentor, s]);
@@ -145,10 +154,10 @@ exports.post_mentor_map = async (req, res) => {
       }
 
       const insertQuery = `
-        INSERT INTO mentor_student (mentor, student)
-        VALUES (?, ?);
+        INSERT INTO mentor_student (mentor,sub_mentor, student)
+        VALUES (?,?,?);
       `;
-      await post_database(insertQuery, [mentor, s]);
+      await post_database(insertQuery, [mentor,sub_mentor, s]);
       successfulMappings.push({ student: s, message: "Mapping successful." });
     }
 
@@ -261,3 +270,27 @@ exports.delete_mentorMap = async(req, res) =>{
     res.status(500).json({ error: "Error Deleteing  Mentor Map" });
   }
 }
+
+exports.get_sub_students = async (req, res) => {
+  const sub_mentor = req.query.sub_mentor;
+
+  if (!sub_mentor) {
+    return res.status(400).json({ error: "Mentor Id not found" });
+  }
+  try {
+    const query = `
+    SELECT s.id, s.name, s.register_number, s.att_status
+  FROM students s
+  JOIN mentor_student ms ON s.id = ms.student
+  WHERE ms.sub_mentor = ?
+  AND ms.status = '1';
+
+    `;
+
+    const students = await get_database(query, [sub_mentor]);
+    res.json(students);
+  } catch (err) {
+    console.error("Error Fetching Mentor-Student List", err);
+    res.status(500).json({ error: "Error fetching Mentor-Student List" });
+  }
+};

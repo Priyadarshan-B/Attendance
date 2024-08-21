@@ -11,8 +11,10 @@ import TravelExploreTwoToneIcon from '@mui/icons-material/TravelExploreTwoTone';
 import ExploreTwoToneIcon from '@mui/icons-material/ExploreTwoTone';
 import DangerousTwoToneIcon from '@mui/icons-material/DangerousTwoTone';
 import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone';
-// import colors from "react-multi-date-picker/plugins/colors";
-
+// import colors from "react-multi-date-picker/pluginsDashboardRoundedIcon/colors";
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import HikingRoundedIcon from '@mui/icons-material/HikingRounded';
+import { ColorizeRounded, Padding } from "@mui/icons-material";
 function getIconComponent(iconPath) {
   switch (iconPath) {
     case "TravelExploreTwoToneIcon":
@@ -27,6 +29,10 @@ function getIconComponent(iconPath) {
       return ExploreTwoToneIcon;
     case "CalendarMonthTwoToneIcon":
       return CalendarMonthTwoToneIcon;
+      case "DashboardRoundedIcon":
+      return DashboardRoundedIcon;
+      case "HikingRoundedIcon":
+      return HikingRoundedIcon;
     default:
       // If the icon path is not found, return a default icon or null
       return null;
@@ -78,7 +84,8 @@ function SideBar(props) {
     <div
       className={props.open ? "app-sidebar sidebar-open" : "app-sidebar"}
       style={{
-        backgroundColor: "#f4f6fa",
+        backgroundColor: "#ffffff",
+        borderRight:"1px solid #f2f2f2"
         // borderRight: "0.1px solid rgba(128, 128, 128, 0.296)"
       }}
     >
@@ -90,7 +97,7 @@ function SideBar(props) {
             onClick={() => setActiveItem(item.name)}
           >
             <Link className="link" to={item.path}>
-              {getIconComponent(item.icon_path) && React.createElement(getIconComponent(item.icon_path), { sx: { marginRight: "10px", color:"#1c0c6a" } })}
+              {getIconComponent(item.icon_path) && React.createElement(getIconComponent(item.icon_path), { sx: { marginRight: "10px", color:"#1c0c6a", backgroundColor:"white", color:"#2c7cf3", padding:"2px", borderRadius:"5px" } })}
               {item.name}
             </Link>
           </li>

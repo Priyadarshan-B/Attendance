@@ -19,6 +19,7 @@ const attendance = require('../Controllers/attendence/attendace_count')
 const role_student = require('../Controllers/mapStudent/mapAttendance')
 const dashboard = require('../Controllers/Dashboard/dashboard')
 const roleMap = require('../Controllers/Roles/roles')
+const placement = require('../Controllers/placement/placement')
 const router = express.Router()
 
 router.get("/mentor-students",mentor.get_students)
@@ -31,6 +32,7 @@ router.get('/leave', mentor.get_leave)
 router.put('/leave', mentor.update_leave)
 router.put('/reject-leave', mentor.update_reject_leave)
 router.put('/mentor-map', mentor.delete_mentorMap)
+router.get('/sub-mentor', mentor.get_sub_students)
 
 //student
 router.get('/student-year', student.get_all_students)
@@ -75,7 +77,8 @@ router.post('/dates',dates.post_dates)
 //semDates
 router.get('/sem-dates', semDates.get_sem_dates)
 router.post('/sem-dates',semDates.post_sem_dates)
-
+router.put('/sem-dates', semDates.update_dates)
+router.put('/sem-date',semDates.delete_dates)
 //percentage
 router.get('/percent',percentage.get_attendance_details)
 
@@ -108,4 +111,8 @@ router.get('/dashboard',dashboard.get_dashboard_details)
 
 // role amp
 router.get('/role-map', roleMap.get_all_roles_map)
+
+//placement
+router.get('/placement', placement.get_placement)
+router.get('/placementSub', placement.get_placement_subMentor)
 module.exports = router

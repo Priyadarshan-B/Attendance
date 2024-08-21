@@ -25,9 +25,7 @@ function calculateTimeLeft() {
   const getNextWednesday = () => {
     const now = new Date();
     const nextWednesday = new Date(
-      now.setDate(
-        now.getDate() + ((3 + 7 - now.getDay()) % 7 || 7)
-      )
+      now.setDate(now.getDate() + ((3 + 7 - now.getDay()) % 7 || 7))
     );
     nextWednesday.setHours(0, 0, 0, 0);
     return nextWednesday;
@@ -50,18 +48,18 @@ function calculateTimeLeft() {
 }
 
 function Approvals() {
-  return <AppLayout rId={1} body={<Body />} />
+  return <AppLayout rId={1} body={<Body />} />;
 }
 
 function Body() {
   const [students, setStudents] = useState([]);
-  const [showLeave,setShowLeave] = useState(false)
+  const [showLeave, setShowLeave] = useState(false);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const id = Cookies.get("id");
   const secretKey = "secretKey123";
-  const deid = CryptoJS.AES.decrypt(id, secretKey).toString(CryptoJS.enc.Utf8)
+  const deid = CryptoJS.AES.decrypt(id, secretKey).toString(CryptoJS.enc.Utf8);
   const [searchTerm, setSearchTerm] = useState("");
   const [openApprovePopup, setOpenApprovePopup] = useState(false);
   const [selectedStudentIndex, setSelectedStudentIndex] = useState(null);
@@ -157,28 +155,22 @@ function Body() {
 
   return (
     <div>
-      <div style={{
-      display:'flex',
-      flexDirection:'column',
-      gap:'20px'
-    }}>
-      <div style={{
-        display:'flex',
-        justifyContent:'space-between',
-        alignItems:'center'
-      }}>
-      <h2>Students Attendance Approvals</h2>
-      {/* <div
-        onClick={() => setShowLeave(true)}
-        style={{ cursor: "pointer", color: "black" , backgroundColor:'#9fd3c7',
-        padding:'8px',
-        borderRadius:'5px'
-
-         }}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
       >
-        Leave Approval
-      </div> */}
-</div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <h2>Students Attendance Approvals</h2>
+        </div>
         <div>
           <InputBox
             value={searchTerm}
@@ -223,28 +215,42 @@ function Body() {
                         <b>{student.register_number}</b>
                       </TableCell>
                       <TableCell>
-                        <button className="status-button"
+                        <button
+                          className="status-button"
                           style={{
                             backgroundColor:
                               student.att_status === "1"
-                                ? "grey"
-                                : "#189142",
-                            color: "#fff",
-                           
+                                ? "#e6faf0"
+                                : "#fde8e8", 
+                            color: 
+                              student.att_status === '1'
+                           ? "#2ECC71"
+                           :"red", 
+                          //  border: '0.1px solid ',
+                          //   borderColor:
+                          //     student.att_status === "1"
+                          //       ? "#90e9bb"
+                          //       : "#f49998", 
+                            cursor:
+                              student.att_status === "1"
+                                ? "not-allowed"
+                                : "pointer", // Disable pointer when status is "1"
                           }}
                           onClick={() => handleApprove(index)}
-                          disabled={student.att_status === "1"}
+                          disabled={student.att_status === "1"} // Disabled when status is "1"
                         >
                           {student.att_status === "1" ? "Approved" : "Approve"}
                         </button>
                       </TableCell>
                       <TableCell>
                         {student.att_status === "1" ? (
-                          <span style={{ color: "#493d88" }}>
-                            <b>
+                          <span style={{
+                            color:'black'
+                          }} >
+                            <p className="time">
                               {timeLeft.days}d {timeLeft.hours}h{" "}
                               {timeLeft.minutes}m {timeLeft.seconds}s
-                            </b>
+                            </p>
                           </span>
                         ) : (
                           "--"

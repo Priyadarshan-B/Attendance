@@ -19,6 +19,7 @@ import MapStudent from "./pages/Forms/mapStudent/mapStudent";
 import Student from "./pages/Students/student";
 import AdminDashboard from "./pages/Admin_Dashboard/admin_dashboard";
 import LeaveDetails from "./pages/Approvals/leave_approval";
+import Placement from "./pages/Placement/placement";
 import Error from "./pages/error";
 import CryptoJS from "crypto-js";
 import { Toaster } from "react-hot-toast";
@@ -58,12 +59,12 @@ const ProtectedRoute = ({ children }) => {
       try {
         const response = await requestApi("GET", `/auth/resources?role=${roleId}`);
         
-        // console.log("Allowed Routes Response:", response.data);
+        console.log("Allowed Routes Response:", response.data);
 
         const routes = response.data.map((route) => route.path);
         setAllowedRoutes(routes);
 
-        // console.log("Allowed Routes After State Update:", routes);
+        console.log("Allowed Routes After State Update:", routes);
       } catch (error) {
         console.error("Failed to fetch allowed routes", error);
       } finally {
@@ -74,7 +75,7 @@ const ProtectedRoute = ({ children }) => {
     fetchAllowedRoutes();
   }, [roleId, token]);
 
-  // console.log("Allowed Routes:", allowedRoutes);
+  console.log("Allowed Routes:", allowedRoutes);
 
   if (loading) return <div>Loading...</div>;
 
@@ -135,6 +136,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/attendance/placement"
+          element={
+            <ProtectedRoute>
+              <Placement />
             </ProtectedRoute>
           }
         />

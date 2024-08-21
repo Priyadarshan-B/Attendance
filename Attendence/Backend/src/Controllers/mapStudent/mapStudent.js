@@ -1,4 +1,3 @@
-const { query } = require("express");
 const { get_database, post_database } = require("../../config/db_utils");
 
 exports.get_map_role = async (req, res)=>{

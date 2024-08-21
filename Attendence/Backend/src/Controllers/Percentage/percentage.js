@@ -1,9 +1,8 @@
-const { get_database } = require("../../config/db_utils");
+const { get_database, post_database } = require("../../config/db_utils");
 
 exports.get_attendance_details = async (req, res) => {
   const student = req.query.student;
   try {
-    // Fetch student's year
     const studentQuery = `SELECT year FROM students WHERE id = ?`;
     const studentData = await get_database(studentQuery, [student]);
     if (!studentData.length) {
@@ -11,7 +10,6 @@ exports.get_attendance_details = async (req, res) => {
     }
     const studentYear = studentData[0].year;
 
-    // Fetch semester dates for the student's year
     const semQuery = `
       SELECT from_date, to_date 
       FROM sem_date 
@@ -22,15 +20,12 @@ exports.get_attendance_details = async (req, res) => {
     }
     const { from_date, to_date } = semDates[0];
 
-    // Fetch holidays
     const holidaysQuery = `SELECT dates FROM holidays WHERE status = '1'`;
     const holidaysData = await get_database(holidaysQuery);
     const holidays = holidaysData.map((holiday) => holiday.dates);
 
-    // Prepare placeholders for the holidays array
-    const placeholders = holidays.map(() => '?').join(',');
+const placeholders = holidays.length > 0 ? holidays.map(() => '?').join(',') : 0;
 
-    // Calculate total days from from_date to to_date excluding Sundays and holidays
     const totalDaysQuery = `
       SELECT COUNT(*) AS total_days
       FROM (
@@ -115,6 +110,27 @@ exports.get_attendance_details = async (req, res) => {
     AND status ='1';
     `
     const preAb = await get_database(presentAbsent, [student])
+    const checkStudentQuery = `
+    SELECT COUNT(*) AS student_count 
+    FROM placement_data 
+    WHERE student = ?
+  `;
+  const studentExists = await get_database(checkStudentQuery, [student]);
+
+  if (studentExists[0].student_count > 0) {
+    const updateQuery = `
+      UPDATE placement_data 
+      SET att_percent = ? 
+      WHERE student = ?
+    `;
+    await post_database(updateQuery, [attendancePercentage, student]);
+  } else {
+    const insertQuery = `
+      INSERT INTO placement_data (student, att_percent) 
+      VALUES (?, ?)
+    `;
+    await post_database(insertQuery, [student, attendancePercentage]);
+  }
     res.json({
       present_days,
       absent_days: absentDays,
@@ -122,7 +138,17 @@ exports.get_attendance_details = async (req, res) => {
       current_days: currentDays,
       attendance_percentage: attendancePercentage.toFixed(2),
       present_absent:preAb,
+
     });
+
+    // if(attendancePercentage.length >0 ){
+    //   const query = `
+    //   INSERT INTO placement_data (att_percent) VALUES(?)
+    //   WHERE student = ?
+    //   `
+    //   const att_percent = await post_database(query, [student])
+    //   res.json(att_percent)
+    // }
   } catch (err) {
     console.error("Error calculating attendance details", err);
     res.status(500).json({ error: "Error calculating attendance details" });

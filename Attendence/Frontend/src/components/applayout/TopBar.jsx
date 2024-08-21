@@ -38,13 +38,13 @@ function TopBar(props) {
     <div
       className="app-topbar"
       style={{
-        backgroundColor: "#f4f6fa",
+        backgroundColor: "#ffffff",
         display: "flex",
         padding: "10px 10px",
         justifyContent: "space-between",
         alignItems: "center",
         gap: 20,
-        // borderBottom: "0.1px solid rgba(128, 128, 128, 0.296)"
+        borderBottom:"1px solid #f2f2f2"
       }}
     >
       <div
@@ -58,7 +58,7 @@ function TopBar(props) {
         <div onClick={props.sidebar} className="sidebar-menu">
           <MenuRoundedIcon sx={{ color: "#472d2d", cursor: "pointer" }} />
         </div>
-        <div className="app-name"><QueryStatsTwoToneIcon sx={{ fontSize: "30px", color: "#1c0c6a" }} />ATTENDANCE</div>
+        <div className="app-name">ATTENDANCE</div>
       </div>
       <div className="topbar-right-content">
         <div>

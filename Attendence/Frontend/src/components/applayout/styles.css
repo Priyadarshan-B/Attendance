@@ -66,8 +66,8 @@
 
 .menu-active,
 .menu-item:hover {
-    background-color: black;
-    color: rgb(14, 120, 220);
+    /* background-color: black; */
+    /* color: rgb(14, 120, 220); */
 }
 
 .menu-item:hover {
@@ -91,6 +91,7 @@
     padding: 12px;
     padding-bottom: 80px;
     font-family: "Hind", sans-serif;
+    background-color: #f4f6fa;
 }
 
 .sidebar-menu {
@@ -154,7 +155,7 @@
 .app-name {
     margin: 0px 10px;
     font-weight: 700;
-    color: rgba(0, 0, 0, 0.885);
+    color: #393939;
     font-size: 20px;
     letter-spacing: 3px;
     display: flex;
@@ -181,21 +182,23 @@
 }
 
 .list-items:hover {
-    background-color: #929098;
+    background-color: #dfe7f7;
 }
 
 .list-items.active {
-    background-color: #000000;
+    background-color: rgb(44, 124, 243);
+    
 }
 
 .list-items.active .link {
-    color: white;
+  
     /* border-left: 5px solid #493d88; */
+    color: white;
     transition: all 0.5s;
 }
 
 .list-items:hover .link {
-    color: #ffffff;
+    /* color: black; */
 }
 
 .link {

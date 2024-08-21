@@ -1,25 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
 import AppLayout from "../../../components/applayout/AppLayout";
-import '../../../components/applayout/styles.css'
+import '../../../components/applayout/styles.css';
 import requestApi from "../../../components/utils/axios";
 import Button from "../../../components/Button/Button";
 import toast from "react-hot-toast";
 import './nip.css';
+import debounce from 'lodash/debounce'; 
 
 function Nip() {
     return <Body />;
 }
 
 function Body() {
-    const [type1Options, setType1Options] = useState([]); // Separate state for Type 1 options
-    const [type2Options, setType2Options] = useState([]); // Separate state for Type 2 options
-    const [selectedType1Options, setSelectedType1Options] = useState([]); // Selected options for Type 1
-    const [selectedType2Options, setSelectedType2Options] = useState([]); // Selected options for Type 2
+    const [type1Options, setType1Options] = useState([]);
+    const [type2Options, setType2Options] = useState([]);
+    const [selectedType1Options, setSelectedType1Options] = useState([]);
+    const [selectedType2Options, setSelectedType2Options] = useState([]);
+    const [searchTermType1, setSearchTermType1] = useState(''); // Search term for Type 1
+    const [searchTermType2, setSearchTermType2] = useState(''); // Search term for Type 2
 
-    // Fetch Type 1 Students
-    const fetchType1Students = () => {
-        requestApi("GET", '/get-type1')
+    const fetchType1Students = useCallback(debounce((query) => {
+        requestApi("GET", `/get-type1?search=${query}`)
             .then(response => {
                 const data = response.data.map(item => ({
                     value: item.id,
@@ -30,11 +32,11 @@ function Body() {
             .catch(error => {
                 console.error("Error fetching Type 1 students", error);
             });
-    };
+    }, 300), []); // Debounce to limit API calls
 
-    // Fetch Type 2 Students
-    const fetchType2Students = () => {
-        requestApi("GET", '/get-type2')
+    // Fetch Type 2 Students with search query
+    const fetchType2Students = useCallback(debounce((query) => {
+        requestApi("GET", `/get-type2?search=${query}`)
             .then(response => {
                 const data = response.data.map(item => ({
                     value: item.id,
@@ -45,12 +47,12 @@ function Body() {
             .catch(error => {
                 console.error("Error fetching Type 2 students", error);
             });
-    };
+    }, 300), []); // Debounce to limit API calls
 
     useEffect(() => {
-        fetchType1Students();
-        fetchType2Students();
-    }, []);
+        fetchType1Students(searchTermType1);
+        fetchType2Students(searchTermType2);
+    }, [searchTermType1, searchTermType2, fetchType1Students, fetchType2Students]);
 
     const handleType1Change = selected => {
         setSelectedType1Options(selected);
@@ -65,9 +67,8 @@ function Body() {
         requestApi("PUT", '/change-type2', ids)
             .then(response => {
                 toast.success("Students changed to Type 2 successfully!");
-                fetchType1Students();
-                fetchType2Students();
                 setSelectedType1Options([]); // Reset selected options after submission
+                setSearchTermType1(''); // Clear search term
             })
             .catch(error => {
                 toast.error("Error changing students to Type 2.");
@@ -80,9 +81,8 @@ function Body() {
         requestApi("PUT", '/change-type1', ids)
             .then(response => {
                 toast.success("Students changed to Type 1 successfully!");
-                fetchType1Students();
-                fetchType2Students();
                 setSelectedType2Options([]); // Reset selected options after submission
+                setSearchTermType2(''); // Clear search term
             })
             .catch(error => {
                 toast.error("Error changing students to Type 1.");
@@ -99,7 +99,8 @@ function Body() {
                     options={type1Options}
                     onChange={handleType1Change}
                     value={selectedType1Options}
-                    placeholder="Select students..."
+                    placeholder="Search students..."
+                    onInputChange={(inputValue) => setSearchTermType1(inputValue)}
                 />
                 <Button onClick={handleSubmitType1} label="Submit" />
             </div>
@@ -111,7 +112,8 @@ function Body() {
                     options={type2Options}
                     onChange={handleType2Change}
                     value={selectedType2Options}
-                    placeholder="Select students..."
+                    placeholder="Search students..."
+                    onInputChange={(inputValue) => setSearchTermType2(inputValue)}
                 />
                 <Button onClick={handleSubmitType2} label="Submit" />
             </div>

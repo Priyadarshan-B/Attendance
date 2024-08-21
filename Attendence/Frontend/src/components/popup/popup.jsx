@@ -20,18 +20,18 @@ const Popup = ({ open, onClose, onConfirm, text }) => {
       <DialogActions>
         <Button
           onClick={onClose}
-          style={{ color: 'black' }} // Change the color here
+          style={{ color: 'black' }} 
         >
           Cancel
         </Button>
         <Button
           onClick={onConfirm}
-          style={{ color: 'blue' }} // Change the color here
+          style={{ color: 'blue' }} 
         >
           Confirm
         </Button>
       </DialogActions>
-    </Dialog>
+    </Dialog> 
   );
 };
 
