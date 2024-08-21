@@ -92,7 +92,7 @@ router.put('/change-type1', change.post_changeStu_type1)
 router.get('/type2_attendence', nip_att.get_att_slots)
 
 //mapStudent
-router.get('/map-role',map_role.get_map_role)
+router.get('/map-role-select',map_role.get_map_role)
 router.post('/map-role', map_role.post_map_role)
 router.get('/role-student',map_role.get_role_student_map)
 router.put('/role-student', map_role.delete_Role_student_map)
@@ -101,9 +101,9 @@ router.put('/role-student', map_role.delete_Role_student_map)
 router.post('/att-count', attendance.checkAndInsertAttendance)
 
 //role_student
-router.get('/role-student', role_student.get_role_student)
+router.get('/mapped-student', role_student.get_role_student)
 router.post('/role-student', role_student.post_attendance)
-router.put('/role-student', role_student.delete_role_stu_att)
+// router.put('/role-student', role_student.delete_role_stu_att)//removed..
 
 //dashboard
 router.get('/dashboard',dashboard.get_dashboard_details)

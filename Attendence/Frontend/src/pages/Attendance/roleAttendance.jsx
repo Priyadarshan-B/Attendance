@@ -21,18 +21,19 @@ function Body() {
   const [sessions, setSessions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const deid = Cookies.get("id");
+  const deid = Cookies.get("role");
   const secretKey = "secretKey123";
-  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8)
+  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
 
-  const derole = Cookies.get("role")
-  const role = CryptoJS.AES.decrypt(derole, secretKey).toString(CryptoJS.enc.Utf8)
+  const derole = Cookies.get("role");
+  const role = CryptoJS.AES.decrypt(derole, secretKey).toString(CryptoJS.enc.Utf8);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const studentResponse = await requestApi(
           "GET",
-          `/role-student?role=${id}`
+          `/mapped-student?role=${id}`
         );
         setData(studentResponse.data);
         setFilterData(studentResponse.data);
@@ -76,22 +77,16 @@ function Body() {
         (record) => record.student === studentId && record.session === sessionId
       );
 
-      if (isChecked) {
+      if (!isChecked) {
         await requestApi("POST", "/role-student", {
           role: role, 
           student: studentId,
           session: sessionId,
         });
-        toast.success("Attendance Logged")
+        console.log(role, studentId, sessionId)
+        toast.success("Attendance Logged");
       } else {
-        console.log(sessionId , id)
-        await requestApi("POST", "/role-student", {
-          role: role, 
-          student: studentId,
-          session: sessionId,
-        });
-        toast.success("Attendance Logged")
-
+        toast.error("Attendance already logged");
       }
 
       setAttendanceData((prev) => {
@@ -105,19 +100,8 @@ function Body() {
         }
       });
     } catch (error) {
-      toast.error("Failed to Log Attendance")
+      toast.error("Failed to Log Attendance");
       console.error("Error handling attendance data:", error);
-
-      if (error.response && error.response.data) {
-        alert(
-          `Error: ${
-            error.response.data.error ||
-            "An error occurred while handling attendance."
-          }`
-        );
-      } else {
-        alert("Student is not approved.");
-      }
     }
   };
 

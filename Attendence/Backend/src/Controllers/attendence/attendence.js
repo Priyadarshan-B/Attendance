@@ -226,36 +226,42 @@ exports.get_AttendanceCount = async (req, res) => {
       
         // Check role mapping
         const roleMapQuery = `
-          SELECT id 
-          FROM role_student_map 
-          WHERE student = ? AND status = '1';
-        `;
-        const roleMapResult = await get_database(roleMapQuery, [studentId]);
-        
-        if (roleMapResult.length > 0) {
-          const roleStudentId = roleMapResult[0].id;
-          const roleStudentQuery = `
-            SELECT DATE(attendance) AS present_day
-            FROM roles_student
-            WHERE student_map = ?
-            AND DATE(attendance) = CURRENT_DATE()
-            AND status = '1'
-            GROUP BY DATE(attendance)
-            HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE status = '1');
+            SELECT id 
+            FROM role_student_map 
+            WHERE student = ? AND status = '1';
           `;
-          const roleStudentRecords = await get_database(roleStudentQuery, [
-            roleStudentId,
-          ]);
-          
-          if (roleStudentRecords.length > 0) {
+          const roleMapResults = await get_database(roleMapQuery, [studentId]);
+          console.log(roleMapResults);
+
+          let allRolesHaveDistinctAttendance = true;
+
+          for (const roleMapResult of roleMapResults) {
+            const roleStudentId = roleMapResult.id;
+            const roleStudentQuery = `
+              SELECT DATE(attendance) AS present_day
+              FROM roles_student
+              WHERE student_map = ?
+              AND DATE(attendance) = CURRENT_DATE()
+              AND status = '1'
+              GROUP BY DATE(attendance)
+              HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE status = '1');
+            `;
+            const roleStudentRecords = await get_database(roleStudentQuery, [roleStudentId]);
+
+            if (roleStudentRecords.length === 0) {
+              allRolesHaveDistinctAttendance = false;
+              break; 
+            }
+          }
+
+          if (allRolesHaveDistinctAttendance) {
             forenoon = "1";
             afternoon = "1";
           } else {
             forenoon = "0";
             afternoon = "0";
           }
-        }
-      
+
         // Update or insert attendance records
         for (let date of attendanceDates) {
           const existingRecordQuery = `
@@ -359,38 +365,75 @@ exports.get_AttendanceCount = async (req, res) => {
           }
 
           // Additional check for students in role_student_map
+          // const roleMapQuery = `
+          //   SELECT id 
+          //   FROM role_student_map 
+          //   WHERE student = ? AND status = '1';
+          // `;
+          // const roleMapResult = await get_database(roleMapQuery, [studentId]);
+          // console.log(roleMapResult);
+
+          // if (roleMapResult.length > 0) {
+          //   const roleStudentId = roleMapResult[0].id;
+          //   const roleStudentQuery = `
+          //   SELECT DATE(attendance) AS present_day
+          //   FROM roles_student
+          //   WHERE student_map = ?
+          //   AND DATE(attendance) = CURRENT_DATE()
+          //   AND status = '1'
+          //   GROUP BY DATE(attendance)
+          //   HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE status = '1');
+          //   `;
+          //   const roleStudentRecords = await get_database(roleStudentQuery, [
+          //     roleStudentId,
+          //   //   date,
+          //   ]);
+          //   console.log(roleStudentRecords);
+          //   if (roleStudentRecords.length > 0) {
+          //     forenoon = "1";
+          //     afternoon = "1";
+          //   } else {
+          //     forenoon = "0";
+          //     afternoon = "0";
+          //   }
+          // }
           const roleMapQuery = `
             SELECT id 
             FROM role_student_map 
             WHERE student = ? AND status = '1';
           `;
-          const roleMapResult = await get_database(roleMapQuery, [studentId]);
-          console.log(roleMapResult);
+          const roleMapResults = await get_database(roleMapQuery, [studentId]);
+          console.log(roleMapResults);
 
-          if (roleMapResult.length > 0) {
-            const roleStudentId = roleMapResult[0].id;
+          let allRolesHaveDistinctAttendance = true;
+
+          for (const roleMapResult of roleMapResults) {
+            const roleStudentId = roleMapResult.id;
             const roleStudentQuery = `
-            SELECT DATE(attendance) AS present_day
-            FROM roles_student
-            WHERE student_map = ?
-            AND DATE(attendance) = CURRENT_DATE()
-            AND status = '1'
-            GROUP BY DATE(attendance)
-            HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE status = '1');
+              SELECT DATE(attendance) AS present_day
+              FROM roles_student
+              WHERE student_map = ?
+              AND DATE(attendance) = CURRENT_DATE()
+              AND status = '1'
+              GROUP BY DATE(attendance)
+              HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE status = '1');
             `;
-            const roleStudentRecords = await get_database(roleStudentQuery, [
-              roleStudentId,
-            //   date,
-            ]);
-            console.log(roleStudentRecords);
-            if (roleStudentRecords.length > 0) {
-              forenoon = "1";
-              afternoon = "1";
-            } else {
-              forenoon = "0";
-              afternoon = "0";
+            const roleStudentRecords = await get_database(roleStudentQuery, [roleStudentId]);
+
+            if (roleStudentRecords.length === 0) {
+              allRolesHaveDistinctAttendance = false;
+              break; // If any role doesn't have distinct attendance, break out of the loop
             }
           }
+
+          if (allRolesHaveDistinctAttendance) {
+            forenoon = "1";
+            afternoon = "1";
+          } else {
+            forenoon = "0";
+            afternoon = "0";
+          }
+
 
           const existingRecordQuery = `
             SELECT * FROM attendance 

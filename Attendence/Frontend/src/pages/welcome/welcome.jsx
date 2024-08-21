@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 import requestApi from "../../components/utils/axios";
+import Loader from "../../components/Loader/loader";
 
 const Welcome = () => {
   const [searchParams] = useSearchParams();
@@ -47,19 +48,17 @@ const Welcome = () => {
             .then((response) => {
               const allowedRoutes = response.data.map((route) => route.path);
 
-              if (roleInt === 1 && allowedRoutes.includes("/attendance/approval")) {
-                navigate("/attendance/approval");
-              } else if (roleInt === 2 && allowedRoutes.includes("/attendance/dashboard")) {
-                navigate("/attendance/dashboard");
-              } else if (roleInt === 3 && allowedRoutes.includes("/attendance/admin"))  {
-                navigate("/attendance/admin");}
-              //  else if(roleInt === 4 || 5|| 6){
-              //   navigate("/attendance/role_attendance")
-              //  }
-              
-              else {
-                navigate("/attendance/role_attendance");
-              }
+              setTimeout(() => { 
+                if (roleInt === 1 && allowedRoutes.includes("/attendance/approval")) {
+                  navigate("/attendance/approval");
+                } else if (roleInt === 2 && allowedRoutes.includes("/attendance/dashboard")) {
+                  navigate("/attendance/dashboard");
+                } else if (roleInt === 3 && allowedRoutes.includes("/attendance/admin")) {
+                  navigate("/attendance/admin");
+                } else {
+                  navigate("/attendance/role_attendance");
+                }
+              }, 500); 
             })
             .catch((error) => {
               console.error("Failed to fetch allowed routes", error);
@@ -85,7 +84,7 @@ const Welcome = () => {
 
   return (
     <div>
-      <h1>Welcome Page</h1>
+      <Loader/>
     </div>
   );
 };

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import Cookies from "js-cookie";
 import requestApi from "./components/utils/axios";
 import Login from "./pages/auth/Login/Login";
@@ -23,7 +29,7 @@ import Placement from "./pages/Placement/placement";
 import Error from "./pages/error";
 import CryptoJS from "crypto-js";
 import { Toaster } from "react-hot-toast";
-
+import Loader from "./components/Loader/loader";
 
 const decryptData = (encryptedData, secretKey) => {
   try {
@@ -40,14 +46,14 @@ const ProtectedRoute = ({ children }) => {
   const [allowedRoutes, setAllowedRoutes] = useState([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
-  const secretKey = "secretKey123"; 
+  const secretKey = "secretKey123";
   const encryptedToken = Cookies.get("token");
   const encryptedRole = Cookies.get("role");
-  const encryptedGmail = Cookies.get('gmail');
+  const encryptedGmail = Cookies.get("gmail");
 
   const token = decryptData(encryptedToken, secretKey);
   const roleId = decryptData(encryptedRole, secretKey);
-  const gmail = decryptData(encryptedGmail, secretKey)
+  const gmail = decryptData(encryptedGmail, secretKey);
 
   useEffect(() => {
     if (!token || !roleId) {
@@ -57,8 +63,11 @@ const ProtectedRoute = ({ children }) => {
 
     const fetchAllowedRoutes = async () => {
       try {
-        const response = await requestApi("GET", `/auth/resources?role=${roleId}`);
-        
+        const response = await requestApi(
+          "GET",
+          `/auth/resources?role=${roleId}`
+        );
+
         console.log("Allowed Routes Response:", response.data);
 
         const routes = response.data.map((route) => route.path);
@@ -68,7 +77,7 @@ const ProtectedRoute = ({ children }) => {
       } catch (error) {
         console.error("Failed to fetch allowed routes", error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -76,8 +85,8 @@ const ProtectedRoute = ({ children }) => {
   }, [roleId, token]);
 
   console.log("Allowed Routes:", allowedRoutes);
+  if (loading) return <Loader />;
 
-  if (loading) return <div>Loading...</div>;
 
   if (location.pathname === "/attendance/welcome") {
     return children;
@@ -87,7 +96,6 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/attendance/login" />;
   }
 
-  // console.log("Current Location:", location.pathname);
 
   if (allowedRoutes.length > 0 && allowedRoutes.includes(location.pathname)) {
     return children;
@@ -98,12 +106,10 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
-    
     <BrowserRouter>
       <Toaster position="top-center" reverseOrder={false} />
 
       <Routes>
-
         <Route path="*" element={<Error />} />
         <Route path="/attendance" element={<Login />} />
         <Route path="/attendance/login" element={<Login />} />
@@ -123,7 +129,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-         <Route
+        <Route
           path="/attendance/role_attendance"
           element={
             <ProtectedRoute>
@@ -139,7 +145,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-          <Route
+        <Route
           path="/attendance/placement"
           element={
             <ProtectedRoute>
@@ -147,7 +153,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-         <Route
+        <Route
           path="/attendance/student"
           element={
             <ProtectedRoute>
@@ -211,7 +217,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-         <Route
+        <Route
           path="/attendance/leave_approval"
           element={
             <ProtectedRoute>

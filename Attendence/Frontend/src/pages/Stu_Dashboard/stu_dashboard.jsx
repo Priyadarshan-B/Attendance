@@ -79,33 +79,33 @@ function Body() {
         console.error("Error fetching student details:", error);
       }
     };
-  
+
     const fetchAttendancePercent = async () => {
       try {
         const response = await requestApi("GET", `/percent?student=${id}`);
-    
+
         const { present_days, absent_days, total_days, current_days, attendance_percentage, present_absent } = response.data;
-    
+
         setAttendancePercent({
-          present_days : parseInt(present_days),
+          present_days: parseInt(present_days),
           absent_days,
           total_days,
           current_days,
           attendance_percentage,
           present_absent
         });
-    
+
         setPercent(parseFloat(attendance_percentage));
-    
+
         console.log("Attendance Percentage:", attendance_percentage);
-    
+
       } catch (error) {
         console.error("Error fetching attendance percent details:", error);
       }
     };
-   
-    
-    
+
+
+
     const fetchAttendanceRecords = async () => {
       try {
         const response = await requestApi(
@@ -123,16 +123,16 @@ function Body() {
         const response = await requestApi("GET", `/att-details?student=${roll}`);
         if (response.data.error) {
           setAttendanceDetails([]);
-          console.log(response.data.error); 
+          console.log(response.data.error);
         } else {
           setAttendanceDetails(response.data);
         }
       } catch (error) {
         console.error("Error fetching attendance details:", error);
-        setAttendanceDetails([]); 
+        setAttendanceDetails([]);
       }
     };
-    
+
 
     const fetchLeaveDetails = async () => {
       try {
@@ -252,7 +252,7 @@ function Body() {
             },
           },
         },
-       
+
       },
       fill: {
         colors: ["#00E396"],
@@ -292,15 +292,14 @@ function Body() {
 
 
   return (
-    <div>
-      {/* <h3>Biometric Details - {roll} </h3> */}
+    <div className="dashboard-flex">
+
       <div className="attendance-percentage-and-status">
         <div className="student-details-container">
           <div
             className="guage"
           >
             <h3>Attendance Percentage</h3>
-            <br />
             <div>
               <LiquidGauge
                 value={percent}
@@ -320,13 +319,7 @@ function Body() {
             </div>
           </div>
           <div
-            className="student-details "
-            style={{
-              backgroundColor: "white",
-              padding: "15px",
-              borderRadius: "10px",
-              boxShadow: "rgba(0, 0, 0, 0.09) 0px 3px 12px",
-            }}
+            className="student-details"
           >
             {/* <div className="detail-row">
               <div className="detail-label">Name:</div>
@@ -366,116 +359,133 @@ function Body() {
                 </div>
               </div>
             )}
-            
-            <div className="detail-row">
-  <div className="detail-label">Today's Attendance:</div>
-  <div
-    className="time"
-    style={{
-      fontSize: "17px",
-      fontWeight: "600",
-    }}
-  >
-    {attendancePercent.present_absent && attendancePercent.present_absent.length > 0 &&
-      attendancePercent.present_absent.map((attendance, index) => {
-        const forenoonStatus = attendance.forenoon === "1" ? "P" : "A";
-        const afternoonStatus = attendance.afternoon === "1" ? "P" : "A";
-        return (
-          <h4 key={index}>
-            {forenoonStatus} | {afternoonStatus}
-          </h4>
-        );
-      })
-    }
-  </div>
-</div>
 
-          
+            <div className="detail-row">
+              <div className="detail-label">Today's Attendance:</div>
+              <div
+                className="time"
+                style={{
+                  fontSize: "17px",
+                  fontWeight: "600",
+                }}
+              >
+                {attendancePercent.present_absent && attendancePercent.present_absent.length > 0 &&
+                  attendancePercent.present_absent.map((attendance, index) => {
+                    const forenoonStatus = attendance.forenoon === "1" ? "P" : "A";
+                    const afternoonStatus = attendance.afternoon === "1" ? "P" : "A";
+                    return (
+                      <h4 key={index}>
+                        {forenoonStatus} | {afternoonStatus}
+                      </h4>
+                    );
+                  })
+                }
+              </div>
+            </div>
+
+
           </div>
         </div>
         <div className="attendance-percent-container">
-          <h3>Attendance Details</h3>
-          <hr />
-          <br />
+          <h3 style={{ backgroundColor: "white", padding: "10px", margin: "0px 0px 0px 0px", borderRadius: "5px", boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px" }}>Attendance Details</h3>
 
           <div className="attendance-summary">
             <div className="summary-item">
               <div className="icons-flex">
-                <EventAvailableTwoToneIcon
-                  style={{
-                    color: "#4dcd6e",
-                    fontSize: "50px",
-                  }}
-                />
-                <p>
-                  <h4>Present</h4>
-                </p>
-                <b>{attendancePercent.present_days}</b>
-              </div>
-            </div>
-            <div className="summary-item">
-              <div className="icons-flex">
-                <EventBusyTwoToneIcon
-                  style={{
-                    color: "#ff6968",
-                    fontSize: "50px",
-                  }}
-                />
-                <p>
-                  <h4>Absent</h4>
-                </p>
-                <b>{attendancePercent.absent_days}</b>
-              </div>
-            </div>
-            <div className="summary-item">
-              <div className="icons-flex">
-                <div>
-                  <img
-                    src={calendar}
-                    alt="Total Days"
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                  <EventAvailableTwoToneIcon
                     style={{
-                      width: "45px",
+                      color: "#4dcd6e",
+                      fontSize: "30px",
                     }}
-                  ></img>
+                  />
+                  <p>
+                    <h4>Present Days</h4>
+                  </p>
                 </div>
-                <p>
-                  <h4>Total Days</h4>
-                </p>
-                <b>{attendancePercent.current_days}</b>
+                <hr style={{ width: "100%" }} />
+                <div style={{ fontWeight: "700", fontSize: "40px", marginTop: "10px" }}>
+                  <p>{attendancePercent.present_days}</p>
+                </div>
               </div>
             </div>
             <div className="summary-item">
               <div className="icons-flex">
-                <div>
-                  <img
-                    src={calendar}
-                    alt="Total Days"
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                  <EventBusyTwoToneIcon
                     style={{
-                      width: "45px",
+                      color: "#ff6968",
+                      fontSize: "30px",
                     }}
-                  ></img>
+                  />
+                  <p>
+                    <h4>Absent Days</h4>
+                  </p>
                 </div>
-                <p>
-                  <h4>Total Days (Sem)</h4>
-                </p>
-                <b>{attendancePercent.total_days}</b>
+                <hr style={{ width: "100%" }} />
+                <div style={{ fontWeight: "700", fontSize: "40px", marginTop: "10px" }}><b>{attendancePercent.absent_days}</b></div>
               </div>
             </div>
             <div className="summary-item">
               <div className="icons-flex">
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                  <div>
+                    <img
+                      src={calendar}
+                      alt="Total Days"
+                      style={{
+                        width: "30px",
+                        margin: "3px"
+                      }}
+                    ></img>
+                  </div>
+                  <p>
+                    <h4>Total Days</h4>
+                  </p>
+                </div>
+                <hr style={{ width: "100%" }} />
+                <div style={{ fontWeight: "700", fontSize: "40px", marginTop: "10px" }}><b>{attendancePercent.current_days}</b></div>
+              </div>
+            </div>
+            <div className="summary-item">
+              <div className="icons-flex">
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                  <div>
+                    <img
+                      src={calendar}
+                      alt="Total Days"
+                      style={{
+                        width: "30px",
+                      }}
+                    ></img>
+                  </div>
+                  
+                  <p>
+                    <h4>Total Days (Sem)</h4>
+                  </p>
+                </div>
+                <hr style={{width:"100%"}}/>
+                <div style={{ fontWeight: "700", fontSize: "40px", marginTop: "10px" }}><b>{attendancePercent.total_days}</b></div>
+              </div>
+            </div>
+            <div className="summary-item">
+              <div className="icons-flex">
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
                 <div>
                   <img
                     src={calendar}
                     alt="Total Days"
                     style={{
-                      width: "45px",
+                      width: "30px",
                     }}
                   ></img>
                 </div>
                 <p>
                   <h4>Attendance (%)</h4>
                 </p>
-                <b>{attendancePercent.attendance_percentage}</b>
+                </div>
+                <hr style={{width:"100%"}}/>
+                <div style={{ fontWeight: "700", fontSize: "40px", marginTop: "10px" }}><b>{attendancePercent.attendance_percentage}</b></div>
               </div>
             </div>
           </div>
@@ -512,17 +522,18 @@ function Body() {
               display: "flex",
               flexDirection: "column",
               backgroundColor: "white",
-              padding: "15px",
+              padding: "10px",
               borderRadius: "10px",
-              width: "90%",
-              boxShadow: "rgba(0, 0, 0, 0.09) 0px 3px 12px",
+              width: "100%",
+              border: "1px solid lightgray",
             }}
           >
             <h4>Today's Biometric Details - {todayDate}</h4>
+            <hr style={{ width: "100%" }} />
             {todayAttendance.length > 0 ? (
               todayAttendance.map((detail, index) => (
                 <div key={index} className="attendance-row">
-                  <b>Time</b> - {detail.time}
+                  <b>Time</b>{detail.time}
                 </div>
               ))
             ) : (
@@ -547,8 +558,8 @@ function Body() {
             <center>Biometric History</center>
           </h3>
           <br />
-          {otherAttendance.length > 0 ?(<div style={{
-            width:'100%'
+          {otherAttendance.length > 0 ? (<div style={{
+            width: '100%'
           }}>
             <TableContainer component={Paper}>
               <Table>
@@ -583,8 +594,8 @@ function Body() {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             </TableContainer>
-          </div>):(
-              <p>No attendance recorded for today.</p>
+          </div>) : (
+            <p>No attendance recorded for today.</p>
 
           )}
         </div>

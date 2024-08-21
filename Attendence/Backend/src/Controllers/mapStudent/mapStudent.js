@@ -42,22 +42,15 @@ exports.post_map_role = async (req, res) => {
     }
 
     try {
-        const checkQuery = `
-            SELECT COUNT(*) as count 
-            FROM role_student_map 
-            WHERE role = ? AND student = ? AND status = 1;
-        `;
-
         const insertQuery = `
             INSERT INTO role_student_map(role, student) 
-            VALUES (?, ?);
+            VALUES (?, ?)
+            ON DUPLICATE KEY UPDATE 
+            role = role;  -- No operation, just avoids inserting duplicates
         `;
 
         for (const studentId of studentIds) {
-            const [result] = await post_database(checkQuery, [roleId, studentId]);
-            if (result.count === 0) { 
-                await post_database(insertQuery, [roleId, studentId]);
-            }
+            await post_database(insertQuery, [roleId, studentId]);
         }
 
         res.status(200).json({ message: "Role mapping successful" });
@@ -66,6 +59,7 @@ exports.post_map_role = async (req, res) => {
         res.status(500).json({ error: "Error inserting role map details" });
     }
 };
+
 
 exports.update_role_student_map = async (req, res)=>{
     const id = req.query.id

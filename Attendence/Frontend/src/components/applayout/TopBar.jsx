@@ -8,6 +8,7 @@ import QueryStatsTwoToneIcon from '@mui/icons-material/QueryStatsTwoTone';
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 import requestApi from "../utils/axios";
+import logo from '../../assets/logo.png'
 
 
 function TopBar(props) {
@@ -40,7 +41,7 @@ function TopBar(props) {
       style={{
         backgroundColor: "#ffffff",
         display: "flex",
-        padding: "10px 10px",
+        padding: "5px 1px 0px 10px",
         justifyContent: "space-between",
         alignItems: "center",
         gap: 20,
@@ -58,6 +59,7 @@ function TopBar(props) {
         <div onClick={props.sidebar} className="sidebar-menu">
           <MenuRoundedIcon sx={{ color: "#472d2d", cursor: "pointer" }} />
         </div>
+        <div className="logo"> <img src={logo} alt="" height={'50px'} /></div>
         <div className="app-name">ATTENDANCE</div>
       </div>
       <div className="topbar-right-content">

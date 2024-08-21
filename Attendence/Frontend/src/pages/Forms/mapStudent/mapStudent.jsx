@@ -26,7 +26,7 @@ function Body() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    requestApi("GET", "/map-role")
+    requestApi("GET", "/map-role-select")
       .then((response) => {
         const formattedRoles = response.data.map((role) => ({
           value: role.id,
