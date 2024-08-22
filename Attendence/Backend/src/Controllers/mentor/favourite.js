@@ -1,0 +1,59 @@
+const { get_database, post_database } = require("../../config/db_utils");
+
+exports.get_favorites = async (req, res) => {
+  const mentor = req.query.mentor;
+  try {
+    const query = `
+        SELECT mentor.name,mentor.id AS mentor_id, students.id AS student_id,students.name, students.register_number
+        FROM favourites f
+        JOIN mentor ON f.mentor = mentor.id
+        JOIN students ON f.student = students.id
+        WHERE  f.mentor =?
+        AND f.status = '1'
+
+        `;
+    const favorites = await get_database(query, [mentor]);
+    res.json(favorites);
+  } catch (err) {
+    console.error("Error Fetching favourites List", err);
+    res.status(500).json({ error: "Error fetching favourites List" });
+  }
+};
+
+exports.post_favourites = async (req, res) => {
+  const { mentor, student } = req.body;
+  if ((!mentor, !student)) {
+    return res
+      .status(400)
+      .json({ erro: "Mentor and student ids are required.." });
+  }
+  try {
+    const query = `
+INSERT INTO favourites (mentor, student) VALUES(?,?);
+`;
+    const post_fav = await post_database(query, [mentor, student]);
+    res.json(post_fav);
+  } catch (err) {
+    console.error("Error Inserting favourites List", err);
+    res.status(500).json({ error: "Error Inserting favourites List" });
+  }
+};
+
+exports.delete_favourites = async (req, res) => {
+  const id = req.query.id;
+  if (!id) {
+    return res.status(400).json({ erro: "ids are required.." });
+  }
+  try {
+    const query = `
+        UPDATE favourites 
+        SET status = '1'
+        WHERE id = ?
+        `;
+    const delFav = await post_database(query, [id]);
+    res.json(delFav);
+  } catch (err) {
+    console.error("Mentor-Student List", err);
+    res.status(500).json({ error: "Error fetching Mentor-Student List" });
+  }
+};

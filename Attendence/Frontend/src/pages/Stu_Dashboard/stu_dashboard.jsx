@@ -509,6 +509,18 @@ function Body() {
                 <div className="space">
                   <b>To:</b> {formatLeaveDate(leave.to_date, leave.to_time)}
                 </div>
+                <div className="space">
+                  <b>Type:</b> {leave.reason} <br />
+                </div>
+                <div className="space">
+                  <b>Status:</b> {
+                    leave.status === '2' ? <b style={{color:'#2196f3'}}>Approval Pending</b> :
+                    leave.status === '3' ? <b style={{color:'#ff6968'}}>Rejected</b> :
+                    leave.status === '1' ? <b style={{color:'#4dcd6e'}}>Approved!!</b> :
+                    null
+
+                  } <br />
+                </div>
                 <hr style={{ width: "100%" }} />
               </div>
             ))

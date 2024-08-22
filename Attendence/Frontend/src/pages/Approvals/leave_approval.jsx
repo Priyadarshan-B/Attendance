@@ -86,6 +86,9 @@ function Body () {
               <p>
                 <strong>To:</strong> {moment(leave.to_date).format("YYYY-MM-DD")} - <strong>Time:</strong> {leave.to_time}
               </p>
+              <p>
+                <strong>Reason:</strong>  {leave.reason}
+              </p>
               <div style={{
                 display:'flex',
                 gap:'10px'

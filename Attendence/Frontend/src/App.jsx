@@ -1,13 +1,6 @@
-import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-} from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import requestApi from "./components/utils/axios";
 import Login from "./pages/auth/Login/Login";
 import Welcome from "./pages/welcome/welcome";
 import Attendence from "./pages/Attendance/attendance";
@@ -26,101 +19,39 @@ import Student from "./pages/Students/student";
 import AdminDashboard from "./pages/Admin_Dashboard/admin_dashboard";
 import LeaveDetails from "./pages/Approvals/leave_approval";
 import Placement from "./pages/Placement/placement";
-import Error from "./pages/error";
 import CryptoJS from "crypto-js";
+import Error from "./pages/error";
 import { Toaster } from "react-hot-toast";
-import Loader from "./components/Loader/loader";
-
-const decryptData = (encryptedData, secretKey) => {
-  try {
-    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
-    const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-    return decryptedData;
-  } catch (error) {
-    console.error("Decryption error:", error);
-    return null;
-  }
-};
 
 const ProtectedRoute = ({ children }) => {
-  const [allowedRoutes, setAllowedRoutes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const location = useLocation();
   const secretKey = "secretKey123";
-  const encryptedToken = Cookies.get("token");
-  const encryptedRole = Cookies.get("role");
-  const encryptedGmail = Cookies.get("gmail");
+  const encryptedRoutes = Cookies.get("allowedRoutes");
 
-  const token = decryptData(encryptedToken, secretKey);
-  const roleId = decryptData(encryptedRole, secretKey);
-  const gmail = decryptData(encryptedGmail, secretKey);
-
-  useEffect(() => {
-    if (!token || !roleId) {
-      setLoading(false);
-      return;
-    }
-
-    const fetchAllowedRoutes = async () => {
-      try {
-        const response = await requestApi(
-          "GET",
-          `/auth/resources?role=${roleId}`
-        );
-
-        console.log("Allowed Routes Response:", response.data);
-
-        const routes = response.data.map((route) => route.path);
-        setAllowedRoutes(routes);
-
-        console.log("Allowed Routes After State Update:", routes);
-      } catch (error) {
-        console.error("Failed to fetch allowed routes", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAllowedRoutes();
-  }, [roleId, token]);
-
-  console.log("Allowed Routes:", allowedRoutes);
-  if (loading) return <Loader />;
-
-
-  if (location.pathname === "/attendance/welcome") {
-    return children;
-  }
-
-  if (!token || !roleId) {
+  if (!encryptedRoutes) {
     return <Navigate to="/attendance/login" />;
   }
 
+  const decryptedRoutes = CryptoJS.AES.decrypt(encryptedRoutes, secretKey).toString(CryptoJS.enc.Utf8);
+  const allowedRoutes = JSON.parse(decryptedRoutes);
 
-  if (allowedRoutes.length > 0 && allowedRoutes.includes(location.pathname)) {
-    return children;
+  const location = window.location.pathname;
+
+  if (allowedRoutes.length === 0 || !allowedRoutes.includes(location)) {
+    return <Navigate to="/attendance/error" />;
   }
 
-  return <Navigate to="/attendance/error" />;
+  return children;
 };
 
 function App() {
   return (
     <BrowserRouter>
       <Toaster position="top-center" reverseOrder={false} />
-
       <Routes>
         <Route path="*" element={<Error />} />
         <Route path="/attendance" element={<Login />} />
         <Route path="/attendance/login" element={<Login />} />
-        <Route
-          path="/attendance/welcome"
-          element={
-            <ProtectedRoute>
-              <Welcome />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/attendance/welcome" element={<Welcome />} />
         <Route
           path="/attendance/attendance"
           element={

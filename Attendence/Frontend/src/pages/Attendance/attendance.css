@@ -5,6 +5,13 @@
   overflow: hidden;
   padding: 20px;
 }
+.favattendance-container {
+  max-width: 100%;
+  background-color: #f4f6fa;
+  border-radius: 8px;
+  overflow: hidden;
+  /* padding: 20px; */
+}
 
 .att-table{
   background-color: white;
@@ -342,4 +349,29 @@
     background: #35dc61;
     box-shadow: 0 -36px 0 -10px transparent, 32px -16px 0 -10px transparent, 32px 16px 0 -10px transparent, 0 36px 0 -10px transparent, -32px 16px 0 -10px transparent, -32px -16px 0 -10px transparent;
   }
+}
+.cbx.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type="checkbox"]:disabled + .cbx {
+  pointer-events: none;
+}
+
+.go-back-button {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: rgb(62, 54, 54);
+  margin-bottom: 20px;
+}
+
+/* .go-back-button:hover {
+  text-decoration: underline;
+} */
+
+.fav-attendance {
+  padding: 20px;
 }

@@ -1,19 +1,45 @@
-/* styles.css */
+.leave-flex{
+    display: flex;
+    gap: 10px;
+    
+}
 .form-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-content: center;
-    gap: 16px;
-    margin: auto; 
-    padding: 20px; 
+    gap: 16px; 
+    padding: 20px;
+    
+}
+
+.leave-data{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.leave-row{
     background-color: #ffffff;
+    /* box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; */
+    border: 1px solid rgb(232, 232, 232);
+    padding: 10px;
+    text-align: center;
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.space{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .leave-form{
     background-color: #f4f6fa;
-    padding: 20px;
+    
     border-radius: 10px;
 }
 .form-container > div {

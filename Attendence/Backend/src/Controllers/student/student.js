@@ -45,7 +45,7 @@ const { format } = require('date-fns');
 
 exports.post_leave = async (req, res) => {
   const student = req.query.student;
-  const { leave, from_date, from_time, to_date, to_time } = req.body;
+  const { leave, from_date, from_time, to_date, to_time, reason } = req.body;
 
   console.log(student);
 
@@ -59,10 +59,10 @@ exports.post_leave = async (req, res) => {
       const toDateFormatted = format(new Date(to_date.split('/').reverse().join('-')), 'yyyy-MM-dd');
 
       const query = `
-          INSERT INTO \`leave\`(\`student\`, \`leave\`, \`from_date\`, \`from_time\`, \`to_date\`, \`to_time\`)
-          VALUES (?, ?, ?, ?, ?, ?);
+          INSERT INTO \`leave\`(\`student\`, \`leave\`, \`from_date\`, \`from_time\`, \`to_date\`, \`to_time\`, \`reason\`)
+          VALUES (?, ?, ?, ?, ?, ? , ?);
       `;
-      const leaves = await post_database(query, [student, leave, fromDateFormatted, from_time, toDateFormatted, to_time]);
+      const leaves = await post_database(query, [student, leave, fromDateFormatted, from_time, toDateFormatted, to_time, reason]);
       res.json(leaves);
   } catch (err) {
       console.error("Error Inserting Leave", err);

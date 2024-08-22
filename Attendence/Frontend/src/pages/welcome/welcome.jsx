@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
@@ -8,85 +8,68 @@ import Loader from "../../components/Loader/loader";
 const Welcome = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const secretKey = "secretKey123";
 
   useEffect(() => {
-    const dataParam = searchParams.get("data");
+    const fetchRoutes = async () => {
+      const dataParam = searchParams.get("data");
 
-    if (dataParam) {
-      try {
-        const decodedData = decodeURIComponent(dataParam);
-        const parsedData = JSON.parse(decodedData);
-        const { token, name, role, roll, id, gmail } = parsedData;
+      if (dataParam) {
+        try {
+          const decodedData = decodeURIComponent(dataParam);
+          const parsedData = JSON.parse(decodedData);
+          const { token, name, role, roll, id, gmail } = parsedData;
 
-        const secretKey = "secretKey123";
-        const encryptedToken = CryptoJS.AES.encrypt(token, secretKey).toString();
-        const encryptedName = CryptoJS.AES.encrypt(name, secretKey).toString();
-        const encryptedRole = CryptoJS.AES.encrypt(role.toString(), secretKey).toString();
-        const encryptedRoll = CryptoJS.AES.encrypt(roll, secretKey).toString();
-        const encryptedId = CryptoJS.AES.encrypt(id.toString(), secretKey).toString();
-        const encryptedGmail = CryptoJS.AES.encrypt(gmail, secretKey).toString();
+          Cookies.set("token", CryptoJS.AES.encrypt(token, secretKey).toString(), { expires: 1 });
+          Cookies.set("name", CryptoJS.AES.encrypt(name, secretKey).toString());
+          Cookies.set("role", CryptoJS.AES.encrypt(role.toString(), secretKey).toString());
+          Cookies.set("id", CryptoJS.AES.encrypt(id.toString(), secretKey).toString());
+          Cookies.set("roll", CryptoJS.AES.encrypt(roll, secretKey).toString());
+          Cookies.set("gmail", CryptoJS.AES.encrypt(gmail, secretKey).toString());
 
-        Cookies.set("token", encryptedToken, { expires: 1 });
-        Cookies.set("name", encryptedName);
-        Cookies.set("role", encryptedRole);
-        Cookies.set("id", encryptedId);
-        Cookies.set("roll", encryptedRoll);
-        Cookies.set("gmail", encryptedGmail);
+          const response = await requestApi("GET", `/auth/resources?role=${role}`);
+          const routes = response.data.map(route => route.path);
 
-        const roleCookie = Cookies.get("role");
-        const gmailCookie = Cookies.get("gmail")
+          Cookies.set("allowedRoutes", CryptoJS.AES.encrypt(JSON.stringify(routes), secretKey).toString(), { expires: 1 });
 
-        if (gmailCookie) {
-          const decryptedRoleBytes = CryptoJS.AES.decrypt(roleCookie, secretKey);
-          const decryptedRole = decryptedRoleBytes.toString(CryptoJS.enc.Utf8);
-          const roleInt = parseInt(decryptedRole, 10);
+          let redirectPath = "/attendance/role_attendance"; // Default path
 
-          const decryptGmail = CryptoJS.AES.decrypt(gmailCookie, secretKey)
-          const decryptedGmail = decryptGmail.toString(CryptoJS.enc.Utf8)
+          if (role === 1 && routes.includes("/attendance/approval")) {
+            redirectPath = "/attendance/approval";
+          } else if (role === 2 && routes.includes("/attendance/dashboard")) {
+            redirectPath = "/attendance/dashboard";
+          } else if (role === 3 && routes.includes("/attendance/admin")) {
+            redirectPath = "/attendance/admin";
+          }
 
-          requestApi("GET", `/auth/resources?role=${roleInt}`)
-            .then((response) => {
-              const allowedRoutes = response.data.map((route) => route.path);
+          // Delay navigation to ensure cookies are set
+          setTimeout(() => {
+            navigate(redirectPath);
+          }, 200);
 
-              setTimeout(() => { 
-                if (roleInt === 1 && allowedRoutes.includes("/attendance/approval")) {
-                  navigate("/attendance/approval");
-                } else if (roleInt === 2 && allowedRoutes.includes("/attendance/dashboard")) {
-                  navigate("/attendance/dashboard");
-                } else if (roleInt === 3 && allowedRoutes.includes("/attendance/admin")) {
-                  navigate("/attendance/admin");
-                } else {
-                  navigate("/attendance/role_attendance");
-                }
-              }, 500); 
-            })
-            .catch((error) => {
-              console.error("Failed to fetch allowed routes", error);
-              navigate("/attendance/error");
-            });
-        } else {
-          console.error("Role cookie not found.");
+        } catch (error) {
+          console.error("Error processing data:", error);
+          Cookies.remove("token");
+          Cookies.remove("name");
+          Cookies.remove("role");
+          Cookies.remove("id");
+          Cookies.remove("gmail");
           navigate("/attendance/error");
         }
-      } catch (error) {
-        console.error("Error decrypting or processing data:", error);
-
-        Cookies.remove("token");
-        Cookies.remove("name");
-        Cookies.remove("role");
-        Cookies.remove("id");
-        Cookies.remove("gmail");
-
+      } else {
         navigate("/attendance/error");
       }
-    }
-  }, [searchParams, navigate]);
+    };
 
-  return (
-    <div>
-      <Loader/>
-    </div>
-  );
+    fetchRoutes();
+  }, [searchParams, navigate, secretKey]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  return null; 
 };
 
 export default Welcome;

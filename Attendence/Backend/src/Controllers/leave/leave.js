@@ -20,18 +20,24 @@ exports.get_student_leave = async(req, res)=>{
     const student = req.query.student;
     try{
         const query = `
-            SELECT leave_type.type, from_date, from_time, to_date, to_time
-            FROM \`leave\`
-            INNER JOIN leave_type ON \`leave\`.\`leave\` = leave_type.id
-            WHERE student = ?
-            AND \`leave\`.\`status\` = '1'; 
+            SELECT leave_type.type, 
+       \`leave\`.from_date, 
+       \`leave\`.from_time, 
+       \`leave\`.to_date, 
+       \`leave\`.to_time, 
+       \`leave\`.reason, 
+       \`leave\`.status
+FROM \`leave\`
+INNER JOIN leave_type ON \`leave\`.\`leave\` = leave_type.id
+WHERE \`leave\`.student = ?
+  AND \`leave\`.\`status\` IN('1', '2', '3');
         `
         const get_leave = await get_database(query, [student])
         res.json(get_leave)
 
     }
     catch{
-        console.error("Error Fetching Leave ", err)
+        console.error("Error Fetching Leave ")
     res.status(500).json({error: "Error Fetching Leave "})
     }
 }

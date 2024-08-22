@@ -183,6 +183,7 @@ exports.get_leave = async(req, res)=>{
     l.to_date, 
     l.from_time, 
     l.to_time,
+    l.reason,
     s.id AS student_id,
     s.name AS student_name,
     s.register_number
