@@ -186,7 +186,7 @@ function Body() {
                   <TableCell sx={{ width: "10%" }}>
                     <h3>S.No</h3>
                   </TableCell>
-                  <TableCell>
+                  <TableCell >
                     <h3>Name</h3>
                   </TableCell>
                   <TableCell>

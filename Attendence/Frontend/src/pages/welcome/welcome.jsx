@@ -33,7 +33,7 @@ const Welcome = () => {
 
           Cookies.set("allowedRoutes", CryptoJS.AES.encrypt(JSON.stringify(routes), secretKey).toString(), { expires: 1 });
 
-          let redirectPath = "/attendance/role_attendance"; // Default path
+          let redirectPath = "/attendance/role_attendance"; 
 
           if (role === 1 && routes.includes("/attendance/approval")) {
             redirectPath = "/attendance/approval";

@@ -26,7 +26,6 @@ function Leave() {
 }
 
 function Body() {
-    
   const [leaveTypes, setLeaveTypes] = useState([]);
   const [selectedLeaveType, setSelectedLeaveType] = useState(null);
   const [fromDate, setFromDate] = useState(null);
@@ -85,18 +84,13 @@ function Body() {
       });
   };
   const formatLeaveDate = (date) => {
-    return (
-      moment(date).format("DD/MM/YYYY")
+    return moment(date).format("DD/MM/YYYY");
     //    +
     //   " " +
     //   moment(time, "HH:mm:ss").format("hh:mm A")
-    );
   };
-  const formatLeaveTime = ( time) => {
-    return (
-      
-      moment(time, "HH:mm:ss").format("hh:mm A")
-    );
+  const formatLeaveTime = (time) => {
+    return moment(time, "HH:mm:ss").format("hh:mm A");
   };
 
   return (
@@ -114,7 +108,7 @@ function Body() {
         >
           <div
             style={{
-              backgroundColor: "#2c7cf3",
+              // backgroundColor: "#2c7cf3",
               marginBottom: "10px",
               padding: "5px",
               color: "white",
@@ -125,11 +119,11 @@ function Body() {
               borderRadius: "5px",
             }}
           >
-            <p style={{ fontSize: "25px", fontWeight: "700" }}>
+            <p style={{ fontSize: "35px", color: "#2c7cf3", fontWeight: "700" , }}>
               <center>Apply Leave</center>
             </p>
 
-            <p>
+            <p style={{color: "#2c7cf3"}}>
               <center>fill all the fields carefully</center>
             </p>
           </div>
@@ -186,8 +180,7 @@ function Body() {
                   onChange={(newValue) => setToDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
                   inputFormat="dd/MM/yyyy"
-                  minDate={fromDate} 
-                  
+                  minDate={fromDate}
                 />
               </div>
               <div>
@@ -197,7 +190,6 @@ function Body() {
                   sx={{ width: "100%" }}
                   onChange={(newValue) => setToTime(newValue)}
                   renderInput={(params) => <TextField {...params} />}
-                  
                 />
               </div>
             </div>
@@ -222,62 +214,104 @@ function Body() {
           </div>
         </form>
       </div>
-      <div className="leave-details">
-          <h3>Leave Details</h3>
-          <hr></hr>
-          <div className="leave-data">
-              {leaveDetails.length > 0 ? (
-                leaveDetails.map((leave, index) => (
+      <div className="leave-detail">
+        <h3>Leave Details</h3>
+        <hr></hr>
+        <div className="leave-data">
+          {leaveDetails.length > 0 ? (
+            leaveDetails.map((leave, index) => (
+              <div
+                key={index}
+                className="leave-row"
+                style={{
+                  backgroundColor:
+                    leave.status === "2"
+                      ? "#e6faff"
+                      : leave.status === "3"
+                      ? "#ffe6e6"
+                      : leave.status === "1"
+                      ? "#e6fff2"
+                      : "transparent",
+                }}
+              >
+                <div>{leave.type}</div>
+
+                <div style={{ backgroundColor: "gray" }}>
+                  <div style={{ display: "flex", width: "100%", gap: "2px" }}>
                     <div
-                    key={index}
-                    className="leave-row"
-                    style={{
-                      backgroundColor:
-                        leave.status === '2'
-                          ? '#e6faff' 
-                          : leave.status === '3'
-                          ? '#ffe6e6' 
-                          : leave.status === '1'
-                          ? '#e6fff2' 
-                          : 'transparent',
-                    }}
-                  >
-                    
-                    
-                    <div>{leave.type}</div>
-                    
-                    <div className="space">
-                      <b>From date:</b>{" "}
-                      {formatLeaveDate(leave.from_date)} <br />
+                      style={{
+                        display: "flex",
+                        flex: "1",
+                        flexDirection: "column",
+                        backgroundColor: "#e6faff",
+                        padding: "10px",
+                        backgroundColor:
+                          leave.status === "2"
+                            ? "#e6faff"
+                            : leave.status === "3"
+                            ? "#ffe6e6"
+                            : leave.status === "1"
+                            ? "#e6fff2"
+                            : "transparent",
+                      }}
+                     
+                    >
+                      <div className="space" >
+                        <b>From date:</b> {formatLeaveDate(leave.from_date)}{" "}
+                        <br />
+                      </div>
+                      <div className="space">
+                        <b>From time:</b> {formatLeaveTime(leave.from_time)}{" "}
+                        <br />
+                      </div>
                     </div>
-                    <div className="space">
-                      <b>From time:</b>{" "}
-                      {formatLeaveTime(leave.from_time)} <br />
-                    </div>
-                    <div className="space">
-                      <b>To date:</b> {formatLeaveDate(leave.to_date)}
-                    </div>
-                    <div className="space">
-                      <b>To time:</b> {formatLeaveTime(leave.to_time)}
-                    </div>
-                    <div className="space">
-                      <b>Reason:</b> {leave.reason} <br />
-                    </div>
-                    <div className="space">
-                      <b>Status:</b> {
-                        leave.status === '2' ? <b>Approval Pending</b> :
-                        leave.status === '3' ? <b >Rejected</b> :
-                        leave.status === '1' ? <b >Approved!!</b> :
-                        null
-                      }
+                    <div
+                      style={{
+                        display: "flex",
+                        flex: "1",
+                        flexDirection: "column",
+                        backgroundColor: "#e6faff",
+                        padding: "10px",
+                        backgroundColor:
+                          leave.status === "2"
+                            ? "#e6faff"
+                            : leave.status === "3"
+                            ? "#ffe6e6"
+                            : leave.status === "1"
+                            ? "#e6fff2"
+                            : "transparent",
+                      }}
+                    >
+                      <div className="space">
+                        <b>To date:</b> {formatLeaveDate(leave.to_date)}
+                      </div>
+                      <div className="space">
+                        <b>To time:</b> {formatLeaveTime(leave.to_time)}
+                      </div>
                     </div>
                   </div>
-                ))
-              ) : (
-                <p>No leave applied.</p>
-              )}
-          </div>
+                </div>
+                <div className="space reason">
+                  <b>Reason:</b> {leave.reason} <br />
+                </div>
+                <div className="space status">
+                  <center>
+                    {leave.status === "2" ? (
+                      <b>Approval Pending</b>
+                    ) : leave.status === "3" ? (
+                      <b>Rejected</b>
+                    ) : leave.status === "1" ? (
+                      <b>Approved!!</b>
+                    ) : null}
+                  </center>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No leave applied.</p>
+          )}
         </div>
+      </div>
     </div>
   );
 }

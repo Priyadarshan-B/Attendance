@@ -1,18 +1,21 @@
 const { get_database, post_database } = require("../../config/db_utils");
 
-exports.get_slots = async (req,res)=>{
-    try{
-        const query = `
-        SELECT * FROM time_slots WHERE status = '1';
-        `
-        const slots = await get_database(query)
-        res.json(slots)
-    }
-    catch(err) {
+exports.get_slots = async (req, res) => {
+    try {
+        const updateQuery = `
+            SELECT * FROM time_slots  WHERE
+                 CURRENT_TIME >= start_time AND CURRENT_TIME <= end_time OR
+                                 CURRENT_TIME > end_time
+        `;
+        const slots = await get_database(updateQuery);
+
+        res.json(slots);
+    } catch (err) {
         console.error("Error Fetching Slots", err);
-        res.status(500).json({ error: "Error fetching Slots" });        
-}
-}
+        res.status(500).json({ error: "Error fetching Slots" });
+    }
+};
+
 
 exports.update_slots = async(req, res)=>{
     const {id, label, start_time, end_time} = req.body

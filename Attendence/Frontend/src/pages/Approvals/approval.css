@@ -2,7 +2,7 @@
 .custom-table td {
   padding: 15px; 
   text-align: center;
-  width: 10%;
+  /* width: 10%; */
 }
 
 .table-container{
@@ -106,3 +106,5 @@
 .reject-button:hover {
   background-color: #e00909;
 }
+
+/* star */

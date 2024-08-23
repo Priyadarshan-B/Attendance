@@ -495,31 +495,38 @@ function Body() {
       <div className="att_det">
         <div className="leave-details">
           <h3>Leave Details</h3>
-          <hr></hr>
+          {/* <hr></hr> */}
           {leaveDetails.length > 0 ? (
             leaveDetails.map((leave, index) => (
               <div key={index} className="leave-row">
-                <div className="space">
-                  <b>Type:</b> {leave.type} <br />
+                <div>
+                  <div>
+                    <div className="space">
+                      <b>Type:</b> {leave.type} <br />
+                    </div>
+                    <div className="space">
+                      <b>From:</b>{" "}
+                      {formatLeaveDate(leave.from_date, leave.from_time)} <br />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="space">
+                      <b>To:</b> {formatLeaveDate(leave.to_date, leave.to_time)}
+                    </div>
+                    <div className="space">
+                      <b>Type:</b> {leave.reason} <br />
+                    </div>
+                  </div>
                 </div>
-                <div className="space">
-                  <b>From:</b>{" "}
-                  {formatLeaveDate(leave.from_date, leave.from_time)} <br />
-                </div>
-                <div className="space">
-                  <b>To:</b> {formatLeaveDate(leave.to_date, leave.to_time)}
-                </div>
-                <div className="space">
-                  <b>Type:</b> {leave.reason} <br />
-                </div>
-                <div className="space">
-                  <b>Status:</b> {
-                    leave.status === '2' ? <b style={{color:'#2196f3'}}>Approval Pending</b> :
-                    leave.status === '3' ? <b style={{color:'#ff6968'}}>Rejected</b> :
-                    leave.status === '1' ? <b style={{color:'#4dcd6e'}}>Approved!!</b> :
-                    null
-
-                  } <br />
+                <div>
+                  <div className="space">
+                    <b>Status:</b> {
+                      leave.status === '2' ? <b style={{color:'#2196f3'}}>Approval Pending</b> :
+                      leave.status === '3' ? <b style={{color:'#ff6968'}}>Rejected</b> :
+                      leave.status === '1' ? <b style={{color:'#4dcd6e'}}>Approved!!</b> :
+                      null
+                    } <br />
+                  </div>
                 </div>
                 <hr style={{ width: "100%" }} />
               </div>
@@ -538,6 +545,9 @@ function Body() {
               borderRadius: "10px",
               width: "100%",
               border: "1px solid lightgray",
+              maxHeight:"180px",
+              overflowY:"scroll",
+              overflowX:"hidden"
             }}
           >
             <h4>Today's Biometric Details - {todayDate}</h4>

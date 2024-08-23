@@ -39,6 +39,7 @@ function Body({ onShowFavAttendance }) {
   const [timeSlots, setTimeSlots] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedRow, setExpandedRow] = useState(null);
+  const [favourites, setFavourites] = useState({});
 
   const deid = Cookies.get("id");
   const secretKey = "secretKey123";
@@ -74,53 +75,12 @@ function Body({ onShowFavAttendance }) {
       setCurrentTime(now.toLocaleTimeString('en-US', { hour12: false }));
     };
 
-    updateCurrentTime(); // Run immediately
-    const intervalId = setInterval(updateCurrentTime, 60000); // Update every minute
+    updateCurrentTime(); 
+    const intervalId = setInterval(updateCurrentTime, 60000); 
 
-    return () => clearInterval(intervalId); // Clean up on unmount
+    return () => clearInterval(intervalId); 
   }, []);
 
-  const parseTime = (timeString) => {
-    // Converts a 24-hour time string to minutes
-    const [hours, minutes] = timeString.split(':').map(Number);
-    return hours * 60 + minutes;
-  };
-  
-  const getEnabledSlots = () => {
-    const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-  
-    console.log(`Current minutes: ${currentMinutes}`);
-  
-    return timeSlots.map((slot) => {
-      const start = parseTime(slot.start_time);
-      let end = parseTime(slot.end_time);
-  
-      // Handle slots that span midnight
-      if (end < start) {
-        end += 24 * 60; // Add 24 hours in minutes
-      }
-  
-      console.log(`Slot: ${slot.label}`);
-      console.log(`Start minutes: ${start}, End minutes: ${end}`);
-  
-      // Determine if slot should be enabled
-      const isCurrentlyEnabled = currentMinutes >= start && currentMinutes <= end;
-      const isPastSlot = currentMinutes > end;
-  
-      console.log(`Is slot currently enabled: ${isCurrentlyEnabled}`);
-      console.log(`Is slot past: ${isPastSlot}`);
-  
-      return {
-        ...slot,
-        isEnabled: (isCurrentlyEnabled || isPastSlot) && slot.status === '1', // Enable if currently active or past and status is '1'
-      };
-    });
-  };
-  // Example usage:
-  const enabledSlots = getEnabledSlots();
-  console.log("Enabled slots:", enabledSlots);
-  
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchTerm(value);
@@ -175,49 +135,58 @@ function Body({ onShowFavAttendance }) {
   const handleRowClick = (rowId) => {
     setExpandedRow(expandedRow === rowId ? null : rowId);
   };
-
+  const handleStarClick = async (studentId) => {
+    try {
+      await requestApi("POST", "/favourites", {
+        student: studentId,
+        mentor: id,
+      });
+      toast.success("Added to Favourites");
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        toast.error("Already in Favourites");
+      } else {
+        toast.error("Failed to Add to Favourites");
+      }
+      console.error("Error adding to favourites:", error);
+    }
+  };
   const renderTimeSlots = (row) => {
-    const enabledSlots = getEnabledSlots();
-
     return (
       <div className="time-slots">
-        {enabledSlots.map((slot) => {
-          const isDisabled = !slot.isEnabled || slot.status === "0";
-          return (
-            <div key={slot.id} className="time-slot checkbox-wrapper-4">
-              <input
-                className="inp-cbx"
-                id={`${row.id}-${slot.id}`}
-                type="checkbox"
-                checked={attendanceData.some(
-                  (record) =>
-                    record.student === row.id && record.slot === slot.id
-                )}
-                onChange={(event) =>
-                  handleCheckboxClick(event, row.id, slot.id)
-                }
-                disabled={isDisabled}
-                onClick={(event) => event.stopPropagation()}
-              />
-              <label
-                className={`cbx ${isDisabled ? "disabled" : ""}`}
-                htmlFor={`${row.id}-${slot.id}`}
-              >
-                <span>
-                  <svg width="12px" height="10px">
-                    <use xlinkHref="#check-4"></use>
-                  </svg>
-                </span>
-                <span>{slot.label}</span>
-              </label>
-              <svg className="inline-svg">
-                <symbol id="check-4" viewBox="0 0 12 10">
-                  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                </symbol>
-              </svg>
-            </div>
-          );
-        })}
+        {timeSlots.map((slot) => (
+          <div key={slot.id} className="time-slot checkbox-wrapper-4">
+            <input
+              className="inp-cbx"
+              id={`${row.id}-${slot.id}`}
+              type="checkbox"
+              checked={attendanceData.some(
+                (record) =>
+                  record.student === row.id && record.slot === slot.id
+              )}
+              onChange={(event) =>
+                handleCheckboxClick(event, row.id, slot.id)
+              }
+              onClick={(event) => event.stopPropagation()}
+            />
+            <label
+              className="cbx"
+              htmlFor={`${row.id}-${slot.id}`}
+            >
+              <span>
+                <svg width="12px" height="10px">
+                  <use xlinkHref="#check-4"></use>
+                </svg>
+              </span>
+              <span>{slot.label}</span>
+            </label>
+            <svg className="inline-svg">
+              <symbol id="check-4" viewBox="0 0 12 10">
+                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+              </symbol>
+            </svg>
+          </div>
+        ))}
       </div>
     );
   };
@@ -246,9 +215,10 @@ function Body({ onShowFavAttendance }) {
         <table className="custom-table">
           <thead>
             <tr>
-              <th>S.No</th>
-              <th>Name</th>
-              <th>Register Number</th>
+            <th style={{ width: "20px" }}></th> 
+            <th style={{ width: "50px" }}>S.No</th> 
+            <th style={{ width: "200px" }}>Name</th> 
+            <th style={{ width: "150px" }}>Register Number</th>
             </tr>
           </thead>
           <tbody>
@@ -261,6 +231,16 @@ function Body({ onShowFavAttendance }) {
                     onClick={() => handleRowClick(row.id)}
                     style={{ cursor: "pointer" }}
                   >
+                    <td>
+                      <input
+                        type="checkbox"
+                        className="star-checkbox"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleStarClick(row.id);
+                        }}
+                      />
+                    </td>
                     <td>{page * rowsPerPage + index + 1}</td>
                     <td>{row.name}</td>
                     <td>{row.register_number}</td>

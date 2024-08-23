@@ -1,8 +1,8 @@
 .leave-flex{
     display: flex;
     gap: 10px;
-    
 }
+
 .form-container {
     display: flex;
     flex-direction: row;
@@ -12,10 +12,22 @@
     padding: 20px;
     
 }
+.leave-form{
+    flex: 1.5;
+}
+.leave-detail {
+    flex: 1;
+    background-color: #ffffff;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    padding: 10px;
+    border-radius: 5px;
+    max-height: 88vh;
+    overflow-y: scroll;
+}
 
 .leave-data{
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 15px;
 }
 
@@ -29,6 +41,19 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.reason{
+    padding: 7px 20px 10px 20px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.status{
+    padding: 7px 20px 10px 20px;
+    background-color: white;
+    border-radius: 5px;
+    width: fit-content;
 }
 
 .space{

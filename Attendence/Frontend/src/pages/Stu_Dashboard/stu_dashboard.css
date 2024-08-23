@@ -35,7 +35,7 @@
 }
 
 .attendance-percent-container {
-    flex: 4;
+    flex: 4.5;
     border-radius: 5px;
     display: flex;
     gap: 10px;
@@ -91,6 +91,11 @@
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     padding: 10px;
     border-radius: 5px;
+    max-height: 492px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .att_det_today {
@@ -113,6 +118,8 @@
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     padding: 10px;
     border-radius: 5px;
+    
+
 
 }
 

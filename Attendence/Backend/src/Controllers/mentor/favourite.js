@@ -4,7 +4,7 @@ exports.get_favorites = async (req, res) => {
   const mentor = req.query.mentor;
   try {
     const query = `
-        SELECT mentor.name,mentor.id AS mentor_id, students.id AS student_id,students.name, students.register_number
+        SELECT mentor.name,mentor.id AS mentor_id, students.id AS id,students.name, students.register_number
         FROM favourites f
         JOIN mentor ON f.mentor = mentor.id
         JOIN students ON f.student = students.id
@@ -22,20 +22,29 @@ exports.get_favorites = async (req, res) => {
 
 exports.post_favourites = async (req, res) => {
   const { mentor, student } = req.body;
-  if ((!mentor, !student)) {
-    return res
-      .status(400)
-      .json({ erro: "Mentor and student ids are required.." });
+  if (!mentor || !student) {
+    return res.status(400).json({ error: "Mentor and student ids are required." });
   }
+
   try {
-    const query = `
-INSERT INTO favourites (mentor, student) VALUES(?,?);
-`;
-    const post_fav = await post_database(query, [mentor, student]);
+    const checkQuery = `
+      SELECT * FROM favourites WHERE mentor = ? AND student = ?;
+    `;
+    const existingRecord = await post_database(checkQuery, [mentor, student]);
+
+    if (existingRecord.length > 0) {
+      return res.status(409).json({ message: "This favourite already exists." });
+    }
+
+    const insertQuery = `
+      INSERT INTO favourites (mentor, student) VALUES (?, ?);
+    `;
+    const post_fav = await post_database(insertQuery, [mentor, student]);
     res.json(post_fav);
+
   } catch (err) {
-    console.error("Error Inserting favourites List", err);
-    res.status(500).json({ error: "Error Inserting favourites List" });
+    console.error("Error inserting favourites list", err);
+    res.status(500).json({ error: "Error inserting favourites list" });
   }
 };
 

@@ -375,3 +375,62 @@ input[type="checkbox"]:disabled + .cbx {
 .fav-attendance {
   padding: 20px;
 }
+
+
+.star-checkbox {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 16px; /* Smaller size */
+  height: 16px; /* Smaller size */
+  background-color: transparent;
+  border: 2px solid #FFA500; /* Orange color */
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+}
+
+.star-checkbox::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px; /* Smaller star */
+  height: 8px; /* Smaller star */
+  background-color: #FFA500; /* Orange color */
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.star-checkbox:checked::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.star-checkbox:checked {
+  animation: pulse 0.4s ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

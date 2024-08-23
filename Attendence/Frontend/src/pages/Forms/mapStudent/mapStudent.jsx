@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import AppLayout from "../../../components/applayout/AppLayout";
-// import "../../../components/applayout/styles.css";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TablePagination, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import requestApi from "../../../components/utils/axios";
@@ -53,9 +51,8 @@ function Body() {
           console.error("Error fetching students:", error);
         });
     }
-  }, [selectedYear]); // Dependency on selectedYear
+  }, [selectedYear]);
 
-  // Handle form submission
   const handleSubmit = () => {
     const payload = {
       roleId: selectedRole?.value,
