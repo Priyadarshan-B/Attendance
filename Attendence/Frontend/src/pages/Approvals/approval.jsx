@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import AppLayout from "../../components/applayout/AppLayout";
 import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
+import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 import {
@@ -18,21 +19,12 @@ import {
 import InputBox from "../../components/TextBox/textbox";
 import Popup from "../../components/popup/popup";
 import LeaveDetails from "./leave_approval";
-import Button from "../../components/Button/Button";
+// import Button from "../../components/Button/Button";
 import "./approval.css";
 
-function calculateTimeLeft() {
-  const getNextWednesday = () => {
-    const now = new Date();
-    const nextWednesday = new Date(
-      now.setDate(now.getDate() + ((3 + 7 - now.getDay()) % 7 || 7))
-    );
-    nextWednesday.setHours(0, 0, 0, 0);
-    return nextWednesday;
-  };
-
-  const nextWednesday = getNextWednesday();
-  const difference = +nextWednesday - +new Date();
+// Calculate time left until the due date
+function calculateTimeLeft(dueDate) {
+  const difference = +new Date(dueDate) - +new Date();
   let timeLeft = {};
 
   if (difference > 0) {
@@ -42,6 +34,8 @@ function calculateTimeLeft() {
       minutes: Math.floor((difference / 1000 / 60) % 60),
       seconds: Math.floor((difference / 1000) % 60),
     };
+  } else {
+    timeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
   }
 
   return timeLeft;
@@ -65,7 +59,9 @@ function Body() {
   const [selectedStudentIndex, setSelectedStudentIndex] = useState(null);
   const [performanceChecked, setPerformanceChecked] = useState(false);
   const [appearanceChecked, setAppearanceChecked] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState([]);
+  const [disabledExpandButtons, setDisabledExpandButtons] = useState({});
+  const [loading, setLoading] = useState({});
 
   useEffect(() => {
     requestApi("GET", `/mentor-students?mentor=${deid}`)
@@ -73,20 +69,28 @@ function Body() {
         if (Array.isArray(response.data)) {
           setStudents(response.data);
           setFilteredStudents(response.data);
+          const initialTimeLeft = response.data.map((student) =>
+            calculateTimeLeft(student.due_date)
+          );
+          setTimeLeft(initialTimeLeft);
         } else {
           console.error("API response is not an array:", response.data);
         }
       })
       .catch((error) => console.error("Error fetching students:", error));
-  }, [id]);
+  }, [deid]);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      // Update the time left for each student
+      const updatedTimeLeft = filteredStudents.map((student) =>
+        calculateTimeLeft(student.due_date)
+      );
+      setTimeLeft(updatedTimeLeft);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [filteredStudents]);
 
   if (showLeave) {
     return <LeaveDetails />;
@@ -108,12 +112,16 @@ function Body() {
           updatedStudents[selectedStudentIndex].att_status = "1";
           setFilteredStudents(updatedStudents);
           setStudents(updatedStudents);
+          toast.success("Approved!!")
         })
-        .catch((error) =>
+        .catch((error) =>{
           console.error(`Error updating student approval status:`, error)
-        );
+        toast.error("Approved Failed..")
+
+       } );
     } else {
-      alert("Please check both Performance and Appearance to approve.");
+      // alert("Please check both Performance and Appearance to approve.");
+      toast.error("Check All Boxes..")
     }
     handleCloseApprovePopup();
   };
@@ -153,6 +161,30 @@ function Body() {
     setFilteredStudents(filtered);
   };
 
+  const handleExpand = (studentId, index) => {
+    setLoading((prevLoading) => ({ ...prevLoading, [studentId]: true }));
+
+    const url = `/nxt-wed?id=${studentId}`;
+
+    requestApi("PUT", url)
+      .then(() => {
+        // alert("Updated to next Wednesday successfully.");
+        toast.success("Added 7 days😁")
+        const updatedTimeLeft = filteredStudents.map((student) =>
+          calculateTimeLeft(student.due_date)
+        );
+        setTimeLeft(updatedTimeLeft);
+      })
+      .catch((error) =>{
+        console.error(`Error updating due date to next Wednesday:`, error)
+        toast.error("Error Expanding 7 days..")
+      }
+      )
+      .finally(() => {
+        setLoading((prevLoading) => ({ ...prevLoading, [studentId]: false }));
+      });
+  };
+
   return (
     <div>
       <div
@@ -186,7 +218,7 @@ function Body() {
                   <TableCell sx={{ width: "10%" }}>
                     <h3>S.No</h3>
                   </TableCell>
-                  <TableCell >
+                  <TableCell>
                     <h3>Name</h3>
                   </TableCell>
                   <TableCell>
@@ -215,41 +247,55 @@ function Body() {
                         <b>{student.register_number}</b>
                       </TableCell>
                       <TableCell>
-                        <button
-                          className="status-button"
-                          style={{
-                            backgroundColor:
-                              student.att_status === "1"
-                                ? "#e6faf0"
-                                : "#fde8e8", 
-                            color: 
-                              student.att_status === '1'
-                           ? "#2ECC71"
-                           :"red", 
-                          //  border: '0.1px solid ',
-                          //   borderColor:
-                          //     student.att_status === "1"
-                          //       ? "#90e9bb"
-                          //       : "#f49998", 
-                            cursor:
-                              student.att_status === "1"
-                                ? "not-allowed"
-                                : "pointer", // Disable pointer when status is "1"
-                          }}
-                          onClick={() => handleApprove(index)}
-                          disabled={student.att_status === "1"} // Disabled when status is "1"
-                        >
-                          {student.att_status === "1" ? "Approved" : "Approve"}
-                        </button>
+                        <div style={{ display: "flex", gap: "10px" }}>
+                          <button
+                            className="status-button"
+                            style={{
+                              backgroundColor:
+                                student.att_status === "1"
+                                  ? "#e6faf0"
+                                  : "#fde8e8",
+                              color:
+                                student.att_status === "1" ? "#2ECC71" : "red",
+                              cursor:
+                                student.att_status === "1"
+                                  ? "not-allowed"
+                                  : "pointer",
+                            }}
+                            onClick={() => handleApprove(index)}
+                            disabled={student.att_status === "1"}
+                          >
+                            {student.att_status === "1"
+                              ? "Approved"
+                              : "Approve"}
+                          </button >
+                          {student.att_status === "1" && (
+                            <button
+                              className="status-button"
+                              style={{
+                                backgroundColor: loading[student.id]
+                                  ? "#b0bec5"
+                                  : "#c1e6ff ",
+                                color: "#1738fd",
+                                cursor: loading[student.id]
+                                  ? "not-allowed"
+                                  : "pointer",
+                              }}
+                              onClick={() => handleExpand(student.id, index)}
+                              disabled={loading[student.id]}
+                            >
+                              Expand
+                            </button>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell>
                         {student.att_status === "1" ? (
-                          <span style={{
-                            color:'black'
-                          }} >
+                          <span style={{ color: "black" }}>
                             <p className="time">
-                              {timeLeft.days}d {timeLeft.hours}h{" "}
-                              {timeLeft.minutes}m {timeLeft.seconds}s
+                              {timeLeft[index].days}d {timeLeft[index].hours}h{" "}
+                              {timeLeft[index].minutes}m{" "}
+                              {timeLeft[index].seconds}s
                             </p>
                           </span>
                         ) : (

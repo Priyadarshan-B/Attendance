@@ -36,6 +36,32 @@ exports.mentor_att_approve = async (req, res) => {
     }
 };
 
+exports.update_next_wed = async (req, res) => {
+    const id = req.query.id;
+    if (!id) {
+        return res.status(400).json({ error: "Id is required!!!" });
+    }
+
+    const query = `
+    UPDATE students
+    SET due_date = (
+        CASE 
+            WHEN DAYOFWEEK(due_date) < 4 THEN DATE_ADD(due_date, INTERVAL (4 - DAYOFWEEK(due_date)) DAY)
+            ELSE DATE_ADD(due_date, INTERVAL (11 - DAYOFWEEK(due_date)) DAY)
+        END
+    )
+    WHERE id = ?
+    AND status = '1'
+    `;
+
+    try {
+        const updateWed = await get_database(query, [id]);
+        res.json(updateWed);
+    } catch (error) {
+        res.status(500).json({ error: "An error occurred while updating the due_date." });
+    }
+};
+
 
 exports.mentor_no_att_approve = async (req, res) => {
     const student = req.query.student;

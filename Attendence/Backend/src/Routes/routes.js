@@ -43,6 +43,7 @@ router.get('/student', student.get_student_details)
 //bio-att
 router.put("/att-approve",bio_attendence.mentor_att_approve)
 router.put("/att-disapprove",bio_attendence.mentor_no_att_approve)
+router.put('/nxt-wed', bio_attendence.update_next_wed)
 
 //att_details
 router.get('/att-details',attendence_details.get_attendence_n_arrear)

@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import AppLayout from "../../components/applayout/AppLayout";
-import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
