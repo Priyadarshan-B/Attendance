@@ -10,12 +10,19 @@
     flex-wrap: wrap;
 }
 
-@media (max-width:1000px){
+@media (max-width:900px){
     .attendance-percentage-and-status{
         flex-direction: column;
     }
+    
 }
 
+.dropdown{
+    display: flex;
+}
+.label-dropdown{
+    flex: 1;
+}
 
 .student-details-container {
     background-color: #ffffff;

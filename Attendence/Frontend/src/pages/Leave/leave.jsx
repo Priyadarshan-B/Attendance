@@ -85,9 +85,6 @@ function Body() {
   };
   const formatLeaveDate = (date) => {
     return moment(date).format("DD/MM/YYYY");
-    //    +
-    //   " " +
-    //   moment(time, "HH:mm:ss").format("hh:mm A")
   };
   const formatLeaveTime = (time) => {
     return moment(time, "HH:mm:ss").format("hh:mm A");
@@ -119,11 +116,13 @@ function Body() {
               borderRadius: "5px",
             }}
           >
-            <p style={{ fontSize: "35px", color: "#2c7cf3", fontWeight: "700" , }}>
+            <p
+              style={{ fontSize: "35px", color: "#2c7cf3", fontWeight: "700" }}
+            >
               <center>Apply Leave</center>
             </p>
 
-            <p style={{color: "#2c7cf3"}}>
+            <p style={{ color: "#2c7cf3" }}>
               <center>fill all the fields carefully</center>
             </p>
           </div>
@@ -226,15 +225,25 @@ function Body() {
                 style={{
                   backgroundColor:
                     leave.status === "2"
-                      ? "#e6faff"
+                      ? "#fcf9ec"
                       : leave.status === "3"
                       ? "#ffe6e6"
                       : leave.status === "1"
                       ? "#e6fff2"
                       : "transparent",
+                   border:
+                        leave.status === "2"
+                          ? " 1px solid #ded2a2"
+                          : leave.status === "3"
+                          ? "1px solid#76292e"
+                          : leave.status === "1"
+                          ? "1px solid #7eac8d"
+                          : "transparent",
                 }}
               >
-                <div>{leave.type}</div>
+                <div>
+                  <b>{leave.type}</b>
+                </div>
 
                 <div style={{ backgroundColor: "gray" }}>
                   <div style={{ display: "flex", width: "100%", gap: "2px" }}>
@@ -243,20 +252,18 @@ function Body() {
                         display: "flex",
                         flex: "1",
                         flexDirection: "column",
-                        backgroundColor: "#e6faff",
                         padding: "10px",
                         backgroundColor:
                           leave.status === "2"
-                            ? "#e6faff"
+                            ? "#fcf9ec"
                             : leave.status === "3"
                             ? "#ffe6e6"
                             : leave.status === "1"
                             ? "#e6fff2"
                             : "transparent",
                       }}
-                     
                     >
-                      <div className="space" >
+                      <div className="space">
                         <b>From date:</b> {formatLeaveDate(leave.from_date)}{" "}
                         <br />
                       </div>
@@ -270,11 +277,18 @@ function Body() {
                         display: "flex",
                         flex: "1",
                         flexDirection: "column",
-                        backgroundColor: "#e6faff",
                         padding: "10px",
                         backgroundColor:
                           leave.status === "2"
-                            ? "#e6faff"
+                            ? "#fcf9ec"
+                            : leave.status === "3"
+                            ? "#ffe6e6"
+                            : leave.status === "1"
+                            ? "#e6fff2"
+                            : "transparent",
+                        border:
+                          leave.status === "2"
+                            ? "#fcf9ec"
                             : leave.status === "3"
                             ? "#ffe6e6"
                             : leave.status === "1"
@@ -294,16 +308,26 @@ function Body() {
                 <div className="space reason">
                   <b>Reason:</b> {leave.reason} <br />
                 </div>
-                <div className="space status">
-                  <center>
-                    {leave.status === "2" ? (
-                      <b>Approval Pending</b>
-                    ) : leave.status === "3" ? (
-                      <b>Rejected</b>
-                    ) : leave.status === "1" ? (
-                      <b>Approved!!</b>
-                    ) : null}
-                  </center>
+                <div
+                  className="space status"
+                  style={{
+                    backgroundColor:
+                      leave.status === "2"
+                        ? "#e5c137"
+                        : leave.status === "3"
+                        ? "#ec0041"
+                        : leave.status === "1"
+                        ? "#00ac3b"
+                        : "transparent",
+                  }}
+                >
+                  {leave.status === "2" ? (
+                    <b>Approval Pending</b>
+                  ) : leave.status === "3" ? (
+                    <b>Rejected</b>
+                  ) : leave.status === "1" ? (
+                    <b>Approved!!</b>
+                  ) : null}
                 </div>
               </div>
             ))

@@ -1,24 +1,41 @@
 const { get_database , post_database} = require("../../config/db_utils");
 
+const moment = require('moment');
+
 exports.mentor_att_approve = async (req, res) => {
     const student = req.query.student;
-    
+
     if (!student) {
         return res.status(400).json({ error: "Mentor Id not found" });
     }
 
     try {
+        const appDate = moment().format('YYYY-MM-DD HH:mm:ss');
+
+        let nextWednesday = moment().day(3).startOf('day');
+        
+        if (moment().isAfter(nextWednesday, 'day')) {
+            nextWednesday.add(1, 'week');
+        }
+        
+        const dueDate = nextWednesday.format('YYYY-MM-DD HH:mm:ss');
         const query = `
             UPDATE students 
-            SET att_status = '1'
-            WHERE id = ?;`
-        const mentor_approve = await post_database(query, [student]);
-        res.json(mentor_approve);
+            SET att_status = '1', 
+                app_date = ?, 
+                due_date = ?, 
+                status = '1' 
+            WHERE id = ?;
+        `;
+        const mentorApprove = await post_database(query, [appDate, dueDate, student]);
+
+        res.json(mentorApprove);
     } catch (err) {
         console.error("Error Updating Mentor-Student Attendance", err);
         res.status(500).json({ error: "Error Updating Mentor-Student Attendance" });
     }
 };
+
 
 exports.mentor_no_att_approve = async (req, res) => {
     const student = req.query.student;
@@ -51,8 +68,8 @@ exports.update_biometrics = async () => {
             FROM students
             WHERE att_status = '1'
             AND (
-                (${currentDay} = 3 AND TIME(app_date) BETWEEN '06:00:00' AND '18:00:00')  -- Wednesday with time condition
-                OR (${currentDay} != 3)  -- Any other day without time condition
+                (${currentDay} = 3 AND TIME(app_date) BETWEEN '06:00:00' AND '18:00:00') 
+                OR (${currentDay} != 3) 
             )
         `;
 
@@ -85,14 +102,15 @@ exports.update_7_days = async () => {
     try {
         const query = `UPDATE students
                      SET att_status = '0'
-                     WHERE DAYOFWEEK(CURDATE()) = 4`;
+                     WHERE due_date < NOW()`;
 
-        const attendence = await get_database(query);
-        console.log('Attendance update executed:', attendence);
+        const attendance = await get_database(query);
+        console.log('Attendance update executed:', attendance);
 
-        return attendence;
+        return attendance;
     } catch (error) {
         console.error('Error executing update_7_days:', error);
         throw error;
     }
 };
+

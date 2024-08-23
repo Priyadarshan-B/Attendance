@@ -57,12 +57,12 @@ exports.post_arrear_stu_att = async(req, res)=>{
     SELECT att_status 
     FROM students
     WHERE id = ?
-    AND status = '1';
+    AND status IN('1', '0');
     `
 const [validate] = await get_database(validateQuery, [student])
 console.log(validate)
 
-if(validate && validate.att_status === '1'){
+if(validate && validate.att_status === '1' || validate.att_status === '0'){
 console.log("hii")
     const query = `
     INSERT INTO re_appear (faculty,  student , slot,att_session)

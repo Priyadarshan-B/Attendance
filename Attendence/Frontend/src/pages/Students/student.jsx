@@ -109,7 +109,7 @@ function Body() {
         );
         setAttendancePercent(attendanceResponse.data);
         setPercent(parseFloat(attendanceResponse.data.attendance_percentage));
-        
+
         const attendanceRecordsResponse = await requestApi(
           "GET",
           `/type2_attendence?student=${selectedStudent}`
@@ -122,7 +122,7 @@ function Body() {
         );
         if (attendanceDetailsResponse.data.error) {
           setAttendanceDetails([]);
-          console.log(attendanceDetailsResponse.data.error); 
+          console.log(attendanceDetailsResponse.data.error);
         } else {
           setAttendanceDetails(attendanceDetailsResponse.data);
         }
@@ -239,12 +239,11 @@ function Body() {
     },
   };
 
-  const formatLeaveDate = (date, time) => {
-    return (
-      moment(date).format("DD/MM/YYYY") +
-      " " +
-      moment(time, "HH:mm:ss").format("hh:mm A")
-    );
+  const formatLeaveDate = (date) => {
+    return moment(date).format("DD/MM/YYYY");
+  };
+  const formatLeaveTime = (time) => {
+    return moment(time, "HH:mm:ss").format("hh:mm A");
   };
 
   const handleChangePage = (event, newPage) => {
@@ -308,323 +307,513 @@ function Body() {
             Biometric Details - {studentDetails.name} (
             {studentDetails.register_number}){" "}
           </h3>
-          <div className="attendance-percentage-and-status">
-            <div className="student-details-container">
-              <div className="guage">
-                <h3>Attendance Percentage</h3>
-                <br />
-                <div>
-                  <LiquidGauge
-                    value={percent ?? 0}
-                    width={200}
-                    height={150}
-                    waveFrequency={2}
-                    waveAmplitude={5}
-                    waveAnimation={true}
-                    waveCount={10}
-                    circleStyle={{
-                      fill: "#55e77a",
-                    }}
-                    waveStyle={{
-                      fill: "#35dc61",
-                    }}
-                  />
-                </div>
-              </div>
-              <div
-                className="student-details "
-                style={{
-                  backgroundColor: "white",
-                  padding: "15px",
-                  borderRadius: "10px",
-                  boxShadow: "rgba(0, 0, 0, 0.09) 0px 3px 12px",
-                }}
-              >
-                <div className="detail-row">
-                  <div className="detail-label">Name:</div>
-                  <div className="detail-value">{studentDetails.name}</div>
-                </div>
-                <div className="detail-row">
-                  <div className="detail-label">Register Number:</div>
-                  <div className="detail-value">
-                    {studentDetails.register_number}
+          <div className="dashboard-flex">
+            <div className="attendance-percentage-and-status">
+              <div className="student-details-container">
+                <div className="guage">
+                  <h3>Attendance Percentage</h3>
+                  <div>
+                    <LiquidGauge
+                      value={percent}
+                      width={200}
+                      height={150}
+                      waveFrequency={2}
+                      waveAmplitude={5}
+                      waveAnimation={true}
+                      waveCount={10}
+                      circleStyle={{
+                        fill: "#55e77a",
+                      }}
+                      waveStyle={{
+                        fill: "#35dc61",
+                      }}
+                    />
                   </div>
                 </div>
-                <div className="detail-row">
-                  <div className="detail-label">Attendance Status:</div>
-                  <div className="detail-value">
-                    {studentDetails.att_status === "1" ? (
-                      <span>
-                        <h5 style={{ color: "#4dcd6e" }}>Approved..</h5>
-                      </span>
-                    ) : (
-                      <h5 className="n_approve">Pending Approval..</h5>
-                    )}
-                  </div>
-                </div>
-                {studentDetails.att_status === "1" && (
+                <div className="student-details">
+                  {/* <div className="detail-row">
+                <div className="detail-label">Name:</div>
+                <div className="detail-value">{studentDetails.name}</div>
+              </div> */}
                   <div className="detail-row">
-                    <div className="detail-label">Time Left:</div>
+                    <div className="detail-label">Register Number:</div>
+                    <div className="detail-value">
+                      {studentDetails.register_number}
+                    </div>
+                  </div>
+                  <div className="detail-row">
+                    <div className="detail-label">Attendance Status:</div>
+                    <div className="detail-value">
+                      {studentDetails.att_status === "1" ? (
+                        <span>
+                          <h5 style={{ color: "#4dcd6e" }}>Approved..</h5>
+                        </span>
+                      ) : (
+                        <h5 className="n_approve">Pending Approval..</h5>
+                      )}
+                    </div>
+                  </div>
+                  {studentDetails.att_status === "1" && (
+                    <div className="detail-row">
+                      <div className="detail-label">Time Left:</div>
+                      <div
+                        className="time"
+                        style={{
+                          color: "#4c91e2",
+                          fontSize: "17px",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m{" "}
+                        {timeLeft.seconds}s
+                      </div>
+                    </div>
+                  )}
+                  <div className="detail-row">
+                    <div className="detail-label">Today's Attendance:</div>
                     <div
                       className="time"
                       style={{
-                        color: "#4c91e2",
                         fontSize: "17px",
                         fontWeight: "600",
                       }}
                     >
-                      {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m{" "}
-                      {timeLeft.seconds}s
+                      {attendancePercent.present_absent &&
+                        attendancePercent.present_absent.length > 0 &&
+                        attendancePercent.present_absent.map(
+                          (attendance, index) => {
+                            const forenoonStatus =
+                              attendance.forenoon === "1" ? "P" : "A";
+                            const afternoonStatus =
+                              attendance.afternoon === "1" ? "P" : "A";
+                            return (
+                              <h4 key={index}>
+                                {forenoonStatus} | {afternoonStatus}
+                              </h4>
+                            );
+                          }
+                        )}
                     </div>
                   </div>
-                )}
+                </div>
+              </div>
+              <div className="attendance-percent-container">
+                <h3
+                  style={{
+                    backgroundColor: "white",
+                    padding: "10px",
+                    margin: "0px 0px 0px 0px",
+                    borderRadius: "5px",
+                    boxShadow:
+                      "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
+                  }}
+                >
+                  Attendance Details
+                </h3>
+                <div className="attendance-summary">
+                  <div className="summary-item">
+                    <div className="icons-flex">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-start",
+                        }}
+                      >
+                        <EventAvailableTwoToneIcon
+                          style={{
+                            color: "#4dcd6e",
+                            fontSize: "30px",
+                          }}
+                        />
+                        <p>
+                          <h4>Present Days</h4>
+                        </p>
+                      </div>
+                      <hr style={{ width: "100%" }} />
+                      <div
+                        style={{
+                          fontWeight: "700",
+                          fontSize: "40px",
+                          marginTop: "10px",
+                        }}
+                      >
+                        <p>{attendancePercent.present_days}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="summary-item">
+                    <div className="icons-flex">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-start",
+                        }}
+                      >
+                        <EventBusyTwoToneIcon
+                          style={{
+                            color: "#ff6968",
+                            fontSize: "30px",
+                          }}
+                        />
+                        <p>
+                          <h4>Absent Days</h4>
+                        </p>
+                      </div>
+                      <hr style={{ width: "100%" }} />
+                      <div
+                        style={{
+                          fontWeight: "700",
+                          fontSize: "40px",
+                          marginTop: "10px",
+                        }}
+                      >
+                        <b>{attendancePercent.absent_days}</b>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="summary-item">
+                    <div className="icons-flex">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-start",
+                        }}
+                      >
+                        <div>
+                          <img
+                            src={calendar}
+                            alt="Total Days"
+                            style={{
+                              width: "30px",
+                              margin: "3px",
+                            }}
+                          ></img>
+                        </div>
+                        <p>
+                          <h4>Total Days</h4>
+                        </p>
+                      </div>
+                      <hr style={{ width: "100%" }} />
+                      <div
+                        style={{
+                          fontWeight: "700",
+                          fontSize: "40px",
+                          marginTop: "10px",
+                        }}
+                      >
+                        <b>{attendancePercent.current_days}</b>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="summary-item">
+                    <div className="icons-flex">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-start",
+                        }}
+                      >
+                        <div>
+                          <img
+                            src={calendar}
+                            alt="Total Days"
+                            style={{
+                              width: "30px",
+                            }}
+                          ></img>
+                        </div>
+
+                        <p>
+                          <h4>Total Days (Sem)</h4>
+                        </p>
+                      </div>
+                      <hr style={{ width: "100%" }} />
+                      <div
+                        style={{
+                          fontWeight: "700",
+                          fontSize: "40px",
+                          marginTop: "10px",
+                        }}
+                      >
+                        <b>{attendancePercent.total_days}</b>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="summary-item">
+                    <div className="icons-flex">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-start",
+                        }}
+                      >
+                        <div>
+                          <img
+                            src={calendar}
+                            alt="Total Days"
+                            style={{
+                              width: "30px",
+                            }}
+                          ></img>
+                        </div>
+                        <p>
+                          <h4>Attendance (%)</h4>
+                        </p>
+                      </div>
+                      <hr style={{ width: "100%" }} />
+                      <div
+                        style={{
+                          fontWeight: "700",
+                          fontSize: "40px",
+                          marginTop: "10px",
+                        }}
+                      >
+                        <b>{attendancePercent.attendance_percentage}</b>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="attendance-percent-container">
-              <h3>Attendance Details</h3>
-              <hr />
-              <br />
 
-              {<div className="attendance-summary">
-                <div className="summary-item">
-                  <div className="icons-flex">
-                    <EventAvailableTwoToneIcon
-                      style={{
-                        color: "#4dcd6e",
-                        fontSize: "50px",
-                      }}
-                    />
-                    <p>
-                      <h4>Present</h4>
-                    </p>
-                    <b>{attendancePercent?.present_days ?? "N/A"}</b>
-                    </div>
-                </div>
-                <div className="summary-item">
-                  <div className="icons-flex">
-                    <EventBusyTwoToneIcon
-                      style={{
-                        color: "#ff6968",
-                        fontSize: "50px",
-                      }}
-                    />
-                    <p>
-                      <h4>Absent</h4>
-                    </p>
-                    <b>{attendancePercent?.absent_days ?? "N/A"}</b>
-                  </div>
-                </div>
-                <div className="summary-item">
-                  <div className="icons-flex">
-                    <div>
-                      <img
-                        src={calendar}
-                        alt="Total Days"
+            <div className="att_det">
+              <div className="leave-details">
+                <h3>Leave Details</h3>
+                <div className="leave-data">
+                  {leaveDetails.length > 0 ? (
+                    leaveDetails.map((leave, index) => (
+                      <div
+                        key={index}
+                        className="leave-row"
                         style={{
-                          width: "45px",
+                          backgroundColor:
+                            leave.status === "2"
+                              ? "#fcf9ec"
+                              : leave.status === "3"
+                              ? "#ffe6e6"
+                              : leave.status === "1"
+                              ? "#e6fff2"
+                              : "transparent",
+                          //  borderColor:
+                          //       leave.status === "2"
+                          //         ? " 1px solid #ded2a2"
+                          //         : leave.status === "3"
+                          //         ? "1px solid#76292e"
+                          //         : leave.status === "1"
+                          //         ? "1px solid #7eac8d"
+                          //         : "transparent",
                         }}
-                      ></img>
-                    </div>
-                    <p>
-                      <h4>Total Days</h4>
-                    </p>
-                    <b>{attendancePercent?.current_days ?? "N/A"}</b>
-                  </div>
-                </div>
-                <div className="summary-item">
-                  <div className="icons-flex">
-                    <div>
-                      <img
-                        src={calendar}
-                        alt="Total Days"
-                        style={{
-                          width: "45px",
-                        }}
-                      ></img>
-                    </div>
-                    <p>
-                      <h4>Total Days (Sem)</h4>
-                    </p>
-                    <b>{attendancePercent?.total_days ?? "N/A"}</b>
-                  </div>
-                </div>
-                <div className="summary-item">
-                  <div className="icons-flex">
-                    <div>
-                      <img
-                        src={calendar}
-                        alt="Total Days"
-                        style={{
-                          width: "45px",
-                        }}
-                      ></img>
-                    </div>
-                    <p>
-                      <h4>Attendance (%)</h4>
-                    </p>
-                    <b>{attendancePercent?.attendance_percentage ?? "N/A"}</b>
-                  </div>
-                </div>
-              </div>}
-            </div>
-          </div>
+                      >
+                        <div>
+                          <b>{leave.type}</b>
+                        </div>
 
-          <div className="att_det">
-            <div className="leave-details">
-              <h3>Leave Details</h3>
-              <hr></hr>
-              {leaveDetails.length > 0 ? (
-                leaveDetails.map((leave, index) => (
-                  <div key={index} className="leave-row">
-                    <div className="space">
-                      <b>Type:</b> {leave?.type ?? "N/A"} <br />
-                    </div>
-                    <div className="space">
-                      <b>From:</b>{" "}
-                      {formatLeaveDate(leave?.from_date ?? "N/A", leave?.from_time?? "N/A")} <br />
-                    </div>
-                    <div className="space">
-                      <b>To:</b> {formatLeaveDate(leave?.to_date ?? "N/A", leave?.to_time ?? "N/A")}
-                    </div>
-                    <hr style={{ width: "100%" }} />
+                        <div>
+                          <div
+                            style={{
+                              display: "flex",
+                              width: "100%",
+                              gap: "15px",
+                              flexDirection: "column",
+                            }}
+                          >
+                            <div className="space">
+                              <b>From date:</b>{" "}
+                              {formatLeaveDate(leave.from_date)} <br />
+                            </div>
+                            <div className="space">
+                              <b>From time:</b>{" "}
+                              {formatLeaveTime(leave.from_time)} <br />
+                            </div>
+
+                            <div className="space">
+                              <b>To date:</b> {formatLeaveDate(leave.to_date)}
+                            </div>
+                            <div className="space">
+                              <b>To time:</b> {formatLeaveTime(leave.to_time)}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="space reason">
+                          <b>Reason:</b> {leave.reason} <br />
+                        </div>
+                        <div
+                          className="space status"
+                          style={{
+                            backgroundColor:
+                              leave.status === "2"
+                                ? "#e5c137"
+                                : leave.status === "3"
+                                ? "#ec0041"
+                                : leave.status === "1"
+                                ? "#00ac3b"
+                                : "transparent",
+                          }}
+                        >
+                          {leave.status === "2" ? (
+                            <b>Approval Pending</b>
+                          ) : leave.status === "3" ? (
+                            <b>Rejected</b>
+                          ) : leave.status === "1" ? (
+                            <b>Approved!!</b>
+                          ) : null}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No leave applied.</p>
+                  )}
+                </div>
+              </div>
+              <div className="att_det_today">
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    backgroundColor: "white",
+                    padding: "10px",
+                    borderRadius: "10px",
+                    width: "100%",
+                    border: "1px solid lightgray",
+                    maxHeight: "180px",
+                    overflowY: "scroll",
+                    overflowX: "hidden",
+                  }}
+                >
+                  <h4>Today's Biometric Details - {todayDate}</h4>
+                  <hr style={{ width: "100%" }} />
+                  {todayAttendance.length > 0 ? (
+                    todayAttendance.map((detail, index) => (
+                      <div key={index} className="attendance-row">
+                        <b>Time</b>
+                        {detail.time}
+                      </div>
+                    ))
+                  ) : (
+                    <p>No attendance recorded for today.</p>
+                  )}
+                </div>
+                <div className="radial-chart">
+                  <h3>
+                    <center>Today's Biometrics</center>
+                  </h3>
+                  <Chart
+                    options={radialChartData.options}
+                    series={radialChartData.series}
+                    type="radialBar"
+                    height={300}
+                  />
+                </div>
+              </div>
+
+              <div className="att_det_others">
+                <h3>
+                  <center>Biometric History</center>
+                </h3>
+                <br />
+                {otherAttendance.length > 0 ? (
+                  <div
+                    style={{
+                      width: "100%",
+                    }}
+                  >
+                    <TableContainer component={Paper}>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>
+                              <b>Date</b>
+                            </TableCell>
+                            <TableCell>
+                              <b>Time</b>
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {otherAttendance
+                            .slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
+                            .map((detail, index) => (
+                              <TableRow key={index}>
+                                <TableCell>{detail.date}</TableCell>
+                                <TableCell>{detail.time}</TableCell>
+                              </TableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                      <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={otherAttendance.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                      />
+                    </TableContainer>
                   </div>
-                ))
-              ) : (
-                <p>No leave applied.</p>
-              )}
-            </div>
-            <div className="att_det_today">
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  backgroundColor: "white",
-                  padding: "15px",
-                  borderRadius: "10px",
-                  width: "90%",
-                  boxShadow: "rgba(0, 0, 0, 0.09) 0px 3px 12px",
-                }}
-              >
-                <h4>Today's Biometric Details - {todayDate}</h4>
-                {todayAttendance.length > 0 ? (
-                  todayAttendance.map((detail, index) => (
-                    <div key={index} className="attendance-row">
-                      <b>Time</b> - {detail?.time ?? "N/A"}
-                    </div>
-                  ))
                 ) : (
                   <p>No attendance recorded for today.</p>
                 )}
               </div>
-              <div className="radial-chart">
-                <h3>
-                  <center>Attendance Count</center>
-                </h3>
-                <Chart
-  options={radialChartData?.options ?? {}}
-  series={radialChartData?.series ?? []}
-  type="radialBar"
-  height={300}
-/>
+            </div>
+
+            {studentDetails.type === 2 && (
+              <div className="type2-table">
+                <h3>NIP/ Re-Appear Attendance Records</h3>
+                {attendanceRecords.length > 0 ? (
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>
+                            <b>Faculty</b>
+                          </TableCell>
+                          <TableCell>
+                            <b>Slots</b>
+                          </TableCell>
+                          <TableCell>
+                            <b>Attendance Session</b>
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {attendanceRecords
+                          .slice(pageNip * rowPage, pageNip * rowPage + rowPage)
+                          .map((record, index) => (
+                            <TableRow key={index}>
+                              <TableCell>{record.name}</TableCell>
+                              <TableCell>{record.label}</TableCell>
+                              <TableCell>
+                                {new Date(record.att_session).toLocaleString()}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25]}
+                      component="div"
+                      count={attendanceRecords.length}
+                      rowsPerPage={rowPage}
+                      page={pageNip}
+                      onPageChange={handlePage}
+                      onRowsPerPageChange={handleChangeRowsPage}
+                    />
+                  </TableContainer>
+                ) : (
+                  <p>No records found</p>
+                )}
               </div>
-            </div>
-
-            <div className="att_det_others">
-              <h3>
-                <center>Biometric History</center>
-              </h3>
-              <br />
-              {otherAttendance.length > 0 ?(<div style={{
-            width:'100%'
-          }}>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <b>Date</b>
-                    </TableCell>
-                    <TableCell>
-                      <b>Time</b>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {otherAttendance
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((detail, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{detail.date}</TableCell>
-                        <TableCell>{detail.time}</TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={otherAttendance.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </TableContainer>
-          </div>):(
-              <p>No attendance recorded for today.</p>
-
-          )}
-            </div>
+            )}
           </div>
-
-          {studentDetails.type === 2 && (
-            <div className="type2-table">
-              <h3>NIP/ Re-Appear Attendance Records</h3>
-              {attendanceRecords.length > 0 ? (
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>
-                          <b>Faculty</b>
-                        </TableCell>
-                        <TableCell>
-                          <b>Slots</b>
-                        </TableCell>
-                        <TableCell>
-                          <b>Attendance Session</b>
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {attendanceRecords
-                        .slice(pageNip * rowPage, pageNip * rowPage + rowPage)
-                        .map((record, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{record.name}</TableCell>
-                            <TableCell>{record.label}</TableCell>
-                            <TableCell>
-                              {new Date(record.att_session).toLocaleString()}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                  <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={attendanceRecords.length}
-                    rowsPerPage={rowPage}
-                    page={pageNip}
-                    onPageChange={handlePage}
-                    onRowsPerPageChange={handleChangeRowsPage}
-                  />
-                </TableContainer>
-              ) : (
-                <p>No records found</p>
-              )}
-            </div>
-          )}
         </>
       )}
     </div>

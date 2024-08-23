@@ -2,21 +2,6 @@ const { get_database, post_database } = require("../../config/db_utils");
 
 exports.get_role_student = async (req, res)=>{
     const role = req.query.role
-    if(!role){
-        return res.status(400).json({ error: "Role id is required." });
-    }
-    const checkRole = `
-    SELECT role FROM roles_faculty
-    WHERE mentor = ?
-    AND status ='1';
-    `
-    const roleId = await get_database(checkRole, [role]) 
-    console.log(roleId)
-    // if (roleId.length === 0) {
-    //     return res.status(404).json({ error: "Role not found or inactive." });
-    // }
-
-    // const roleValue = roleId[0].role;
     try{
         const query = `
              SELECT s.id, s.name, s.register_number
@@ -39,24 +24,6 @@ ORDER BY s.name
 
 exports.post_attendance = async (req, res) => {
     const { role, student, session } = req.body;
-
-    // if (!role || !student || !session) {
-    //     return res.status(400).json({ error: "Role, student, and session IDs are required." });
-    // }
-    // const checkRole = `
-    // SELECT role FROM roles_faculty
-    // WHERE mentor = ?
-    // AND status ='1';
-    // `
-    // const roleId = await get_database(checkRole, [role]) 
-    // console.log(roleId)
-    // if (roleId.length === 0) {
-    //     return res.status(404).json({ error: "Role not found or inactive." });
-    // }
-
-    // const roleValue = roleId[0].role;
-
-
     try {
         const query = `
             SELECT id FROM role_student_map 

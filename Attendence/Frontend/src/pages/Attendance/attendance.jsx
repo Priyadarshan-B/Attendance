@@ -215,7 +215,7 @@ function Body({ onShowFavAttendance }) {
         <table className="custom-table">
           <thead>
             <tr>
-            <th style={{ width: "20px" }}></th> 
+            <th style={{ width: "20px" }}>favourites</th> 
             <th style={{ width: "50px" }}>S.No</th> 
             <th style={{ width: "200px" }}>Name</th> 
             <th style={{ width: "150px" }}>Register Number</th>
@@ -247,7 +247,7 @@ function Body({ onShowFavAttendance }) {
                   </tr>
                   {expandedRow === row.id && (
                     <tr className="expanded-row">
-                      <td colSpan="3">{renderTimeSlots(row)}</td>
+                      <td colSpan="4">{renderTimeSlots(row)}</td>
                     </tr>
                   )}
                 </React.Fragment>
