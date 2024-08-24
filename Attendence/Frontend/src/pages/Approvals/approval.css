@@ -44,10 +44,9 @@
     margin: 0;
   }
 
-/* .time{
-  background-color: rgba(147, 169, 188, 0.352);
-  border-radius: 5px;
-} */
+.time{
+  font-weight: 600;
+}
 
 .leave-container {
   display: flex;

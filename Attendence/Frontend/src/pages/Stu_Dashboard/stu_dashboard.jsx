@@ -15,6 +15,9 @@ import Groups2TwoToneIcon from '@mui/icons-material/Groups2TwoTone';
 import SportsScoreIcon from '@mui/icons-material/SportsScore'
 import EmojiEventsTwoToneIcon from '@mui/icons-material/EmojiEventsTwoTone';
 import { RiWaterPercentFill } from "react-icons/ri";
+import { BsFillCalendar2MonthFill } from "react-icons/bs";
+import { LuCalendarRange } from "react-icons/lu";
+import CountUp from 'react-countup';
 import calendar from "../../assets/calendar.png";
 import {
   Table,
@@ -333,10 +336,6 @@ function Body() {
             </div>
           </div>
           <div className="student-details">
-            {/* <div className="detail-row">
-              <div className="detail-label">Name:</div>
-              <div className="detail-value">{studentDetails.name}</div>
-            </div> */}
             <div className="detail-row">
               <div className="detail-label">Register Number:</div>
               <div className="detail-value">
@@ -348,7 +347,7 @@ function Body() {
               <div className="detail-value">
                 {studentDetails.att_status === "1" ? (
                   <span>
-                    <h5 style={{ color: "#4dcd6e" }}>Approved..</h5>
+                    <h5 style={{ color: "#00bb00" }}>Approved..</h5>
                   </span>
                 ) : (
                   <h5 className="n_approve">Pending Approval..</h5>
@@ -373,7 +372,7 @@ function Body() {
             )}
 
             <div className="detail-row">
-              <div className="detail-label">Today's Attendance:</div>
+              <div className="detail-label">Today's Attendance (P|P):</div>
               <div
                 className="tim"
                 style={{
@@ -401,12 +400,13 @@ function Body() {
         <div className="attendance-percent-container">
           <h3
             style={{
-              backgroundColor: "white",
+              backgroundColor: "rgb(113 137 255 / 13%)",
               padding: "10px",
               margin: "0px 0px 0px 0px",
+              border:'1px solid blue',
               borderRadius: "5px",
-              boxShadow:
-                "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
+              color:'#000078',
+              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
             }}
           >
             Attendance Details
@@ -433,7 +433,7 @@ function Body() {
                     }}
                   />
                   <p>
-                    <h4>Present Days</h4>
+                    <h5>Present Days</h5>
                   </p>
                 </div>
                 <hr style={{ width: "100%" }} />
@@ -472,7 +472,7 @@ function Body() {
                     }}
                   />
                   <p>
-                    <h4>Absent Days</h4>
+                    <h5>Absent Days</h5>
                   </p>
                 </div>
                 <hr style={{ width: "100%" }} />
@@ -504,17 +504,15 @@ function Body() {
                   }}
                 >
                   <div>
-                    <img
-                      src={calendar}
-                      alt="Total Days"
-                      style={{
-                        width: "30px",
-                        margin: "3px",
-                      }}
-                    ></img>
+                    <BsFillCalendar2MonthFill
+                    style={{
+                      color: "#ffb22f",
+                      fontSize: "25px",
+                    }}
+                    />
                   </div>
                   <p>
-                    <h4>Total Days</h4>
+                    <h5>Total Days</h5>
                   </p>
                 </div>
                 <hr style={{ width: "100%" }} />
@@ -539,13 +537,12 @@ function Body() {
                   }}
                 >
                   <div>
-                    <img
-                      src={calendar}
-                      alt="Total Days"
-                      style={{
-                        width: "30px",
-                      }}
-                    ></img>
+                    <LuCalendarRange
+                    style={{
+                      color: "#fffff",
+                      fontSize: "25px",
+                    }}
+                    />
                   </div>
 
                   <p>
@@ -632,14 +629,19 @@ function Body() {
                     fontWeight: "700",
                     fontSize: "40px",
                     marginTop: "10px",
-                    color:'#b399ff'
+                    color:'#875eff'
                   }}
                 >
                   <b>{placement.placement_rank}</b>
                 </div>
               </div>
             </div>
-            <div className="summary-item">
+            <div className="summary-item"
+            style={{
+              backgroundColor:'#e6fff5',
+              border:'1px solid #5fffbf'
+            }}
+            >
               <div className="icons-flex">
                 <div
                   style={{
@@ -670,7 +672,9 @@ function Body() {
                 </div>
               </div>
             </div>
-            <div className="summary-item">
+            <div className="summary-item" style={{
+              border:'1px solid #343434'
+            }}>
               <div className="icons-flex">
                 <div
                   style={{
@@ -703,7 +707,7 @@ function Body() {
             </div>
             <div className="summary-item"
             style={{
-              backgroundColor:'#fffbc9',
+              backgroundColor:'#fffdee',
               border:'1px solid yellow'
             }}
             >
@@ -722,7 +726,7 @@ function Body() {
                     }}
                   />
                   <p>
-                    <h4>Reward Points</h4>
+                    <h5>Reward Points</h5>
                   </p>
                 </div>
                 <hr style={{ width: "100%" }} />
@@ -733,7 +737,17 @@ function Body() {
                     marginTop: "10px",
                   }}
                 >
-                  <b>{placement.reward_points}</b>
+                  <b style={{
+                    color:'black'
+                  }}>
+                    <CountUp style={{
+                      color:'black',
+                      fontSize:'30px'
+                    }} end={placement.reward_points}
+                    duration={2}
+                    />
+                    {/* {placement.reward_points} */}
+                    </b>
                 </div>
               </div>
             </div>
@@ -759,14 +773,14 @@ function Body() {
                         : leave.status === "1"
                         ? "#e6fff2"
                         : "transparent",
-                    //  borderColor:
-                    //       leave.status === "2"
-                    //         ? " 1px solid #ded2a2"
-                    //         : leave.status === "3"
-                    //         ? "1px solid#76292e"
-                    //         : leave.status === "1"
-                    //         ? "1px solid #7eac8d"
-                    //         : "transparent",
+                     border:
+                          leave.status === "2"
+                            ? " 1px solid #ded2a2"
+                            : leave.status === "3"
+                            ? "1px solid#76292e"
+                            : leave.status === "1"
+                            ? "1px solid #7eac8d"
+                            : "transparent",
                   }}
                 >
                   <div>
@@ -813,6 +827,7 @@ function Body() {
                           : leave.status === "1"
                           ? "#00ac3b"
                           : "transparent",
+                        color:"white"
                     }}
                   >
                     {leave.status === "2" ? (

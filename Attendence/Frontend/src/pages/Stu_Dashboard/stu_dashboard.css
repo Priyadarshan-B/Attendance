@@ -30,11 +30,10 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 10px;
+    /* padding: 10px; */
     flex: 2;
     border-radius: 5px;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-}
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;}
 
 .icons-flex{
     display: flex;
@@ -141,8 +140,11 @@
     display: flex;
     flex-direction: column;
     width: 80%;
-    margin: 20px;
+    margin: 10px;
+    padding: 10px;
     gap: 5px;
+    background-color: #e6ebff;
+    border-radius: 10px;
 }
 
 .detail-row {

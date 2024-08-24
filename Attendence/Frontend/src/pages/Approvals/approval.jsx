@@ -19,10 +19,8 @@ import {
 import InputBox from "../../components/TextBox/textbox";
 import Popup from "../../components/popup/popup";
 import LeaveDetails from "./leave_approval";
-// import Button from "../../components/Button/Button";
 import "./approval.css";
 
-// Calculate time left until the due date
 function calculateTimeLeft(dueDate) {
   const difference = +new Date(dueDate) - +new Date();
   let timeLeft = {};
@@ -285,19 +283,34 @@ function Body() {
                       </TableCell>
                       <TableCell>
                         {student.att_status === "1" ? (
-                          <span>
-                            <p className="time" style={{
-                              backgrounColor:
+                          <div style={{
+                            color:timeLeft[index].days < 4
+                            ? "red"
+                            : timeLeft[index].days > 7
+                            ? "green"
+                            : "black",
+                            borderRadius:'20px',
+                            padding:'2px',
+                            textAlign:'center',
+                            backgroundColor:
+                              timeLeft[index].days < 4
+                                ? "#fde8e8"
+                                : timeLeft[index].days > 7
+                                ? "#e6fff2"
+                                : "white",
+                                border:
                                 timeLeft[index].days < 4
-                                  ? "red"
+                                  ? "1px solid red"
                                   : timeLeft[index].days > 7
-                                  ? "green"
-                                  : "black",
-                            }}>
+                                  ? "1px solid green"
+                                  : "white",
+                          }}
+                          >
+                            <p className="time" >
                               {timeLeft[index].days}d {timeLeft[index].hours}h{" "}
                               {timeLeft[index].minutes}m{" "}
                             </p>
-                          </span>
+                          </div>
                         ) : (
                           "--"
                         )}
