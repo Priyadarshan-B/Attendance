@@ -2,24 +2,35 @@ import React, { useEffect, useState } from "react";
 import AppLayout from "../../components/applayout/AppLayout";
 import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
-import DatePicker from "react-multi-date-picker"
-import DatePanel from "react-multi-date-picker/plugins/date_panel"
+import DatePicker from "react-multi-date-picker";
+import DatePanel from "react-multi-date-picker/plugins/date_panel";
 import Button from "../../components/Button/Button";
-import './holidays.css'
-import date from '../../assets/date.png'
+import Select from 'react-select';
+// import Loader from "../../components/Loader/loader";
+import Loader from '../../components/Loader/loader'
+import './holidays.css';
+import date from '../../assets/date.png';
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
-
 
 function Holidays(){
     return <Body/>
 }
+
 function Body(){
+    const [selectedYear, setSelectedYear] = useState(null);
     const [selectedDates, setSelectedDates] = useState([]);
     const [holidays, setHolidays] = useState([]);
     const [currentMonthIndex, setCurrentMonthIndex] = useState(new Date().getMonth());
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
 
+    const yearOptions = [
+        { value: "I", label: "I" },
+        { value: "II", label: "II" },
+        { value: "III", label: "III" },
+        { value: "IV", label: "IV" },
+        { value: "All", label: "All" }
 
+    ];
 
     useEffect(() => {
         fetchHolidays();
@@ -44,7 +55,7 @@ function Body(){
         } catch (error) {
             console.error('Error fetching holidays:', error);
         } finally {
-            setLoading(false); // Set loading to false after data is fetched
+            setLoading(false);
         }
     };
 
@@ -70,18 +81,24 @@ function Body(){
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            console.log(selectedDates)
-            const response = await requestApi("POST", '/dates', { dates: selectedDates });
+            console.log(selectedDates);
+            const response = await requestApi("POST", '/dates', { 
+                year: selectedYear.value, 
+                dates: selectedDates });
 
             if (response.success) {
                 console.log('Response from backend:', response);
-                fetchHolidays()
+                fetchHolidays();
             } else {
                 console.log('Error response from backend:', response.error);
             }
         } catch (error) {
             console.error('Error sending data to backend:', error);
         }
+    };
+
+    const handleYearChange = (selectedOption) => {
+        setSelectedYear(selectedOption);
     };
 
     const groupedHolidays = holidays.reduce((acc, holiday) => {
@@ -91,7 +108,6 @@ function Body(){
         return acc;
     }, {});
 
-    // Create an array of all months
     const allMonths = [
         ...new Array(12).fill(0).map((_, index) => {
             const adjustedIndex = (currentMonthIndex + index) % 12;
@@ -101,57 +117,67 @@ function Body(){
 
     return (
         <div className="holidays-page">
-            <div className="add-holidays-div">
-                <div className="date-picker">
-                    <DatePicker
-                        multiple
-                        plugins={[<DatePanel />]}
-                        value={selectedDates}
-                        onChange={handleDateChange}
-                        style={{ padding: '7px', width: "300px" }}
-                        placeholder="Select Holidays"
-                    />
-                </div>
-                <div className="button-submit">
-                    <Button label="Submit" onClick={handleSubmit} />
-                </div>
-            </div>
-
-
-            <div className="calender-container">
-
-                {loading ? (
-                    <div className="loader-page1">
-                        <div className="loader"></div>
+            {loading ? (
+                <Loader />
+            ) : (
+                <>
+                    <div className="year-select-div">
+                    <Select 
+                            options={yearOptions}
+                            value={selectedYear}
+                            onChange={handleYearChange}
+                            placeholder="Select Year"
+                            className="year-dropdown"
+                            isClearable
+                        />
                     </div>
-                ) : (
-                    allMonths.map(month => (
-                        <div className="display-holidays-grid" key={month}>
-                            <h3 className="mon-name">{month}</h3>
-                            <div className="div-grid">
-                                {groupedHolidays[month] && groupedHolidays[month].length > 0 ? (
-                                    groupedHolidays[month].map((date, index) => (
-                                        <div key={index} className="holiday-item">
-                                            {date}
-                                            <div className="delete-icon-div">
-                                                <DeleteForeverTwoToneIcon sx={{ fontSize: "16px", position: "relative", top: "2px", color: "red", left: "1px" }} />
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <div className="no-items">
-                                        <img src={date} alt="img" className="date-img" />
-                                        No holidays added
-                                    </div>
-                                )}
+
+                    {selectedYear && (
+                        <div className="add-holidays-div">
+                            <div className="date-picker">
+                                <DatePicker
+                                    multiple
+                                    plugins={[<DatePanel />]}
+                                    value={selectedDates}
+                                    onChange={handleDateChange}
+                                    style={{ padding: '7px', width: "300px" }}
+                                    placeholder="Select Holidays"
+                                />
+                            </div>
+                            <div className="button-submit">
+                                <Button label="Submit" onClick={handleSubmit} />
                             </div>
                         </div>
-                    ))
-                )}
+                    )}
 
-            </div>
-
+                    <div className="calendar-container">
+                        {allMonths.map(month => (
+                            <div className="display-holidays-grid" key={month}>
+                                <h3 className="mon-name">{month}</h3>
+                                <div className="div-grid">
+                                    {groupedHolidays[month] && groupedHolidays[month].length > 0 ? (
+                                        groupedHolidays[month].map((date, index) => (
+                                            <div key={index} className="holiday-item">
+                                                {date}
+                                                <div className="delete-icon-div">
+                                                    <DeleteForeverTwoToneIcon sx={{ fontSize: "16px", position: "relative", top: "2px", color: "red", left: "1px" }} />
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="no-items">
+                                            <img src={date} alt="img" className="date-img" />
+                                            No holidays added
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
         </div>
     );
 }
-export default Holidays
+
+export default Holidays;

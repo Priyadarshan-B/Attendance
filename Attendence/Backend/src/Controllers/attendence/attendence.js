@@ -343,98 +343,69 @@ exports.get_AttendanceCount = async (req, res) => {
       if (morningSession && afternoonSession) {
         for (let date of attendanceDates) {
           const reAppearQuery = `
-            SELECT DATE(att_session) AS present_day
+            SELECT COUNT(DISTINCT slot) AS distinct_slot_count
             FROM re_appear
             WHERE student = ?
             AND DATE(att_session) = CURRENT_DATE()
-            AND status = '1'
-            GROUP BY DATE(att_session)
-            HAVING COUNT(DISTINCT slot) = (SELECT COUNT(*) FROM time_slots WHERE status = '1');
+            AND status = '1';
           `;
-          const slotRecords = await get_database(reAppearQuery, [
-            studentId,
-            // date,
-          ]);
-
-          if (slotRecords.length > 0) {
-            forenoon = "1";
-            afternoon = "1";
-          } else {
+          const slotRecords = await get_database(reAppearQuery, [studentId]);
+        
+          const availableSlotQuery = `
+            SELECT COUNT(*) AS available_slot_count
+            FROM time_slots
+            WHERE year = ?
+            AND status = '1'; 
+          `;
+          const availableSlotRecords = await get_database(availableSlotQuery, [year]);
+        
+          const distinctSlotCount = slotRecords.length > 0 ? slotRecords[0].distinct_slot_count : 0;
+          const availableSlotCount = availableSlotRecords.length > 0 ? availableSlotRecords[0].available_slot_count : 0;
+        
+          if (distinctSlotCount !== availableSlotCount) {
             forenoon = "0";
             afternoon = "0";
-          }
-
-          // Additional check for students in role_student_map
-          // const roleMapQuery = `
-          //   SELECT id 
-          //   FROM role_student_map 
-          //   WHERE student = ? AND status = '1';
-          // `;
-          // const roleMapResult = await get_database(roleMapQuery, [studentId]);
-          // console.log(roleMapResult);
-
-          // if (roleMapResult.length > 0) {
-          //   const roleStudentId = roleMapResult[0].id;
-          //   const roleStudentQuery = `
-          //   SELECT DATE(attendance) AS present_day
-          //   FROM roles_student
-          //   WHERE student_map = ?
-          //   AND DATE(attendance) = CURRENT_DATE()
-          //   AND status = '1'
-          //   GROUP BY DATE(attendance)
-          //   HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE status = '1');
-          //   `;
-          //   const roleStudentRecords = await get_database(roleStudentQuery, [
-          //     roleStudentId,
-          //   //   date,
-          //   ]);
-          //   console.log(roleStudentRecords);
-          //   if (roleStudentRecords.length > 0) {
-          //     forenoon = "1";
-          //     afternoon = "1";
-          //   } else {
-          //     forenoon = "0";
-          //     afternoon = "0";
-          //   }
-          // }
-          const roleMapQuery = `
-            SELECT id 
-            FROM role_student_map 
-            WHERE student = ? AND status = '1';
-          `;
-          const roleMapResults = await get_database(roleMapQuery, [studentId]);
-          console.log(roleMapResults);
-
-          let allRolesHaveDistinctAttendance = true;
-
-          for (const roleMapResult of roleMapResults) {
-            const roleStudentId = roleMapResult.id;
-            const roleStudentQuery = `
-              SELECT DATE(attendance) AS present_day
-              FROM roles_student
-              WHERE student_map = ?
-              AND DATE(attendance) = CURRENT_DATE()
-              AND status = '1'
-              GROUP BY DATE(attendance)
-              HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE status = '1');
+          } else {
+            forenoon = "1";
+            afternoon = "1";
+        
+            const roleMapQuery = `
+              SELECT id 
+              FROM role_student_map 
+              WHERE student = ? AND status = '1';
             `;
-            const roleStudentRecords = await get_database(roleStudentQuery, [roleStudentId]);
-
-            if (roleStudentRecords.length === 0) {
-              allRolesHaveDistinctAttendance = false;
-              break; // If any role doesn't have distinct attendance, break out of the loop
+            const roleMapResults = await get_database(roleMapQuery, [studentId]);
+        
+            let allRolesHaveDistinctAttendance = true;
+        
+            for (const roleMapResult of roleMapResults) {
+              const roleStudentId = roleMapResult.id;
+              const roleStudentQuery = `
+                SELECT DATE(attendance) AS present_day
+                FROM roles_student
+                WHERE student_map = ?
+                AND DATE(attendance) = CURRENT_DATE()
+                AND status = '1'
+                GROUP BY DATE(attendance)
+                HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE status = '1');
+              `;
+              const roleStudentRecords = await get_database(roleStudentQuery, [roleStudentId]);
+        
+              if (roleStudentRecords.length === 0) {
+                allRolesHaveDistinctAttendance = false;
+                break; // If any role doesn't have distinct attendance, break out of the loop
+              }
+            }
+        
+            if (allRolesHaveDistinctAttendance) {
+              forenoon = "1";
+              afternoon = "1";
+            } else {
+              forenoon = "0";
+              afternoon = "0";
             }
           }
-
-          if (allRolesHaveDistinctAttendance) {
-            forenoon = "1";
-            afternoon = "1";
-          } else {
-            forenoon = "0";
-            afternoon = "0";
-          }
-
-
+        
           const existingRecordQuery = `
             SELECT * FROM attendance 
             WHERE student = ? AND date = ?;
@@ -443,7 +414,7 @@ exports.get_AttendanceCount = async (req, res) => {
             studentId,
             date,
           ]);
-
+        
           if (existingRecord.length > 0) {
             const updateAttendanceQuery = `
               UPDATE attendance 
@@ -469,9 +440,9 @@ exports.get_AttendanceCount = async (req, res) => {
             ]);
           }
         }
+        
+        await processLeaves(studentId, from_date, to_date);
       }
-
-      await processLeaves(studentId, from_date, to_date);
     }
 
     res.status(200).json({ message: "Attendance processed successfully" });

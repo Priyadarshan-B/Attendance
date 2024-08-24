@@ -80,7 +80,7 @@ const processAttendanceForAllStudents = async () => {
 };
 
 
-cron.schedule('8 0 * * 3', async () => {
+cron.schedule('0 0 * * 3', async () => {
     try {
         console.log('Executing update_7_days cron job...');
         await update_7_days();
@@ -108,7 +108,7 @@ cron.schedule('43 16 * * *', async () => {
   }
 });
 
-cron.schedule('0 15 * * *', async () => {
+cron.schedule('42 11 * * *', async () => {
   try {
       console.log('Executing update_biometrics cron job...');
       await update_biometrics();

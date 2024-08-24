@@ -56,19 +56,28 @@ function Body({ onShowFavAttendance }) {
       }
     };
 
-    const fetchTimeSlots = async () => {
-      try {
-        const response = await requestApi("GET", "/slots");
-        setTimeSlots(response.data);
-      } catch (error) {
-        console.error("Error fetching time slots:", error);
-      }
-    };
+   
+    
 
     fetchData();
-    fetchTimeSlots();
+    // fetchTimeSlots();
   }, []);
-
+  const fetchTimeSlots = async (year) => {
+    try {
+      const response = await requestApi("GET", `/slots?year=${year}`);
+      setTimeSlots(response.data);
+    } catch (error) {
+      console.error("Error fetching time slots:", error);
+    }
+  };
+  const handleRowClick = (rowId, year) => {
+    if (expandedRow === rowId) {
+      setExpandedRow(null);
+    } else {
+      fetchTimeSlots(year);
+      setExpandedRow(rowId);
+    }
+  };
   useEffect(() => {
     const updateCurrentTime = () => {
       const now = new Date();
@@ -132,9 +141,8 @@ function Body({ onShowFavAttendance }) {
     setPage(0);
   };
 
-  const handleRowClick = (rowId) => {
-    setExpandedRow(expandedRow === rowId ? null : rowId);
-  };
+ 
+  
   const handleStarClick = async (studentId) => {
     try {
       await requestApi("POST", "/favourites", {
@@ -215,8 +223,9 @@ function Body({ onShowFavAttendance }) {
         <table className="custom-table">
           <thead>
             <tr>
-            <th style={{ width: "20px" }}>favourites</th> 
-            <th style={{ width: "50px" }}>S.No</th> 
+            <th style={{ width: "0px" }}></th> 
+            <th style={{ width: "0px" }}>S.No</th> 
+            <th style={{ width: "0px" }}>Year</th> 
             <th style={{ width: "200px" }}>Name</th> 
             <th style={{ width: "150px" }}>Register Number</th>
             </tr>
@@ -228,7 +237,7 @@ function Body({ onShowFavAttendance }) {
                 <React.Fragment key={row.id}>
                   <tr
                     className="row"
-                    onClick={() => handleRowClick(row.id)}
+                    onClick={() => handleRowClick(row.id, row.year)}
                     style={{ cursor: "pointer" }}
                   >
                     <td>
@@ -242,12 +251,13 @@ function Body({ onShowFavAttendance }) {
                       />
                     </td>
                     <td>{page * rowsPerPage + index + 1}</td>
+                    <td>{row.year}</td>
                     <td>{row.name}</td>
                     <td>{row.register_number}</td>
                   </tr>
                   {expandedRow === row.id && (
                     <tr className="expanded-row">
-                      <td colSpan="4">{renderTimeSlots(row)}</td>
+                      <td colSpan="5">{renderTimeSlots(row)}</td>
                     </tr>
                   )}
                 </React.Fragment>

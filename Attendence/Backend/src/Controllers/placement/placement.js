@@ -128,3 +128,24 @@ exports.get_placement_subMentor = async (req, res) => {
     return res.status(500).json({ error: "Error fetching placement data." });
   }
 };
+
+
+exports.get_stu_placement = async(req, res)=>{
+  const student = req.query.student
+  if(!student){
+    res.status(400).json({error:"Student id is required!!"})
+  }
+  try{
+    const query = 
+      `SELECT * FROM placement_data 
+      WHERE student = ? 
+      AND status = '1'
+      `
+      const stuPlacement = await get_database(query, [student])
+      res.json(stuPlacement)
+      }
+  catch(err){
+    console.error("Error fetching placement data:", err);
+    return res.status(500).json({ error: "Error fetching placement data." });
+  }
+}

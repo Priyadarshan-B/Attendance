@@ -15,13 +15,14 @@ exports.get_attendance_details = async (req, res) => {
       FROM sem_date 
       WHERE year = ? AND status = '1'`;
     const semDates = await get_database(semQuery, [studentYear]);
+    console.log(studentYear)
     if (!semDates.length) {
       return res.status(404).json({ error: "Semester dates not found" });
     }
     const { from_date, to_date } = semDates[0];
 
-    const holidaysQuery = `SELECT dates FROM holidays WHERE status = '1'`;
-    const holidaysData = await get_database(holidaysQuery);
+    const holidaysQuery = `SELECT dates FROM holidays WHERE year = ? AND status = '1'`;
+    const holidaysData = await get_database(holidaysQuery, [studentYear]);
     const holidays = holidaysData.map((holiday) => holiday.dates);
 
 const placeholders = holidays.length > 0 ? holidays.map(() => '?').join(',') : 0;

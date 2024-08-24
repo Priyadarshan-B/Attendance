@@ -117,6 +117,7 @@ router.get('/role-map', roleMap.get_all_roles_map)
 //placement
 router.get('/placement', placement.get_placement)
 router.get('/placementSub', placement.get_placement_subMentor)
+router.get('/placement-student', placement.get_stu_placement)
 
 //favourites
 router.get('/favourites', favorites.get_favorites)

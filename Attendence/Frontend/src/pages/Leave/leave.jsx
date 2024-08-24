@@ -321,13 +321,15 @@ function Body() {
                         : "transparent",
                   }}
                 >
-                  {leave.status === "2" ? (
-                    <b>Approval Pending</b>
-                  ) : leave.status === "3" ? (
-                    <b>Rejected</b>
-                  ) : leave.status === "1" ? (
-                    <b>Approved!!</b>
-                  ) : null}
+                  <div>
+                    {leave.status === "2" ? (
+                      <b className="leave-b" >Approval Pending</b>
+                    ) : leave.status === "3" ? (
+                      <b className="leave-b">Rejected</b>
+                    ) : leave.status === "1" ? (
+                      <b className="leave-b">Approved!!</b>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             ))

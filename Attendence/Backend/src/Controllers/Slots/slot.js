@@ -1,13 +1,18 @@
 const { get_database, post_database } = require("../../config/db_utils");
 
 exports.get_slots = async (req, res) => {
+    const { year } = req.query; 
     try {
-        const updateQuery = `
-            SELECT * FROM time_slots  WHERE
-                 CURRENT_TIME >= start_time AND CURRENT_TIME <= end_time OR
-                                 CURRENT_TIME > end_time
+        const query = `
+            SELECT * FROM time_slots 
+            WHERE year = ? 
+            AND (
+                (CURRENT_TIME >= start_time AND CURRENT_TIME <= end_time) OR
+                (CURRENT_TIME > end_time)
+            )
+            AND status = '1'
         `;
-        const slots = await get_database(updateQuery);
+        const slots = await get_database(query, [year]);
 
         res.json(slots);
     } catch (err) {

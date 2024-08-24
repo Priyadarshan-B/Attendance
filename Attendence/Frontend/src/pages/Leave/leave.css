@@ -77,11 +77,15 @@
 }
 
 .form-container .react-select__control {
-    margin-bottom: 16px; /* Adds spacing below each React Select dropdown */
+    margin-bottom: 16px; 
 }
 
 @media (max-width: 768px) {
     .form-container {
-        padding: 10px; /* Adjust padding for smaller screens */
+        padding: 10px; 
     }
+}
+
+.leave-b{
+    color:  white;
 }

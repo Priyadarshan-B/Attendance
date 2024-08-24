@@ -5,3 +5,12 @@
 .time-form{
     width: 100%;
 }
+.time-flex{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.react-select{
+    z-index: 2;
+}

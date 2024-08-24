@@ -51,16 +51,17 @@
 
 .attendance-summary {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 15px;
     height: 100%;
 }
 
 .summary-item {
     background-color: #ffffff;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    /* box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; */
     padding: 7px;
     text-align: center;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 5px 0px;
     border-radius: 5px;
 }
 

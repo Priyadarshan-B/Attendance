@@ -3,7 +3,7 @@ const { get_database, post_database } = require("../../config/db_utils");
 exports.get_dates = async (req, res) => {
     try {
       const query = `
-          SELECT id, dates FROM holidays; 
+          SELECT id,year, dates FROM holidays; 
       `;
       const dates = await get_database(query);
   
@@ -15,7 +15,6 @@ exports.get_dates = async (req, res) => {
         const monthIndex = date.getMonth();
         const year = date.getFullYear();
   
-        // Format the date as "Month DD, YYYY"
         return `${monthNames[monthIndex]} ${day}, ${year}`;
       });
   
@@ -26,27 +25,33 @@ exports.get_dates = async (req, res) => {
     }
   };
 
-exports.post_dates = async (req, res) => {
+  exports.post_dates = async (req, res) => {
     try {
-      if(!Array.isArray(req.body.dates)){
-          return res.status(400).json({message:'Inavalid json format'})
-      }
-  
-      for(const date of req.body.dates){
-      const query = `
-          INSERT INTO holidays(dates)VALUE(?)
-          `;
-      const success_message = await post_database(
-        query,date,
-        "Dates added successfully"
-      );
-      if(!success_message){
-          return res.status(500).json({ message: 'Failed to add date to the database.' });
-  
-      }
-  }
-      res.json({ message: 'Dates added successfully' });
+        const { year, dates } = req.body;
+
+        // Validate the inputs
+        if (!year || !Array.isArray(dates)) {
+            return res.status(400).json({ message: 'Invalid JSON format' });
+        }
+
+        for (const date of dates) {
+            const query = `
+                INSERT INTO holidays (year, dates) VALUES (?, ?)
+            `;
+            const success_message = await post_database(
+                query,
+                [year, date], 
+                "Dates added successfully"
+            );
+
+            if (!success_message) {
+                return res.status(500).json({ message: 'Failed to add date to the database.' });
+            }
+        }
+
+        res.json({ message: 'Dates added successfully' });
     } catch (err) {
-      console.error("Error Adding Dates");
+        console.error("Error Adding Dates:", err);
+        res.status(500).json({ message: 'Internal server error' });
     }
-  };
+};

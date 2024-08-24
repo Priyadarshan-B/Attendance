@@ -267,7 +267,7 @@ function Body() {
                           >
                             {student.att_status === "1"
                               ? "Approved"
-                              : "Approve"}
+                              : "Over Due"}
                           </button >
                           {student.att_status === "1" && (
                             <button
@@ -284,7 +284,7 @@ function Body() {
                               onClick={() => handleExpand(student.id, index)}
                               disabled={loading[student.id]}
                             >
-                              Expand
+                              Extent
                             </button>
                           )}
                         </div>

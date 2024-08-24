@@ -70,7 +70,7 @@ AND s.status = '1';
 
   try {
     const query = `
-      SELECT id, name, register_number, att_status
+      SELECT id, name, register_number, year,att_status
         FROM students
         WHERE type = 2
         AND status = '1';

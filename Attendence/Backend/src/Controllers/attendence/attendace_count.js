@@ -260,11 +260,12 @@ exports.checkAndInsertAttendance = async (req, res) => {
             AND DATE(att_session) = ?
             AND status = '1'
             GROUP BY DATE(att_session)
-            HAVING COUNT(DISTINCT slot) = (SELECT COUNT(*) FROM time_slots WHERE status = '1');
+            HAVING COUNT(DISTINCT slot) = (SELECT COUNT(*) FROM time_slots WHERE year = ? AND status = '1');
           `;
           const slotRecords = await get_database(reAppearQuery, [
             studentId,
             date,
+            year
           ]);
 
           if (slotRecords.length > 0) {
@@ -293,7 +294,7 @@ exports.checkAndInsertAttendance = async (req, res) => {
             AND DATE(attendance) = ?
             AND status = '1'
             GROUP BY DATE(attendance)
-            HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE status = '1');
+            HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE  status = '1');
             `;
             const roleStudentRecords = await get_database(roleStudentQuery, [
               roleStudentId,

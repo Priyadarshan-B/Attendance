@@ -10,6 +10,11 @@ import LiquidGauge from "react-liquid-gauge";
 import moment from "moment";
 import EventAvailableTwoToneIcon from "@mui/icons-material/EventAvailableTwoTone";
 import EventBusyTwoToneIcon from "@mui/icons-material/EventBusyTwoTone";
+import MilitaryTechTwoToneIcon from '@mui/icons-material/MilitaryTechTwoTone';
+import Groups2TwoToneIcon from '@mui/icons-material/Groups2TwoTone';
+import SportsScoreIcon from '@mui/icons-material/SportsScore'
+import EmojiEventsTwoToneIcon from '@mui/icons-material/EmojiEventsTwoTone';
+import { RiWaterPercentFill } from "react-icons/ri";
 import calendar from "../../assets/calendar.png";
 import {
   Table,
@@ -36,6 +41,7 @@ function Body() {
   const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
   const [studentDetails, setStudentDetails] = useState(null);
   const [attendanceDetails, setAttendanceDetails] = useState([]);
+  const [placement,setPlacement] = useState([])
   const [leaveDetails, setLeaveDetails] = useState([]);
   const [attendancePercent, setAttendancePercent] = useState({});
   const [percent, setPercent] = useState([]);
@@ -68,6 +74,7 @@ function Body() {
 
     return timeLeft;
   }
+ 
 
   useEffect(() => {
     const fetchStudentDetails = async () => {
@@ -75,13 +82,19 @@ function Body() {
         const response = await requestApi("GET", `/student-details?id=${id}`);
         setStudentDetails(response.data[0]);
 
-        // After fetching student details, fetch attendance percentage
         fetchAttendancePercent(response.data[0].type);
       } catch (error) {
         console.error("Error fetching student details:", error);
       }
     };
-
+    const fetchPlacementData = async () => {
+      try {
+          const response = await requestApi("GET", `/placement-student?student=${id}`);
+          setPlacement(response.data[0]); 
+      } catch (error) {
+          console.error("Error fetching placement data", error);
+      }
+  };
     const fetchAttendancePercent = async () => {
       try {
         const response = await requestApi("GET", `/percent?student=${id}`);
@@ -158,6 +171,7 @@ function Body() {
     fetchAttendanceRecords();
     fetchAttendanceDetails();
     fetchLeaveDetails();
+    fetchPlacementData()
 
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
@@ -181,9 +195,6 @@ function Body() {
     (detail) => detail.date !== todayDate
   );
 
-  // if(otherAttendance.length <=0){
-  //   return <div>No Data Found</div>
-  // }
 
   const timeIntervals = [
     { start: "08:00:00 AM", end: "10:00:00 AM" },
@@ -402,7 +413,11 @@ function Body() {
           </h3>
 
           <div className="attendance-summary">
-            <div className="summary-item">
+            <div className="summary-item" style={{
+              backgroundColor:'#dcffd6',
+              border:'1px solid #4ddc72',
+
+            }}>
               <div className="icons-flex">
                 <div
                   style={{
@@ -425,15 +440,23 @@ function Body() {
                 <div
                   style={{
                     fontWeight: "700",
-                    fontSize: "40px",
+                    fontSize: "35px",
                     marginTop: "10px",
+                    color:'green',
+
                   }}
                 >
                   <p>{attendancePercent.present_days}</p>
                 </div>
               </div>
             </div>
-            <div className="summary-item">
+            <div className="summary-item"
+            style={{
+              backgroundColor:'#ffe5e5',
+              border:'1px solid red '
+
+            }}
+            >
               <div className="icons-flex">
                 <div
                   style={{
@@ -456,15 +479,22 @@ function Body() {
                 <div
                   style={{
                     fontWeight: "700",
-                    fontSize: "40px",
+                    fontSize: "35px",
                     marginTop: "10px",
+                    color:'red'
                   }}
                 >
                   <b>{attendancePercent.absent_days}</b>
                 </div>
               </div>
             </div>
-            <div className="summary-item">
+            <div className="summary-item"
+            style={{
+              backgroundColor:'#fff5e4',
+              border:'1px solid #ffd691 '
+
+            }}
+            >
               <div className="icons-flex">
                 <div
                   style={{
@@ -491,7 +521,7 @@ function Body() {
                 <div
                   style={{
                     fontWeight: "700",
-                    fontSize: "40px",
+                    fontSize: "35px",
                     marginTop: "10px",
                   }}
                 >
@@ -519,7 +549,81 @@ function Body() {
                   </div>
 
                   <p>
-                    <h4>Total Days (Sem)</h4>
+                    <h5>Total Days (Sem)</h5>
+                  </p>
+                </div>
+                <hr style={{ width: "100%" }} />
+                <div
+                  style={{
+                    fontWeight: "700",
+                    fontSize: "35px",
+                    marginTop: "10px",
+                  }}
+                >
+                  <b>{attendancePercent.total_days}</b>
+                </div>
+              </div>
+            </div>
+            <div className="summary-item"
+            style={{
+              backgroundColor:'#cdd8ff',
+              border:'1px solid #2c7cf3 '
+            }}
+            >
+              <div className="icons-flex">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <div>
+                  <RiWaterPercentFill
+                    style={{
+                      color: "#2c7cf3",
+                      fontSize: "35px",
+                    }}
+                  />
+                  </div>
+                  <p>
+                    <h5>Attendance (%)</h5>
+                  </p>
+                </div>
+                <hr style={{ width: "100%" }} />
+                <div
+                  style={{
+                    fontWeight: "700",
+                    fontSize: "35px",
+                    marginTop: "10px",
+                  }}
+                >
+                  <b>{attendancePercent.attendance_percentage}</b>
+                </div>
+              </div>
+            </div>
+            <div className="summary-item" 
+            style={{
+              backgroundColor:'#f1ebff',
+              border:'1px solid #ba9dff'
+            }}
+            >
+              <div className="icons-flex">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <MilitaryTechTwoToneIcon
+                    style={{
+                      color: "#2c7cf3",
+                      fontSize: "35px",
+                    }}
+                  />
+                  <p>
+                    <h5>Placement Rank</h5>
                   </p>
                 </div>
                 <hr style={{ width: "100%" }} />
@@ -528,9 +632,10 @@ function Body() {
                     fontWeight: "700",
                     fontSize: "40px",
                     marginTop: "10px",
+                    color:'#b399ff'
                   }}
                 >
-                  <b>{attendancePercent.total_days}</b>
+                  <b>{placement.placement_rank}</b>
                 </div>
               </div>
             </div>
@@ -543,28 +648,87 @@ function Body() {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <div>
-                    <img
-                      src={calendar}
-                      alt="Total Days"
-                      style={{
-                        width: "30px",
-                      }}
-                    ></img>
-                  </div>
+                  <Groups2TwoToneIcon
+                    style={{
+                      color: "green",
+                      fontSize: "30px",
+                    }}
+                  />
                   <p>
-                    <h4>Attendance (%)</h4>
+                    <h5>Placement Batch</h5>
                   </p>
                 </div>
                 <hr style={{ width: "100%" }} />
                 <div
                   style={{
                     fontWeight: "700",
-                    fontSize: "40px",
+                    fontSize: "30px",
                     marginTop: "10px",
                   }}
                 >
-                  <b>{attendancePercent.attendance_percentage}</b>
+                  <b>{placement.placement_group}</b>
+                </div>
+              </div>
+            </div>
+            <div className="summary-item">
+              <div className="icons-flex">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <SportsScoreIcon
+                    style={{
+                      color: "#000",
+                      fontSize: "30px",
+                    }}
+                  />
+                  <p>
+                    <h5>Placement Score</h5>
+                  </p>
+                </div>
+                <hr style={{ width: "100%" }} />
+                <div
+                  style={{
+                    fontWeight: "700",
+                    fontSize: "30px",
+                    marginTop: "10px",
+                  }}
+                >
+                  <b>{placement.placement_score}</b>
+                </div>
+              </div>
+            </div>
+            <div className="summary-item">
+              <div className="icons-flex">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <EmojiEventsTwoToneIcon 
+                    style={{
+                      color: "gold",
+                      fontSize: "30px",
+                    }}
+                  />
+                  <p>
+                    <h4>Reward Points</h4>
+                  </p>
+                </div>
+                <hr style={{ width: "100%" }} />
+                <div
+                  style={{
+                    fontWeight: "700",
+                    fontSize: "30px",
+                    marginTop: "10px",
+                  }}
+                >
+                  <b>{placement.reward_points}</b>
                 </div>
               </div>
             </div>
@@ -668,7 +832,7 @@ function Body() {
               flexDirection: "column",
               backgroundColor: "white",
               padding: "10px",
-              borderRadius: "10px",
+              borderRadius: "5px",
               width: "100%",
               border: "1px solid lightgray",
               maxHeight: "180px",
