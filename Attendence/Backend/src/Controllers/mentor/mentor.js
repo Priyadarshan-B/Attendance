@@ -23,7 +23,7 @@ exports.get_students = async (req, res) => {
   }
   try {
     const query = `
-    SELECT s.id, s.name, s.register_number, s.att_status, s.app_date, s.due_date
+    SELECT s.id, s.name, s.year, s.register_number, s.att_status, s.app_date, s.due_date
   FROM students s
   JOIN mentor_student ms ON s.id = ms.student
   WHERE ms.mentor = ?

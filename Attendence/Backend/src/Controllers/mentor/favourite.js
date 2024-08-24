@@ -4,7 +4,7 @@ exports.get_favorites = async (req, res) => {
   const mentor = req.query.mentor;
   try {
     const query = `
-        SELECT mentor.name,mentor.id AS mentor_id, students.id AS id,students.name, students.register_number
+        SELECT mentor.name,mentor.id AS mentor_id, students.id AS id,students.name, students.register_number, students.year
         FROM favourites f
         JOIN mentor ON f.mentor = mentor.id
         JOIN students ON f.student = students.id

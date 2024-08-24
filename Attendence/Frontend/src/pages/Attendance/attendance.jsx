@@ -70,6 +70,7 @@ function Body({ onShowFavAttendance }) {
       console.error("Error fetching time slots:", error);
     }
   };
+  
   const handleRowClick = (rowId, year) => {
     if (expandedRow === rowId) {
       setExpandedRow(null);
@@ -78,6 +79,7 @@ function Body({ onShowFavAttendance }) {
       setExpandedRow(rowId);
     }
   };
+
   useEffect(() => {
     const updateCurrentTime = () => {
       const now = new Date();

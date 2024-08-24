@@ -112,16 +112,14 @@ function Body() {
           updatedStudents[selectedStudentIndex].att_status = "1";
           setFilteredStudents(updatedStudents);
           setStudents(updatedStudents);
-          toast.success("Approved!!")
+          toast.success("Approved!!");
         })
-        .catch((error) =>{
-          console.error(`Error updating student approval status:`, error)
-        toast.error("Approved Failed..")
-
-       } );
+        .catch((error) => {
+          console.error(`Error updating student approval status:`, error);
+          toast.error("Approval Failed..");
+        });
     } else {
-      // alert("Please check both Performance and Appearance to approve.");
-      toast.error("Check All Boxes..")
+      toast.error("Check All Boxes..");
     }
     handleCloseApprovePopup();
   };
@@ -169,17 +167,16 @@ function Body() {
     requestApi("PUT", url)
       .then(() => {
         // alert("Updated to next Wednesday successfully.");
-        toast.success("Added 7 days😁")
+        toast.success("Added 7 days😁");
         const updatedTimeLeft = filteredStudents.map((student) =>
           calculateTimeLeft(student.due_date)
         );
         setTimeLeft(updatedTimeLeft);
       })
-      .catch((error) =>{
-        console.error(`Error updating due date to next Wednesday:`, error)
-        toast.error("Error Expanding 7 days..")
-      }
-      )
+      .catch((error) => {
+        console.error(`Error updating due date to next Wednesday:`, error);
+        toast.error("Error Expanding 7 days..");
+      })
       .finally(() => {
         setLoading((prevLoading) => ({ ...prevLoading, [studentId]: false }));
       });
@@ -215,19 +212,22 @@ function Body() {
             <Table className="custom-table">
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ width: "10%" }}>
+                  <TableCell sx={{ width: "10px" }}>
                     <h3>S.No</h3>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ width: "10px" }}>
+                    <h3>Year</h3>
+                  </TableCell>
+                  <TableCell sx={{ width: "10px" }}>
                     <h3>Name</h3>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ width: "0px" }}>
                     <h3>Register Number</h3>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ width: "10px", textAlign: "center" }}>
                     <h3>Actions</h3>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ width: "10px" }}>
                     <h3>Time Left</h3>
                   </TableCell>
                 </TableRow>
@@ -241,35 +241,29 @@ function Body() {
                         <b>{page * rowsPerPage + index + 1}</b>
                       </TableCell>
                       <TableCell>
+                        <b>{student.year}</b>
+                      </TableCell>
+                      <TableCell>
                         <b>{student.name}</b>
                       </TableCell>
                       <TableCell>
                         <b>{student.register_number}</b>
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         <div style={{ display: "flex", gap: "10px" }}>
-                          <button
-                            className="status-button"
-                            style={{
-                              backgroundColor:
-                                student.att_status === "1"
-                                  ? "#e6faf0"
-                                  : "#fde8e8",
-                              color:
-                                student.att_status === "1" ? "#2ECC71" : "red",
-                              cursor:
-                                student.att_status === "1"
-                                  ? "not-allowed"
-                                  : "pointer",
-                            }}
-                            onClick={() => handleApprove(index)}
-                            disabled={student.att_status === "1"}
-                          >
-                            {student.att_status === "1"
-                              ? "Approved"
-                              : "Over Due"}
-                          </button >
-                          {student.att_status === "1" && (
+                          {student.att_status !== "1" ? (
+                            <button
+                              className="status-button"
+                              style={{
+                                backgroundColor: "#fde8e8",
+                                color: "red",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => handleApprove(index)}
+                            >
+                              Over Due
+                            </button>
+                          ) : (
                             <button
                               className="status-button"
                               style={{
@@ -284,18 +278,24 @@ function Body() {
                               onClick={() => handleExpand(student.id, index)}
                               disabled={loading[student.id]}
                             >
-                              Extent
+                              Extend
                             </button>
                           )}
                         </div>
                       </TableCell>
                       <TableCell>
                         {student.att_status === "1" ? (
-                          <span style={{ color: "black" }}>
-                            <p className="time">
+                          <span>
+                            <p className="time" style={{
+                              backgrounColor:
+                                timeLeft[index].days < 4
+                                  ? "red"
+                                  : timeLeft[index].days > 7
+                                  ? "green"
+                                  : "black",
+                            }}>
                               {timeLeft[index].days}d {timeLeft[index].hours}h{" "}
                               {timeLeft[index].minutes}m{" "}
-                              {timeLeft[index].seconds}s
                             </p>
                           </span>
                         ) : (

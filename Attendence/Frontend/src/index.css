@@ -1,9 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@100..900&family=PT+Sans+Narrow:wght@400;700&family=Signika+Negative&display=swap');
-
+/* @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@100..900&family=PT+Sans+Narrow:wght@400;700&family=Signika+Negative&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
-    font-family: "Exo 2", sans-serif;
+    /* font-family: "Exo 2", sans-serif; */
+    font-family: "Montserrat", sans-serif;
+
     font-optical-sizing: auto;
-    font-weight: 400;
+    font-weight: 600;
     font-style: normal;
   }
   p{
@@ -11,7 +13,7 @@
   }
   
   a {
-    font-weight: 500;
+    /* font-weight: 500; */
     text-decoration: inherit;
   }
   
@@ -19,15 +21,21 @@
   }
   
   * {
-    font-family: "Exo 2", sans-serif;
+    /* font-family: "Exo 2", sans-serif; */
+    font-family: "Montserrat", sans-serif;
+
   }
   
   label{
-    font-family: "Exo 2";
+    /* font-family: "Exo 2"; */
+    font-family: "Montserrat", sans-serif;
+
   }
   body {
     margin: 0;
-    font-family: "Exo 2", sans-serif;
+    /* font-family: "Exo 2", sans-serif; */
+    font-family: "Montserrat", sans-serif;
+
   }
   
   /* Style the thin scrollbar */

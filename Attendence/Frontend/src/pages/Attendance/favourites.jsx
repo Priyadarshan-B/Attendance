@@ -33,18 +33,17 @@ function FavAttendance({ onGoBack }) {
       }
     };
 
-    const fetchTimeSlots = async () => {
-      try {
-        const response = await requestApi("GET", "/slots");
-        setTimeSlots(response.data);
-      } catch (error) {
-        console.error("Error fetching time slots:", error);
-      }
-    };
-
     fetchData();
-    fetchTimeSlots();
   }, [id]);
+
+  const fetchTimeSlots = async (year) => {
+    try {
+      const response = await requestApi("GET", `/slots?year=${year}`);
+      setTimeSlots(response.data);
+    } catch (error) {
+      console.error("Error fetching time slots:", error);
+    }
+  };
 
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
@@ -99,11 +98,14 @@ function FavAttendance({ onGoBack }) {
     setPage(0);
   };
 
-  const handleRowClick = (rowId) => {
-    setExpandedRows((prev) => ({
-      ...prev,
-      [rowId]: !prev[rowId],
-    }));
+  const handleRowClick = (rowId, year) => {
+    setExpandedRows((prev) => {
+      const newState = { ...prev, [rowId]: !prev[rowId] };
+      if (newState[rowId]) {
+        fetchTimeSlots(year);
+      }
+      return newState;
+    });
   };
 
   if (showRoleAttendance) {
@@ -170,6 +172,7 @@ function FavAttendance({ onGoBack }) {
             <thead>
               <tr>
                 <th>S.No</th>
+                <th>Year</th>
                 <th>Name</th>
                 <th>Register Number</th>
               </tr>
@@ -179,14 +182,15 @@ function FavAttendance({ onGoBack }) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => (
                   <React.Fragment key={row.id}>
-                    <tr onClick={() => handleRowClick(row.id)}>
+                    <tr onClick={() => handleRowClick(row.id, row.year)}>
                       <td>{page * rowsPerPage + index + 1}</td>
+                      <td>{row.year}</td>
                       <td>{row.name}</td>
                       <td>{row.register_number}</td>
                     </tr>
                     {expandedRows[row.id] && (
                       <tr>
-                        <td colSpan="3">{renderTimeSlots(row)}</td>
+                        <td colSpan="4">{renderTimeSlots(row)}</td>
                       </tr>
                     )}
                   </React.Fragment>
@@ -212,7 +216,7 @@ function FavAttendance({ onGoBack }) {
             <div>
               Rows per page:{" "}
               <select value={rowsPerPage} onChange={handleChangeRowsPerPage}>
-                {[5, 10, 15, 25, 100].map((option) => (
+                {[5, 10, 15, 25].map((option) => (
                   <option key={option} value={option}>
                     {option}
                   </option>

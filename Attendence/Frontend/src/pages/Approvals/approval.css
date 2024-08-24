@@ -1,8 +1,6 @@
 .custom-table th,
 .custom-table td {
   padding: 15px; 
-  text-align: center;
-  /* width: 10%; */
 }
 
 .table-container{
@@ -46,10 +44,10 @@
     margin: 0;
   }
 
-.time{
+/* .time{
   background-color: rgba(147, 169, 188, 0.352);
   border-radius: 5px;
-}
+} */
 
 .leave-container {
   display: flex;

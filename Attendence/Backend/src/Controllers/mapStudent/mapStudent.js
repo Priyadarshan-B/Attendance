@@ -46,7 +46,7 @@ exports.post_map_role = async (req, res) => {
             INSERT INTO role_student_map(role, student) 
             VALUES (?, ?)
             ON DUPLICATE KEY UPDATE 
-            role = role;  -- No operation, just avoids inserting duplicates
+            role = role;  
         `;
 
         for (const studentId of studentIds) {

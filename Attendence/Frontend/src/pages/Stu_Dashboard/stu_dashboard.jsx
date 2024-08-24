@@ -375,7 +375,7 @@ function Body() {
             <div className="detail-row">
               <div className="detail-label">Today's Attendance:</div>
               <div
-                className="time"
+                className="tim"
                 style={{
                   fontSize: "17px",
                   fontWeight: "600",
@@ -385,9 +385,9 @@ function Body() {
                   attendancePercent.present_absent.length > 0 &&
                   attendancePercent.present_absent.map((attendance, index) => {
                     const forenoonStatus =
-                      attendance.forenoon === "1" ? "P" : "A";
+                      attendance.forenoon === "1" ? "PR" : "AB";
                     const afternoonStatus =
-                      attendance.afternoon === "1" ? "P" : "A";
+                      attendance.afternoon === "1" ? "PR" : "AB";
                     return (
                       <h4 key={index}>
                         {forenoonStatus} | {afternoonStatus}
@@ -701,7 +701,12 @@ function Body() {
                 </div>
               </div>
             </div>
-            <div className="summary-item">
+            <div className="summary-item"
+            style={{
+              backgroundColor:'#fffbc9',
+              border:'1px solid yellow'
+            }}
+            >
               <div className="icons-flex">
                 <div
                   style={{
