@@ -4,13 +4,14 @@
   border-radius: 8px;
   overflow: hidden;
   padding: 20px;
+  height: 100vh;
+  overflow-y: scroll;
 }
 .favattendance-container {
   max-width: 100%;
   background-color: #f4f6fa;
   border-radius: 8px;
   overflow: hidden;
-  /* padding: 20px; */
 }
 
 .att-table{
@@ -26,10 +27,6 @@
   border-radius: 10px;
 }
 
-/* .custom-table thead {
-  color: white;
-  border-radius: 10px;
-} */
 .custom-table thead  :first-child {
   border-radius: 10px 0px 0px 0px;
 }
@@ -59,9 +56,10 @@
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
-  background-color: #f4f6fa;
+  background-color: #eff4ff;
   border-radius: 10px;
   gap: 15px;
+  border: 1px solid rgb(208, 208, 255);
   /* border-top: 1px solid #ddd; */
 }
 
@@ -91,11 +89,12 @@
 
 .pagination {
   display: flex;
+  border-radius: 10px;
   justify-content: space-between;
+  border: 1px solid rgb(215, 215, 215);
   align-items: center;
   padding: 10px;
-  background-color: #f9f9f9;
-  border-top: 1px solid #ddd;
+  background-color: #ffffff;
 }
 
 .pagination button {
@@ -377,60 +376,38 @@ input[type="checkbox"]:disabled + .cbx {
 }
 
 
-.star-checkbox {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  width: 16px; /* Smaller size */
-  height: 16px; /* Smaller size */
-  background-color: transparent;
-  border: 2px solid #FFA500; /* Orange color */
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  outline: none;
+
+.year-select{
+  width: 50%;
 }
 
-.star-checkbox::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px; /* Smaller star */
-  height: 8px; /* Smaller star */
-  background-color: #FFA500; /* Orange color */
-  clip-path: polygon(
-    50% 0%,
-    61% 35%,
-    98% 35%,
-    68% 57%,
-    79% 91%,
-    50% 70%,
-    21% 91%,
-    32% 57%,
-    2% 35%,
-    39% 35%
-  );
-  transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.3s ease-in-out;
+.students-table{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.star-checkbox:checked::before {
-  transform: translate(-50%, -50%) scale(1);
+
+.submit-attendance{
+  padding: 10px;
+  border-radius: 20px;
+  background-color: #c2d7ff;
+  border: 1px solid rgb(100, 100, 255);
+  color: rgb(0, 0, 0);
+  font-weight: 700;
+  font-size: 16px;
+}
+.submit-attendance:hover{
+  background-color: #79a8ff ;
+}
+.favourites{
+  padding: 10px;
+  border-radius: 20px;
+  background-color: pink;
+  color: rgb(0, 0, 0);
+  float: right;
 }
 
-.star-checkbox:checked {
-  animation: pulse 0.4s ease-in-out;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
+.favourites:hover{
+background-color: #9be3d2;
 }

@@ -8,7 +8,7 @@
 }
 .custom-table th {
   font-weight: bold;
-  background-color: #142d4c;
+  background-color: #2a3645;
   color: white;
 
 }
@@ -50,20 +50,26 @@
 
 .leave-container {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: row; */
   gap: 20px;
   padding: 20px;
 }
 
 .leave-card {
-  background-color: #f9f9f9;
+  background-color: #dde6ff;
+  border: 1px solid rgb(143, 143, 255);
   border-radius: 8px;
   padding: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
+ display: flex;
+ flex-direction: column;
+ 
 }
 
+.leave-box{
+display: flex;
+/* flex: 1; */
+}
 .leave-card h3 {
   margin-top: 0;
 }
@@ -77,8 +83,9 @@
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
-  background-color: #4caf50;
-  color: white;
+  background-color: #65ff81;
+  border: 1px solid green;
+  color: rgb(0, 0, 0);
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -90,18 +97,35 @@
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
-  background-color: #ff2a2a;
-  color: white;
+  background-color: #ff8282;
+  border: 1px solid red;
+  color: rgb(0, 0, 0);
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
   flex: 1;
 }
 .approve-button:hover {
+  color: white;
   background-color: #45a049;
 }
 .reject-button:hover {
+  color: white;
   background-color: #e00909;
 }
 
-/* star */
+@media (max-width:999px){
+  .leave-container{
+    flex-direction: column;
+  }
+}
+
+.noresult{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  height: 90vh;
+
+}

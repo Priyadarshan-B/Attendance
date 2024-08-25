@@ -46,41 +46,42 @@ exports.get_arrear_att = async (req, res) => {
   }
 };
 
-exports.post_arrear_stu_att = async(req, res)=>{
-  const {faculty, student, slot} = req.body;
-  if(!faculty || !student || !slot ){
-    return res.status(400).json({error:"Student id is required.."})
+exports.post_arrear_stu_att = async (req, res) => {
+  const { faculty, students, timeslots } = req.body;
 
+  if (!faculty || !students || !timeslots || students.length === 0 || timeslots.length === 0) {
+    return res.status(400).json({ error: "Faculty, students, and timeslots are required." });
   }
-  try{
-    const validateQuery = `
-    SELECT att_status 
-    FROM students
-    WHERE id = ?
-    AND status IN('1', '0');
-    `
-const [validate] = await get_database(validateQuery, [student])
-console.log(validate)
+  try {
+    for (let slot of timeslots) {
+      for (let student of students) {
+        const validateQuery = `
+          SELECT att_status 
+          FROM students
+          WHERE id = ?
+          AND status IN('1', '0');
+        `;
+        const [validate] = await get_database(validateQuery, [student]);
 
-if(validate && validate.att_status === '1' || validate.att_status === '0'){
-console.log("hii")
-    const query = `
-    INSERT INTO re_appear (faculty,  student , slot,att_session)
-     VALUES(?,?,?,CURRENT_TIMESTAMP);
-    `
-    const arrear_attendence = await post_database(query,[faculty,student,slot])
-    res.json(arrear_attendence)
-  }
-  else {
-    res.status(400).json({ error: "Student status is not valid for attendance." });
-}
-}
-  catch(err){
-    console.error("Error Inserting arrear attendence",err)
-    res.status(500).json("Error Inserting arrear attendence")
+        if (validate && (validate.att_status === '1' || validate.att_status === '0')) {
+          const query = `
+            INSERT INTO re_appear (faculty, student, slot, att_session)
+            VALUES (?, ?, ?, CURRENT_TIMESTAMP);
+          `;
+          await post_database(query, [faculty, student, slot]);
+        } else {
+          return res.status(400).json({ error: `Student ID ${student} has an invalid status for attendance.` });
+        }
+      }
+    }
 
+    res.json({ message: "Attendance records inserted successfully." });
+  } catch (err) {
+    console.error("Error Inserting arrear attendance:", err);
+    res.status(500).json({ error: "Error inserting arrear attendance" });
   }
-}
+};
+
 
 exports.delete_arrear_stu_att = async(req, res)=>{
   const {faculty, student, slot} = req.body;

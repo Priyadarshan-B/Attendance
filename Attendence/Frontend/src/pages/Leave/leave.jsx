@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import AppLayout from "../../components/applayout/AppLayout";
 import "../../components/applayout/styles.css";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -37,25 +36,34 @@ function Body() {
   const deid = Cookies.get("id");
   const secretKey = "secretKey123";
   const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
-  const navigate = useNavigate();
+
+  const fetchLeaveDetails = async () => {
+    try {
+      const response = await requestApi(
+        "GET",
+        `/leave-student?student=${id}`
+      );
+      setLeaveDetails(response.data);
+    } catch (error) {
+      console.error("Error fetching leave details:", error);
+    }
+  };
 
   useEffect(() => {
     requestApi("GET", "/leave-type").then((response) =>
       setLeaveTypes(response.data)
     );
-    const fetchLeaveDetails = async () => {
-      try {
-        const response = await requestApi(
-          "GET",
-          `/leave-student?student=${id}`
-        );
-        setLeaveDetails(response.data);
-      } catch (error) {
-        console.error("Error fetching leave details:", error);
-      }
-    };
     fetchLeaveDetails();
   }, [id]);
+
+  const resetForm = () => {
+    setFromDate(null);
+    setToDate(null);
+    setFromTime(null);
+    setToTime(null);
+    setReason("");
+    setSelectedLeaveType(null);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -67,7 +75,7 @@ function Body() {
       from_time: fromTime ? format(fromTime, "HH:mm") : null,
       to_date: toDate ? format(toDate, "dd/MM/yyyy") : null,
       to_time: toTime ? format(toTime, "HH:mm") : null,
-      reason: reason, // Add reason to the data being sent
+      reason: reason, 
     };
     console.log(data);
 
@@ -75,14 +83,15 @@ function Body() {
       .then((response) => {
         console.log("Leave applied successfully:", response.data);
         toast.success(`${selectedLeaveType?.label} Applied successfully!`);
-
-        // navigate("/attendance/dashboard");
+        fetchLeaveDetails();
+        resetForm();
       })
       .catch((error) => {
         console.error("Error applying leave:", error);
         toast.error(`${selectedLeaveType?.label} Failed to Apply`);
       });
   };
+
   const formatLeaveDate = (date) => {
     return moment(date).format("DD/MM/YYYY");
   };
@@ -105,7 +114,6 @@ function Body() {
         >
           <div
             style={{
-              // backgroundColor: "#2c7cf3",
               marginBottom: "10px",
               padding: "5px",
               color: "white",

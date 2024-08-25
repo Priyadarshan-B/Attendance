@@ -316,7 +316,9 @@ function Body() {
       <div className="attendance-percentage-and-status">
         <div className="student-details-container">
           <div className="guage">
-            <h3>Attendance Percentage</h3>
+            <h3 
+            
+            >Attendance Percentage</h3>
             <div>
               <LiquidGauge
                 value={percent}
@@ -409,7 +411,7 @@ function Body() {
               boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
             }}
           >
-            Attendance Details
+            Attendance & Placement Details
           </h3>
 
           <div className="attendance-summary">
@@ -757,7 +759,17 @@ function Body() {
 
       <div className="att_det">
         <div className="leave-details">
-          <h3>Leave Details</h3>
+          <h3
+          style={{
+            backgroundColor: "rgb(113 137 255 / 13%)",
+            padding: "10px",
+            margin: "0px 0px 0px 0px",
+            border:'1px solid blue',
+            borderRadius: "5px",
+            color:'#000078',
+            boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
+          }}
+          >Leave Details</h3>
           <div className="leave-data">
             {leaveDetails.length > 0 ? (
               leaveDetails.map((leave, index) => (
@@ -873,8 +885,9 @@ function Body() {
               <p>No attendance recorded for today.</p>
             )}
           </div>
+         
           <div className="radial-chart">
-            <h3>
+          <h3>
               <center>Today's Biometrics</center>
             </h3>
             <Chart
@@ -887,7 +900,15 @@ function Body() {
         </div>
 
         <div className="att_det_others">
-          <h3>
+          <h3 style={{
+              backgroundColor: "rgb(113 137 255 / 13%)",
+              padding: "10px",
+              margin: "0px 0px 0px 0px",
+              border:'1px solid blue',
+              borderRadius: "5px",
+              color:'#000078',
+              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
+            }}>
             <center>Biometric History</center>
           </h3>
           <br />

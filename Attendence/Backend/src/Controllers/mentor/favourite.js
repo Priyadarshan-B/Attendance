@@ -30,7 +30,7 @@ exports.post_favourites = async (req, res) => {
     const checkQuery = `
       SELECT * FROM favourites WHERE mentor = ? AND student = ?;
     `;
-    const existingRecord = await post_database(checkQuery, [mentor, student]);
+    const existingRecord = await get_database(checkQuery, [mentor, student]);
 
     if (existingRecord.length > 0) {
       return res.status(409).json({ message: "This favourite already exists." });

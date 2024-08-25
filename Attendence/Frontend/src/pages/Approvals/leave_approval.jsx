@@ -7,6 +7,7 @@ import "./approval.css";
 import toast from "react-hot-toast";
 import AppLayout from "../../components/applayout/AppLayout";
 import '../../components/applayout/styles.css'
+import noResult from '../../assets/no-results.png'
 
 function LeaveDetails(){
 return <AppLayout body= {<Body/>}/>
@@ -67,10 +68,11 @@ function Body () {
 
   return (
     <div>
-     {leaveDetails.length >0 ? <div className="leave-container">
+     {leaveDetails.length >0 ? 
+     <div className="leave-container">
         {leaveDetails.map((leave) => (
       
-          <div>
+          <div className="leave-box">
             <div className="leave-card" key={leave.leave_id}>
               <h3>Leave Type - {leave.type}</h3>
               <p>
@@ -110,7 +112,11 @@ function Body () {
           </div>
         ))}
       </div>
-    :<div>No Records Found..</div>  
+    :
+    
+    <div className="noresult">
+      <img src={noResult} alt="" height='200px' width='200px'/>
+      No Records Found..</div>  
     }
     </div>
   );

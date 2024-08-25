@@ -32,8 +32,7 @@ function Body() {
             .catch(error => {
                 console.error("Error fetching Type 1 students", error);
             });
-    }, 300), []); // Debounce to limit API calls
-
+    }, 30), []); 
     // Fetch Type 2 Students with search query
     const fetchType2Students = useCallback(debounce((query) => {
         requestApi("GET", `/get-type2?search=${query}`)
@@ -47,7 +46,7 @@ function Body() {
             .catch(error => {
                 console.error("Error fetching Type 2 students", error);
             });
-    }, 300), []); // Debounce to limit API calls
+    }, 30), []); 
 
     useEffect(() => {
         fetchType1Students(searchTermType1);

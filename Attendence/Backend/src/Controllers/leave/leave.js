@@ -30,7 +30,9 @@ exports.get_student_leave = async(req, res)=>{
 FROM \`leave\`
 INNER JOIN leave_type ON \`leave\`.\`leave\` = leave_type.id
 WHERE \`leave\`.student = ?
-  AND \`leave\`.\`status\` IN('1', '2', '3');
+  AND \`leave\`.\`status\` IN('1', '2', '3')
+  ORDER BY from_date DESC
+  ;
         `
         const get_leave = await get_database(query, [student])
         res.json(get_leave)
