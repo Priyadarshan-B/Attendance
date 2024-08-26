@@ -116,7 +116,7 @@ WHERE
 
 
 exports.post_mentor_map = async (req, res) => {
-  const { mentor,sub_mentor, student } = req.body;
+  const { mentor, sub_mentor = null, student } = req.body;  // Default sub_mentor to null if not provided
   
   if (!Array.isArray(student) || student.length === 0) {
     return res.status(400).json({ error: "Student array is required and must not be empty." });
@@ -127,18 +127,19 @@ exports.post_mentor_map = async (req, res) => {
     const successfulMappings = [];
 
     for (const s of student) {
-      // Check if the student is already mapped to the same mentor
       const checkQuery = `
         SELECT COUNT(*) AS count
         FROM mentor_student
-        WHERE mentor = ? AND student = ? AND sub_mentor=? 
+        WHERE mentor = ? AND student = ? AND sub_mentor ${sub_mentor ? '= ?' : 'IS NULL'}
         AND status = '1';
       `;
-      const [existingMapping] = await get_database(checkQuery, [mentor, s]);
 
+      const [existingMapping] = await get_database(checkQuery, sub_mentor ? [mentor, s, sub_mentor] : [mentor, s]);
       if (existingMapping.count > 0) {
-        failedMappings.push({ student: s, reason: "Student already mapped to the same mentor." });
-        continue;
+        return res.status(409).json({
+          error: "Conflict",
+          message: `Student ${s} is already mapped to the same mentor with status 1.`,
+        });
       }
 
       const checkStatusQuery = `
@@ -149,15 +150,17 @@ exports.post_mentor_map = async (req, res) => {
       const [statusMapping] = await get_database(checkStatusQuery, [s]);
 
       if (statusMapping.count > 0) {
-        failedMappings.push({ student: s, reason: "Student already mapped to another mentor with status 1." });
-        continue;
+        return res.status(409).json({
+          error: "Conflict",
+          message: `Student ${s} is already mapped to another mentor with status 1.`,
+        });
       }
 
       const insertQuery = `
-        INSERT INTO mentor_student (mentor,sub_mentor, student)
-        VALUES (?,?,?);
+        INSERT INTO mentor_student (mentor, sub_mentor, student)
+        VALUES (?, ?, ?);
       `;
-      await post_database(insertQuery, [mentor,sub_mentor, s]);
+      await post_database(insertQuery, [mentor, sub_mentor, s]);
       successfulMappings.push({ student: s, message: "Mapping successful." });
     }
 
@@ -167,6 +170,7 @@ exports.post_mentor_map = async (req, res) => {
     res.status(500).json({ error: "Error Inserting Mentor mapping" });
   }
 };
+
 
 exports.get_leave = async(req, res)=>{
   const  mentor = req.query.mentor

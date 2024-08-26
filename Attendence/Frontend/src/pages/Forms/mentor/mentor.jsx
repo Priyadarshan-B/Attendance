@@ -5,7 +5,6 @@ import InputBox from "../../../components/TextBox/textbox";
 import Buttons from "../../../components/Button/Button";
 import toast from "react-hot-toast";
 import {  Delete } from "@mui/icons-material";
-import debounce from "lodash/debounce";
 
 import {
   Table,
@@ -29,8 +28,11 @@ function MentorMapping() {
 function Body() {
   const [mentors, setMentors] = useState([]);
   const [students, setStudents] = useState([]);
+  const [mentorOptions, setMentorOptions] = useState([]);
+  const [subMentorOptions, setSubMentorOptions] = useState([]);
+  const [studentOptions, setStudentOptions] = useState([]);
   const [selectedMentor, setSelectedMentor] = useState(null);
-  const [selectedSubMentor, setSelectedSubMentor] = useState(null); // New state for Sub-Mentor
+  const [selectedSubMentor, setSelectedSubMentor] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [showMentorList, setShowMentorList] = useState(false);
@@ -39,39 +41,63 @@ function Body() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
-  const [openPopup, setOpenPopup] = useState(false); // State for the popup
-  const [deleteId, setDeleteId] = useState(null); // State to hold the ID of the item to delete
+  const [openPopup, setOpenPopup] = useState(false); 
+  const [deleteId, setDeleteId] = useState(null); 
+  
 
-  useEffect(() => {
-    const fetchMentors = async () => {
-      try {
-        const mentorResponse = await requestApi("GET", "/all-mentors");
-        setMentors(mentorResponse.data);
-      } catch (error) {
-        console.error("Error fetching mentors:", error);
-      }
-    };
-    fetchMentors();
-  }, []);
+  const fetchMentors = (inputValue) => {
+    if (inputValue.length >= 3) {
+      requestApi("GET", `/all-mentors?search=${inputValue}`)
+        .then((response) => {
+          const formattedMentors = response.data.map((mentor) => ({
+            value: mentor.id,
+            label: mentor.name,
+          }));
+          setMentorOptions(formattedMentors);
+        })
+        .catch((error) => {
+          console.error("Error fetching mentors:", error);
+        });
+    } else {
+      setMentorOptions([]);
+    }
+  };
+  const fetchSubMentors = (inputValue) => {
+    if (inputValue.length >= 3) {
+      requestApi("GET", `/all-mentors?search=${inputValue}&exclude=${selectedMentor?.value || ''}`)
+        .then((response) => {
+          const formattedSubMentors = response.data.map((mentor) => ({
+            value: mentor.id,
+            label: mentor.name,
+          }));
+          setSubMentorOptions(formattedSubMentors);
+        })
+        .catch((error) => {
+          console.error("Error fetching sub-mentors:", error);
+        });
+    } else {
+      setSubMentorOptions([]);
+    }
+  };
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      if (selectedYear) {
-        try {
-          const studentResponse = await requestApi(
-            "GET",
-            `/all-students?year=${selectedYear.value}`
-          );
-          setStudents(studentResponse.data);
-        } catch (error) {
+  const fetchStudents = (inputValue) => {
+    if (inputValue.length >= 3 && selectedYear) {
+      requestApi("GET", `/all-students?year=${selectedYear.value}&search=${inputValue}`)
+        .then((response) => {
+          const formattedStudents = response.data.map((student) => ({
+            value: student.id,
+            label: `${student.name} - ${student.register_number}`,
+          }));
+          setStudentOptions(formattedStudents);
+        })
+        .catch((error) => {
           console.error("Error fetching students:", error);
-        }
-      } else {
-        setStudents([]);
-      }
-    };
-    fetchStudents();
-  }, [selectedYear]);
+        });
+    } else {
+      setStudentOptions([]);
+    }
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,18 +107,23 @@ function Body() {
         subMentor: selectedSubMentor?.value,
         student: selectedStudents.map((student) => student.value),
       });
-      console.log("Mapping saved successfully:", response.data);
-      toast.success("Mentor Mapped successfully!");
-      setSelectedMentor(null);
-      setSelectedSubMentor(null);
-      setSelectedStudents([]);
-      setSelectedYear(null);
+  
+      if (response.status === 409) {
+        toast.error("Mentor-Student already mapped!!");
+      } else {
+        toast.success("Mentor Mapped successfully!");
+        setSelectedMentor(null);
+        setSelectedSubMentor(null);
+        setSelectedStudents([]);
+        setSelectedYear(null);
+        console.log("Mapping saved successfully:", response.data);
+      }
     } catch (error) {
       console.error("Error saving mapping:", error);
       toast.error("Mentor Mapping Failed");
     }
   };
-
+  
   const handleShowMentorList = async () => {
     setShowMentorList(!showMentorList);
     if (!showMentorList) {
@@ -107,8 +138,8 @@ function Body() {
   };
 
   const handleDelete = (id) => {
-    setDeleteId(id); // Set the ID of the item to delete
-    setOpenPopup(true); // Open the popup
+    setDeleteId(id); 
+    setOpenPopup(true); 
   };
 
   const handleConfirmDelete = async () => {
@@ -123,7 +154,7 @@ function Body() {
       console.error("Error deleting mentor:", error);
       toast.error("Error deleting Mentor Mapping");
     } finally {
-      setOpenPopup(false); // Close the popup
+      setOpenPopup(false); 
     }
   };
 
@@ -136,16 +167,6 @@ function Body() {
     setPage(0);
   };
 
-  const mentorOptions = mentors.map((mentor) => ({
-    value: mentor.id,
-    label: mentor.name,
-  }));
-
-  const studentOptions = students.map((student) => ({
-    value: student.id,
-    label: `${student.name} - ${student.register_number}`,
-  }));
-
   const yearOptions = [
     { value: "I", label: "I" },
     { value: "II", label: "II" },
@@ -153,9 +174,6 @@ function Body() {
     { value: "IV", label: "IV" },
   ];
 
-  const subMentorOptions = mentorOptions.filter(
-    (option) => option.value !== selectedMentor?.value
-  );
 
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
@@ -183,7 +201,14 @@ function Body() {
               options={mentorOptions}
               onChange={setSelectedMentor}
               value={selectedMentor}
+              onInputChange={fetchMentors}
               isClearable
+              noOptionsMessage={({ inputValue }) => 
+                inputValue.length > 0 
+                  ? inputValue.length < 3 
+                    ? "Type at least 3 characters to search" 
+                    : "No mentors found" 
+                  : "Type to search..."}
             />
           </div>
           <div className="form-group">
@@ -193,7 +218,14 @@ function Body() {
               options={subMentorOptions}
               onChange={setSelectedSubMentor}
               value={selectedSubMentor}
+              onInputChange={fetchSubMentors}
               isClearable
+              noOptionsMessage={({ inputValue }) => 
+                inputValue.length > 0 
+                  ? inputValue.length < 3 
+                    ? "Type at least 3 characters to search" 
+                    : "No sub-mentors found" 
+                  : "Type to search..."}
             />
           </div>
           <div className="form-group">
@@ -212,7 +244,16 @@ function Body() {
               options={studentOptions}
               onChange={setSelectedStudents}
               value={selectedStudents}
+              onInputChange={fetchStudents}
               isMulti
+              noOptionsMessage={({ inputValue }) => 
+                !selectedYear
+                  ? "Please select a year first"
+                  : inputValue.length > 0 
+                    ? inputValue.length < 3 
+                      ? "Type at least 3 characters to search" 
+                      : "No students found" 
+                    : "Type to search..."}
             />
           </div>
           <Buttons type="submit" label="Submit Mapping" />
