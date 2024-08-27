@@ -90,6 +90,7 @@ try{
   JOIN resources rs ON FIND_IN_SET(rs.id, r.resources)
   WHERE r.id =?
   AND rs.status = '1' 
+  ORDER BY order_by
 `
 const resource = await get_database(query, [role])
 res.json(resource)

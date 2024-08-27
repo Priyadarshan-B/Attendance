@@ -169,6 +169,7 @@ exports.checkAndInsertAttendance = async (req, res) => {
       });
 
       if (morningSession && afternoonSession) {
+        
         forenoon = "1";
         afternoon = "1";
       } else {

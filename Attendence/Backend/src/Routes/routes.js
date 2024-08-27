@@ -21,6 +21,10 @@ const dashboard = require('../Controllers/Dashboard/dashboard')
 const roleMap = require('../Controllers/Roles/roles')
 const placement = require('../Controllers/placement/placement')
 const favorites = require ('../Controllers/mentor/favourite')
+const mDash = require('../Controllers/mentor_dashboard/mdashboard')
+const mdashboard = require('../Controllers/mentor_dashboard/mdashboard')
+
+
 const router = express.Router()
 
 router.get("/mentor-students",mentor.get_students)
@@ -122,4 +126,9 @@ router.get('/placement-student', placement.get_stu_placement)
 //favourites
 router.get('/favourites', favorites.get_favorites)
 router.post('/favourites', favorites.post_favourites)
+
+// mentor dashbord
+router.get('/mdash', mDash.get_mdashboard)
+router.get('/mdashboard', mdashboard.dashboard)
+
 module.exports = router

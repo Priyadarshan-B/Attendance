@@ -67,6 +67,20 @@ function Body() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    const startDateTime = moment(fromDate)
+        .set({ hour: fromTime.getHours(), minute: fromTime.getMinutes() })
+        .toDate();
+    const endDateTime = moment(toDate)
+        .set({ hour: toTime.getHours(), minute: toTime.getMinutes() })
+        .toDate();
+
+    const timeDifference = moment.duration(moment(endDateTime).diff(moment(startDateTime))).asMinutes();
+
+    if (timeDifference < 480) {
+        toast.error("The end date and time must be at least 8 hours after the start date and time.");
+        return;
+    }
 
     const data = {
       student: parseInt(id),
@@ -98,6 +112,7 @@ function Body() {
   const formatLeaveTime = (time) => {
     return moment(time, "HH:mm:ss").format("hh:mm A");
   };
+  const now = new Date();
 
   return (
     <div className="leave-flex">
@@ -168,6 +183,8 @@ function Body() {
                   onChange={(newValue) => setFromDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
                   inputFormat="dd/MM/yyyy"
+                  minDate={now}
+
                 />
               </div>
               <div>
@@ -177,6 +194,8 @@ function Body() {
                   value={fromTime}
                   onChange={(newValue) => setFromTime(newValue)}
                   renderInput={(params) => <TextField {...params} />}
+                  minTime={now}
+                  disabled={!fromDate}
                 />
               </div>
               <div>
@@ -188,6 +207,7 @@ function Body() {
                   renderInput={(params) => <TextField {...params} />}
                   inputFormat="dd/MM/yyyy"
                   minDate={fromDate}
+
                 />
               </div>
               <div>

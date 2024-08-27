@@ -109,7 +109,6 @@ function SideBar(props) {
                 React.createElement(getIconComponent(item.icon_path), {
                   sx: {
                     marginRight: "10px",
-                    color: "#1c0c6a",
                     backgroundColor: "white",
                     color: "#2c7cf3",
                     padding: "2px",

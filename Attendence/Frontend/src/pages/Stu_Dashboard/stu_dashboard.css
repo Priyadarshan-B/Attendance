@@ -19,6 +19,7 @@
 
 .dropdown{
     display: flex;
+    gap: 10px;
 }
 .label-dropdown{
     flex: 1;
@@ -85,12 +86,14 @@
         flex-direction: column;
     }
 }
-
-/* @media (max-width: 480px) {
-    .attendance-summary {
-        grid-template-columns: 1fr;
-    }
-} */
+.no-stu{
+    height: 70vh;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-content: center;
+    align-items: center;    
+}
 
 .leave-details {
     flex: 1;

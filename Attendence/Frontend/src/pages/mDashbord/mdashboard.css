@@ -1,0 +1,46 @@
+.count-box{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: 10px;
+}
+.count{
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;  
+    gap: 40px;
+    align-items: center;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    flex: 1;
+}
+.img-no{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+h1{
+    margin: 0;
+}
+h3{
+    margin: 0;
+}
+.count-p{
+    font-size: 45px;
+    font-weight: 650;
+}
+
+.att-chart{
+    background-color: white;
+    border-radius: 10px;
+   width: 50%;
+    }
+
+.ab-table{
+    flex: 1;
+}
+.ch-table{
+    display: flex;
+    gap: 10px   ;
+}

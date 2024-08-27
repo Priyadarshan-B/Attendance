@@ -235,19 +235,19 @@ exports.update_leave = async(req, res)=>{
   }
 }
 exports.update_reject_leave = async(req, res)=>{
-  const {student,id} = req.body
+  const {student,id , reason} = req.body
   if(!student || !id){
     res.status(400).json({error:"Student id is required"})
   }
   try{
     const query = `
     UPDATE \`leave\`
-    SET status = '3'
+    SET status = '3', rej_reason = ?
     WHERE student = ?
     AND id = ?
     AND status = '2'
     `
-    const updateLeave = await post_database(query, [student , id])
+    const updateLeave = await post_database(query, [reason, student , id])
     res.json(updateLeave)
   }
   catch(err){

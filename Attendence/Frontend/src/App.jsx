@@ -20,6 +20,7 @@ import AdminDashboard from "./pages/Admin_Dashboard/admin_dashboard";
 import LeaveDetails from "./pages/Approvals/leave_approval";
 import Placement from "./pages/Placement/placement";
 import CryptoJS from "crypto-js";
+import Mdashboard from "./pages/mDashbord/mdashboard";
 import Error from "./pages/error";
 import { Toaster } from "react-hot-toast";
 
@@ -73,6 +74,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendance/mdashboard"
+          element={
+            <ProtectedRoute>
+              <Mdashboard />
             </ProtectedRoute>
           }
         />
