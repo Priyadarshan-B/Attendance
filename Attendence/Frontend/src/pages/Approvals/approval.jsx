@@ -5,6 +5,7 @@ import requestApi from "../../components/utils/axios";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
+import moment from "moment";
 import {
   Table,
   TableBody,
@@ -22,21 +23,31 @@ import LeaveDetails from "./leave_approval";
 import "./approval.css";
 
 function calculateTimeLeft(dueDate) {
-  const difference = +new Date(dueDate) - +new Date();
-  let timeLeft = {};
+  const now = moment();
+  const due = moment(dueDate);
+  const duration = moment.duration(due.diff(now));
 
-  if (difference > 0) {
-    timeLeft = {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / 1000 / 60) % 60),
-      seconds: Math.floor((difference / 1000) % 60),
-    };
-  } else {
-    timeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  const days = Math.floor(duration.asDays());
+  const hours = duration.hours();
+  const minutes = duration.minutes();
+  const seconds = duration.seconds();
+
+  let timeLeft = { days, hours, minutes, seconds };
+
+  if (days < 0 || hours < 0 || minutes < 0 || seconds < 0) {
+    timeLeft.isNegative = true;
   }
 
   return timeLeft;
+}
+
+function formatTimeLeft(timeLeft) {
+  if (timeLeft.isNegative) {
+    return `Overdue by ${Math.abs(timeLeft.days)}d ${Math.abs(
+      timeLeft.hours
+    )}h ${Math.abs(timeLeft.minutes)}m`;
+  }
+  return `${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m`;
 }
 
 function Approvals() {
@@ -54,62 +65,82 @@ function Body() {
   const deid = CryptoJS.AES.decrypt(id, secretKey).toString(CryptoJS.enc.Utf8);
   const [searchTerm, setSearchTerm] = useState("");
   const [openApprovePopup, setOpenApprovePopup] = useState(false);
-  const [selectedStudentIndex, setSelectedStudentIndex] = useState(null);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [performanceChecked, setPerformanceChecked] = useState(false);
   const [appearanceChecked, setAppearanceChecked] = useState(false);
-  const [timeLeft, setTimeLeft] = useState([]);
-  const [disabledExpandButtons, setDisabledExpandButtons] = useState({});
+  const [timeLeft, setTimeLeft] = useState({});
   const [loading, setLoading] = useState({});
+  const [openExtend, setOpenExtend] = useState(false);
 
   useEffect(() => {
-    requestApi("GET", `/mentor-students?mentor=${deid}`)
-      .then((response) => {
-        if (Array.isArray(response.data)) {
-          setStudents(response.data);
-          setFilteredStudents(response.data);
-          const initialTimeLeft = response.data.map((student) =>
-            calculateTimeLeft(student.due_date)
-          );
-          setTimeLeft(initialTimeLeft);
-        } else {
-          console.error("API response is not an array:", response.data);
-        }
-      })
-      .catch((error) => console.error("Error fetching students:", error));
+    fetchStudents();
   }, [deid]);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      // Update the time left for each student
-      const updatedTimeLeft = filteredStudents.map((student) =>
-        calculateTimeLeft(student.due_date)
-      );
-      setTimeLeft(updatedTimeLeft);
+      updateTimeLeft();
     }, 1000);
 
     return () => clearInterval(timer);
   }, [filteredStudents]);
 
-  if (showLeave) {
-    return <LeaveDetails />;
-  }
+  useEffect(() => {
+    fetchStudents();
+    const timer = setInterval(() => {
+      updateTimeLeft();
+    }, 60000);
 
-  const handleApprove = (index) => {
-    setSelectedStudentIndex(index);
+    return () => clearInterval(timer);
+  }, []);
+
+  const fetchStudents = () => {
+    requestApi("GET", `/mentor-students?mentor=${deid}`)
+      .then((response) => {
+        if (Array.isArray(response.data)) {
+          setStudents(response.data);
+          setFilteredStudents(response.data);
+          updateTimeLeft(response.data);
+        } else {
+          console.error("API response is not an array:", response.data);
+        }
+      })
+      .catch((error) => console.error("Error fetching students:", error));
+  };
+
+  const updateTimeLeft = (studentsData = filteredStudents) => {
+    const updatedTimeLeft = {};
+    studentsData.forEach((student) => {
+      updatedTimeLeft[student.id] = calculateTimeLeft(student.due_date);
+    });
+    setTimeLeft(updatedTimeLeft);
+  };
+
+  const handleApprove = (studentId) => {
+    setSelectedStudentId(studentId);
     setOpenApprovePopup(true);
+  };
+
+  const handleExtend = (studentId) => {
+    setSelectedStudentId(studentId);
+    setOpenExtend(true);
   };
 
   const handleConfirmApprove = () => {
     if (performanceChecked && appearanceChecked) {
-      const updatedStudents = [...filteredStudents];
-      const student = updatedStudents[selectedStudentIndex];
-      const url = `/att-approve?student=${student.id}`;
+      const studentId = selectedStudentId;
+      const url = `/att-approve?student=${studentId}`;
 
       requestApi("PUT", url)
         .then(() => {
-          updatedStudents[selectedStudentIndex].att_status = "1";
+          const updatedStudents = filteredStudents.map((student) => {
+            if (student.id === studentId) {
+              student.att_status = "1";
+            }
+            return student;
+          });
           setFilteredStudents(updatedStudents);
           setStudents(updatedStudents);
+          updateTimeLeft(updatedStudents);
           toast.success("Approved!!");
         })
         .catch((error) => {
@@ -124,7 +155,7 @@ function Body() {
 
   const handleCloseApprovePopup = () => {
     setOpenApprovePopup(false);
-    setSelectedStudentIndex(null);
+    setSelectedStudentId(null);
     setPerformanceChecked(false);
     setAppearanceChecked(false);
   };
@@ -155,40 +186,48 @@ function Body() {
         student.register_number.toLowerCase().includes(value)
     );
     setFilteredStudents(filtered);
+    updateTimeLeft(filtered); // Recalculate time left for filtered students
   };
 
-  const handleExpand = (studentId, index) => {
-    setLoading((prevLoading) => ({ ...prevLoading, [studentId]: true }));
+  const handleExpand = () => {
+    if (selectedStudentId) {
+      setLoading((prevLoading) => ({
+        ...prevLoading,
+        [selectedStudentId]: true,
+      }));
 
-    const url = `/nxt-wed?id=${studentId}`;
+      const url = `/nxt-wed?id=${selectedStudentId}`;
 
-    requestApi("PUT", url)
-      .then(() => {
-        // alert("Updated to next Wednesday successfully.");
-        toast.success("Added 7 days😁");
-        const updatedTimeLeft = filteredStudents.map((student) =>
-          calculateTimeLeft(student.due_date)
-        );
-        setTimeLeft(updatedTimeLeft);
-      })
-      .catch((error) => {
-        console.error(`Error updating due date to next Wednesday:`, error);
-        toast.error("Error Expanding 7 days..");
-      })
-      .finally(() => {
-        setLoading((prevLoading) => ({ ...prevLoading, [studentId]: false }));
-      });
+      requestApi("PUT", url)
+        .then(() => {
+          toast.success("Extended 7 days😁..");
+          fetchStudents();
+        })
+        .catch((error) => {
+          console.error(`Error updating due date to next Wednesday:`, error);
+          toast.error("Error Expanding 7 days..");
+        })
+        .finally(() => {
+          setLoading((prevLoading) => ({
+            ...prevLoading,
+            [selectedStudentId]: false,
+          }));
+        });
+
+      setOpenExtend(false);
+      setSelectedStudentId(null);
+    } else {
+      console.error("No student ID found");
+    }
   };
+
+  if (showLeave) {
+    return <LeaveDetails />;
+  }
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-        }}
-      >
+      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div
           style={{
             display: "flex",
@@ -234,7 +273,7 @@ function Body() {
                 {filteredStudents
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((student, index) => (
-                    <TableRow key={student.register_number}>
+                    <TableRow key={student.id}>
                       <TableCell>
                         <b>{page * rowsPerPage + index + 1}</b>
                       </TableCell>
@@ -257,7 +296,7 @@ function Body() {
                                 color: "red",
                                 cursor: "pointer",
                               }}
-                              onClick={() => handleApprove(index)}
+                              onClick={() => handleApprove(student.id)}
                             >
                               Over Due
                             </button>
@@ -273,7 +312,7 @@ function Body() {
                                   ? "not-allowed"
                                   : "pointer",
                               }}
-                              onClick={() => handleExpand(student.id, index)}
+                              onClick={() => handleExtend(student.id)}
                               disabled={loading[student.id]}
                             >
                               Extend
@@ -283,36 +322,36 @@ function Body() {
                       </TableCell>
                       <TableCell>
                         {student.att_status === "1" ? (
-                          <div style={{
-                            color:timeLeft[index].days < 4
-                            ? "red"
-                            : timeLeft[index].days > 7
-                            ? "green"
-                            : "black",
-                            borderRadius:'20px',
-                            padding:'2px',
-                            textAlign:'center',
-                            backgroundColor:
-                              timeLeft[index].days < 4
+                          <div
+                            style={{
+                              color: timeLeft[student.id]?.isNegative
+                                ? "red"
+                                : timeLeft[student.id]?.days > 2
+                                ? "green"
+                                : "black",
+                                border: timeLeft[student.id]?.isNegative
+                                ? "1px solid red"
+                                : timeLeft[student.id]?.days > 2
+                                ? "1px solid green"
+                                : "1px solid #ffd691",
+                              borderRadius: "20px",
+                              padding: "2px",
+                              textAlign: "center",
+                              backgroundColor: timeLeft[student.id]?.isNegative
                                 ? "#fde8e8"
-                                : timeLeft[index].days > 7
-                                ? "#e6fff2"
-                                : "white",
-                                border:
-                                timeLeft[index].days < 4
-                                  ? "1px solid red"
-                                  : timeLeft[index].days > 7
-                                  ? "1px solid green"
-                                  : "white",
-                          }}
+                                : timeLeft[student.id]?.days > 2
+                                ? "#d5f7da"
+                                : "#fff5e4",
+                            }}
                           >
-                            <p className="time" >
-                              {timeLeft[index].days}d {timeLeft[index].hours}h{" "}
-                              {timeLeft[index].minutes}m{" "}
-                            </p>
+                            <b>
+                              {timeLeft[student.id]
+                                ? formatTimeLeft(timeLeft[student.id])
+                                : "Calculating..."}
+                            </b>
                           </div>
                         ) : (
-                          "--"
+                          "N/A"
                         )}
                       </TableCell>
                     </TableRow>
@@ -321,9 +360,9 @@ function Body() {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 15, 25]}
+            rowsPerPageOptions={[5, 10, 15]}
             component="div"
-            count={students.length}
+            count={filteredStudents.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -331,7 +370,6 @@ function Body() {
           />
         </Paper>
       </div>
-      {/* Approve Popup */}
       <Popup
         open={openApprovePopup}
         onClose={handleCloseApprovePopup}
@@ -357,6 +395,16 @@ function Body() {
               Appearance
             </div>
           </div>
+        }
+      />
+      <Popup
+        open={openExtend}
+        onClose={() => setOpenExtend(false)}
+        onConfirm={handleExpand}
+        text={
+          <p>
+            Are you sure you want to extend this student's due date by 7 days?
+          </p>
         }
       />
     </div>

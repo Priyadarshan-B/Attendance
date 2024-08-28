@@ -31,6 +31,9 @@ function Body() {
   const [scount, setSCount] = useState(0);
   const [todayAtt, setTodayAtt] = useState([]);
   const [tcount, setTCount] = useState(0);
+  const [subCount, SetsubCount] = useState(0);
+  const [regcount, setRegCount] = useState(0)
+  const [type2count, setType2Count] = useState(0)
   const [todayAb, setTodayAb] = useState([]);
   const [tabCount, setTAbCount] = useState(0);
   const [pageAbsent, setPageAbsent] = useState(0);
@@ -46,9 +49,12 @@ function Body() {
       const response = await requestApi("GET", `/mdash?mentor=${id}`);
       setSCount(response.data.student_count);
       setTodayAtt(response.data.today_attendance_records);
+      SetsubCount(response.data.sub_mentor)
       setTCount(response.data.today_attendance_count);
       setTodayAb(response.data.today_absent_records);
       setTAbCount(response.data.todat_absent);
+      setRegCount(response.data.regular_students)
+      setType2Count(response.data.type2_students)
     } catch (err) {
       console.error("Error Fetching Students Details", err);
     }
@@ -102,7 +108,7 @@ function Body() {
         <div
           className="count"
           style={{
-            boxShadow: "#93d0fd 0px 1px 4px",
+            // boxShadow: "#93d0fd 0px 1px 4px",
             backgroundColor: "white",
           }}
         >
@@ -110,7 +116,7 @@ function Body() {
             style={{
               fontSize: "40px",
               color: "blue",
-              padding: "20px",
+              padding: "10px",
               backgroundColor: "#93d0fd",
               borderRadius: "100%",
             }}
@@ -124,13 +130,43 @@ function Body() {
             >
               {scount}
             </p>
-            <p>Total Students </p>
+            <p>Mentees</p>
           </div>
         </div>
         <div
           className="count"
           style={{
-            boxShadow: "#a9f2a4 0px 1px 4px",
+            // boxShadow: "#f0b5b5 0px 1px 4px",
+            backgroundColor: "white",
+            cursor: "pointer",
+          }}
+          // onClick={handleAbsenteesClick}
+        >
+          <Groups2TwoToneIcon
+            style={{
+              fontSize: "40px",
+              color: "gold",
+              padding: "10px",
+              backgroundColor: "#f9eac4",
+              borderRadius: "100%",
+            }}
+          />
+          <div className="img-no">
+            <p
+              className="count-p"
+              style={{
+                color: "gold",
+              }}
+            >
+              {subCount}
+            </p>
+            <p>Monitoring</p>
+          </div>
+        </div>
+        <div
+          className="count"
+          style={{
+            // boxShadow: "#a9f2a4 0px 1px 4px",
             backgroundColor: "white",
           }}
         >
@@ -138,7 +174,7 @@ function Body() {
             style={{
               fontSize: "40px",
               color: "green",
-              padding: "20px",
+              padding: "10px",
               backgroundColor: "#a9f2a4",
               borderRadius: "100%",
             }}
@@ -158,7 +194,6 @@ function Body() {
         <div
           className="count"
           style={{
-            boxShadow: "#f0b5b5 0px 1px 4px",
             backgroundColor: "white",
             cursor: "pointer",
           }}
@@ -168,7 +203,7 @@ function Body() {
             style={{
               fontSize: "40px",
               color: "red",
-              padding: "20px",
+              padding: "10px",
               backgroundColor: "#f0b5b5",
               borderRadius: "100%",
             }}
@@ -183,8 +218,71 @@ function Body() {
               {tabCount}
             </p>
             <p>Absentees</p>
+            <p></p>
+          </div>
+          
+        </div>
+        <div
+          className="count"
+          style={{
+            // boxShadow: "#f0b5b5 0px 1px 4px",
+            backgroundColor: "white",
+            cursor: "pointer",
+          }}
+          // onClick={handleAbsenteesClick}
+        >
+          <Groups2TwoToneIcon
+            style={{
+              fontSize: "40px",
+              color: "gold",
+              padding: "10px",
+              backgroundColor: "#f9eac4",
+              borderRadius: "100%",
+            }}
+          />
+          <div className="img-no">
+            <p
+              className="count-p"
+              style={{
+                color: "gold",
+              }}
+            >
+              {regcount}
+            </p>
+            <p>Monitoring</p>
           </div>
         </div>
+        <div
+          className="count"
+          style={{
+            // boxShadow: "#f0b5b5 0px 1px 4px",
+            backgroundColor: "white",
+            cursor: "pointer",
+          }}
+          // onClick={handleAbsenteesClick}
+        >
+          <Groups2TwoToneIcon
+            style={{
+              fontSize: "40px",
+              color: "gold",
+              padding: "10px",
+              backgroundColor: "#f9eac4",
+              borderRadius: "100%",
+            }}
+          />
+          <div className="img-no">
+            <p
+              className="count-p"
+              style={{
+                color: "gold",
+              }}
+            >
+              {type2count}
+            </p>
+            <p>Monitoring</p>
+          </div>
+        </div>
+      
       </div>
       <div className="ch-table">
         <div className="att-chart">
@@ -192,7 +290,7 @@ function Body() {
         </div>
 
         {!showAbsentTable && (
-          <div>
+          <div className="ab-table">
             <InputBox
               placeholder="Search by Name"
               value={searchPre}
@@ -208,6 +306,15 @@ function Body() {
               <Table className="custom-table">
                 <TableHead sx={{ backgroundColor: "#2a3645" }}>
                   <TableRow>
+                  <TableCell
+                      sx={{
+                        color: "white",
+                        fontWeight: "700",
+                        fontSize: "18px",
+                      }}
+                    >
+                      S.No
+                    </TableCell>
                     <TableCell
                       sx={{
                         color: "white",
@@ -234,8 +341,9 @@ function Body() {
                       pagePresent * rowsPerPagePresent,
                       pagePresent * rowsPerPagePresent + rowsPerPagePresent
                     )
-                    .map((row) => (
+                    .map((row, index) => (
                       <TableRow key={row.id}>
+                        <TableCell>{index+1}</TableCell>
                         <TableCell>{row.name}</TableCell>
                         <TableCell>{row.register_number}</TableCell>
                       </TableRow>
@@ -272,6 +380,15 @@ function Body() {
               <Table className="custom-table">
                 <TableHead sx={{ backgroundColor: "#2a3645" }}>
                   <TableRow>
+                  <TableCell
+                      sx={{
+                        color: "white",
+                        fontWeight: "700",
+                        fontSize: "18px",
+                      }}
+                    >
+                      S.No
+                    </TableCell>
                     <TableCell
                       sx={{
                         color: "white",
@@ -298,8 +415,9 @@ function Body() {
                       pageAbsent * rowsPerPageAbsent,
                       pageAbsent * rowsPerPageAbsent + rowsPerPageAbsent
                     )
-                    .map((row) => (
+                    .map((row, index) => (
                       <TableRow key={row.id}>
+                        <TableCell>{index+1}</TableCell>
                         <TableCell>{row.name}</TableCell>
                         <TableCell>{row.register_number}</TableCell>
                       </TableRow>

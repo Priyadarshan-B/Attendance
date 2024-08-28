@@ -299,3 +299,48 @@ exports.get_sub_students = async (req, res) => {
     res.status(500).json({ error: "Error fetching Mentor-Student List" });
   }
 };
+
+exports.get_type1_mentor = async(req, res)=>{
+  const mentor = req.query.mentor
+  if(!mentor){
+    return res.status(400).json({error:"Mentor id is required.."})
+  }
+  try{
+    const query = `
+    SELECT s.name, s.register_number,(ms.student) FROM mentor_student ms
+INNER JOIN students s
+ON ms.student = s.id
+WHERE ms.mentor = ?
+ AND s.type = '1'
+AND ms.status = '1'
+    `
+    const gettype1 = await get_database(query, [mentor])
+    res.json(gettype1)
+  }
+  catch(err){
+    console.error("Error Fetching Mentor-Student 1 List", err);
+    res.status(500).json({ error: "Error fetching Mentor-Student 1 List" });
+  }
+}
+exports.get_type2_mentor = async(req, res)=>{
+  const mentor = req.query.mentor
+  if(!mentor){
+    return res.status(400).json({error:"Mentor id is required.."})
+  }
+  try{
+    const query = `
+    SELECT s.name, s.register_number,(ms.student) FROM mentor_student ms
+INNER JOIN students s
+ON ms.student = s.id
+WHERE ms.mentor = ?
+ AND s.type = '2'
+AND ms.status = '1'
+    `
+    const gettype1 = await get_database(query, [mentor])
+    res.json(gettype1)
+  }
+  catch(err){
+    console.error("Error Fetching Mentor-Student 1 List", err);
+    res.status(500).json({ error: "Error fetching Mentor-Student 1 List" });
+  }
+}

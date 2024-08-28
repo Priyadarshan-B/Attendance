@@ -13,11 +13,11 @@ exports.mentor_att_approve = async (req, res) => {
         const appDate = moment().format('YYYY-MM-DD HH:mm:ss');
 
         let nextWednesday = moment().day(3).startOf('day');
-        
-        if (moment().isAfter(nextWednesday, 'day')) {
+
+        if (moment().day() === 3) {
             nextWednesday.add(1, 'week');
         }
-        
+
         const dueDate = nextWednesday.format('YYYY-MM-DD HH:mm:ss');
         const query = `
             UPDATE students 

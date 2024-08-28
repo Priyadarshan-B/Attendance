@@ -1,8 +1,8 @@
 .count-box{
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+    display: grid;
     margin: 10px;
+    grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
 }
 .count{
     padding: 20px;
@@ -12,6 +12,7 @@
     align-items: center;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     flex: 1;
+    
 }
 .img-no{
     display: flex;
@@ -34,7 +35,9 @@ h3{
 .att-chart{
     background-color: white;
     border-radius: 10px;
-   width: 50%;
+   /* width: 50%; */
+   flex: 1;
+   margin: 5px;
     }
 
 .ab-table{
@@ -43,4 +46,30 @@ h3{
 .ch-table{
     display: flex;
     gap: 10px   ;
+    flex-wrap: wrap;
 }
+
+@media (max-width: 1500px) {
+    .count-box {
+      grid-template-columns: repeat(3, 1fr); /* 3 containers per row on medium screens */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .count-box {
+      grid-template-columns: repeat(2, 1fr); /* 2 containers per row on small screens */
+    }
+    .count{
+        flex-direction: column;
+        gap: 5px;
+    }
+    .ch-table{
+        flex-direction: column-reverse;
+    }
+  }
+  
+  /* @media (max-width: 480px) {
+    .count-box {
+      grid-template-columns: 1fr; 
+    }
+  } */

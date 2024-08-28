@@ -8,50 +8,55 @@ const AttendanceChart = ({ mentorId }) => {
     series: [],
     options: {
       chart: {
-        type: 'bar',
-        height: 350
-      },
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          columnWidth: '55%',
-          endingShape: 'rounded'
-        },
+        type: 'line',
+        height: 350,
       },
       dataLabels: {
         enabled: false,
         style: {
-            colors: ['#a9f2a4', '#f0b5b5']
-          }
+          colors: ['#008000', '#ff0000'],
+        },
       },
-      colors:['#a9f2a4', '#f0b5b5'],
-      markers: {
-        colors: ['#a9f2a4', '#f0b5b5']
-     },
+      colors: ['#008000', '#ff0000'], 
       stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent']
+        curve: 'smooth',
+        width: 5,
+        colors: ['#008000', '#ff0000'],
+      },
+      markers: {
+        size: 5, 
+        colors: ['#008000', '#ff0000'],
+        hover: {
+          size: 7, 
+        },
       },
       xaxis: {
         categories: [],
+        
       },
-      yaxis: {
-        title: {
-          text: 'Number of Students'
-        }
+      yaxis:{
+        min:0,
+        max:+10,
+        
       },
       fill: {
-        opacity: 1,
-        colors: ['#a9f2a4', '#f0b5b5']
+        opacity: 0.3, 
+        colors: ['#008000', '#ff0000'],
       },
       tooltip: {
+        theme: 'light',
+        style: {
+          fontSize: '12px',
+          backgroundColor: '#fff',
+          color: '#0000',
+          borderRadius: 8,
+        },
         y: {
           formatter: function (val) {
-            return val + " students"
-          }
-        }
-      }
+            return val + " students";
+          },
+        },
+      },
     },
   });
 
@@ -69,21 +74,21 @@ const AttendanceChart = ({ mentorId }) => {
           ...prevState,
           series: [
             {
-              name: 'Present',
-              data: presentCounts
+              name: 'Attendees',
+              data: presentCounts,
             },
             {
-              name: 'Absent',
-              data: absentCounts
-            }
+              name: 'Absentees',
+              data: absentCounts,
+            },
           ],
           options: {
             ...prevState.options,
             xaxis: {
               ...prevState.options.xaxis,
-              categories: dates
-            }
-          }
+              categories: dates,
+            },
+          },
         }));
       } catch (err) {
         console.error("Error fetching attendance data", err);
@@ -96,7 +101,7 @@ const AttendanceChart = ({ mentorId }) => {
   return (
     <div>
       <h2>Attendance Summary</h2>
-      <ReactApexChart options={chartData.options} series={chartData.series} type="bar" height={350} />
+      <ReactApexChart options={chartData.options} series={chartData.series} type="line" height={350} />
     </div>
   );
 };

@@ -38,6 +38,9 @@ router.put('/leave', mentor.update_leave)
 router.put('/reject-leave', mentor.update_reject_leave)
 router.put('/mentor-map', mentor.delete_mentorMap)
 router.get('/sub-mentor', mentor.get_sub_students)
+router.get('/regular', mentor.get_type1_mentor)
+router.get('/type2', mentor.get_type2_mentor)
+
 
 //student
 router.get('/student-year', student.get_all_students)
