@@ -99,6 +99,7 @@ router.put('/change-type1', change.post_changeStu_type1)
 
 //nip/re_appear att
 router.get('/type2_attendence', nip_att.get_att_slots)
+router.get('/role-attendance', nip_att.get_role_slots)
 
 //mapStudent
 router.get('/map-role-select',map_role.get_map_role)

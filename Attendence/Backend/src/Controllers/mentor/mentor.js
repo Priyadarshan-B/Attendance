@@ -27,7 +27,9 @@ exports.get_students = async (req, res) => {
   FROM students s
   JOIN mentor_student ms ON s.id = ms.student
   WHERE ms.mentor = ?
-  AND ms.status = '1';
+  AND ms.status = '1'
+  AND s.status = '1'
+  ;
 
     `;
 

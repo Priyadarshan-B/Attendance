@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import AppLayout from "../../components/applayout/AppLayout";
-import "../../components/applayout/styles.css";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 import requestApi from "../../components/utils/axios";
-import "./stu_dashboard.css";
+import "../Stu_Dashboard/stu_dashboard.css";
 import Chart from "react-apexcharts";
 import LiquidGauge from "react-liquid-gauge";
 import moment from "moment";
@@ -18,7 +16,6 @@ import { RiWaterPercentFill } from "react-icons/ri";
 import { BsFillCalendar2MonthFill } from "react-icons/bs";
 import { LuCalendarRange } from "react-icons/lu";
 import CountUp from "react-countup";
-import calendar from "../../assets/calendar.png";
 import {
   Table,
   TableBody,
@@ -30,18 +27,18 @@ import {
   TablePagination,
 } from "@mui/material";
 
-function StuDashboard({id}) {
-  return <AppLayout rId={2} body={<Body id={id} />} />;
+function StudentDashboard({id, roll}) {
+  return  <Body id={id} roll={roll} />;
 }
 
-function Body() {
-  const deroll = Cookies.get("roll");
-  const deid = Cookies.get("id");
-  const secretKey = "secretKey123";
-  const roll = CryptoJS.AES.decrypt(deroll, secretKey).toString(
-    CryptoJS.enc.Utf8
-  );
-  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
+function Body({id, roll}) {
+//   const deroll = Cookies.get("roll");
+//   const deid = Cookies.get("id");
+//   const secretKey = "secretKey123";
+//   const roll = CryptoJS.AES.decrypt(deroll, secretKey).toString(
+//     CryptoJS.enc.Utf8
+//   );
+//   const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
   const [studentDetails, setStudentDetails] = useState(null);
   const [attendanceDetails, setAttendanceDetails] = useState([]);
   const [placement, setPlacement] = useState([]);
@@ -1115,4 +1112,4 @@ function Body() {
   );
 }
 
-export default StuDashboard;
+export default StudentDashboard;

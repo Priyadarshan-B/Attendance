@@ -9,7 +9,7 @@ const AttendanceChart = ({ mentorId }) => {
     options: {
       chart: {
         type: 'line',
-        height: 350,
+        // height: 500,
       },
       dataLabels: {
         enabled: false,
@@ -100,8 +100,10 @@ const AttendanceChart = ({ mentorId }) => {
 
   return (
     <div>
-      <h2>Attendance Summary</h2>
-      <ReactApexChart options={chartData.options} series={chartData.series} type="line" height={350} />
+      <div style={{display:'flex', justifyContent:'center', alignContent:'center', alignItems:'center', gap:'10px'}}>
+        <h3>Attendance Summary (last 10 days)</h3>
+      </div>
+      <ReactApexChart options={chartData.options} series={chartData.series} type="line" height={450} />
     </div>
   );
 };

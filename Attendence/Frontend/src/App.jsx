@@ -21,6 +21,7 @@ import LeaveDetails from "./pages/Approvals/leave_approval";
 import Placement from "./pages/Placement/placement";
 import CryptoJS from "crypto-js";
 import Mdashboard from "./pages/mDashbord/mdashboard";
+import MStudent from "./pages/mDashbord/m_students";
 import Error from "./pages/error";
 import { Toaster } from "react-hot-toast";
 
@@ -186,6 +187,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Leave />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendance/mstudent"
+          element={
+            <ProtectedRoute>
+              <MStudent />
             </ProtectedRoute>
           }
         />

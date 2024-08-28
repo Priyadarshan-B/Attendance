@@ -35,13 +35,13 @@ h3{
 .att-chart{
     background-color: white;
     border-radius: 10px;
-   /* width: 50%; */
    flex: 1;
+   /* width: 50%; */
    margin: 5px;
     }
 
-.ab-table{
-    flex: 1;
+.s-table{
+    flex: 1.5;
 }
 .ch-table{
     display: flex;
@@ -68,8 +68,13 @@ h3{
     }
   }
   
-  /* @media (max-width: 480px) {
-    .count-box {
-      grid-template-columns: 1fr; 
-    }
-  } */
+
+
+  .m-table{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+  }

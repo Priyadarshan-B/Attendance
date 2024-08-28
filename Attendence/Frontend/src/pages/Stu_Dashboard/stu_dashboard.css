@@ -164,3 +164,8 @@ h5,
 h4 {
     margin: 10px;
 }
+
+.att_table{
+    display: flex;
+    gap: 10px;
+}
