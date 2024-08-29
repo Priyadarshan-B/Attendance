@@ -1,70 +1,19 @@
-.leave-flex{
-    display: flex;
-    gap: 10px;
-}
-
+/* styles.css */
 .form-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-content: center;
-    gap: 16px; 
-    padding: 20px;
-    
-}
-.leave-form{
-    flex: 1.5;
-}
-.leave-detail {
-    flex: 1;
+    gap: 16px;
+    margin: auto; 
+    padding: 20px; 
     background-color: #ffffff;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-    padding: 10px;
     border-radius: 5px;
-    max-height: 88vh;
-    overflow-y: scroll;
-}
-
-.leave-data{
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 15px;
-}
-
-.leave-row{
-    background-color: #ffffff;
-    /* box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; */
-    /* border: 1px solid rgb(232, 232, 232); */
-    padding: 10px;
-    text-align: center;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.reason{
-    padding: 7px 20px 10px 20px;
-    background-color: white;
-    border-radius: 5px;
-}
-
-.status{
-    padding: 7px 20px 10px 20px;
-    background-color: white;
-    border-radius: 5px;
-    width: fit-content;
-}
-
-.space{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }
 
 .leave-form{
     background-color: #f4f6fa;
-    
+    padding: 20px;
     border-radius: 10px;
 }
 .form-container > div {
@@ -77,15 +26,11 @@
 }
 
 .form-container .react-select__control {
-    margin-bottom: 16px; 
+    margin-bottom: 16px; /* Adds spacing below each React Select dropdown */
 }
 
 @media (max-width: 768px) {
     .form-container {
-        padding: 10px; 
+        padding: 10px; /* Adjust padding for smaller screens */
     }
-}
-
-.leave-b{
-    color:  white;
 }

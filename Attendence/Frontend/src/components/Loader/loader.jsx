@@ -1,5 +1,5 @@
 import React from 'react';
-import './loader.css'; 
+import './loader.css'; // Create a separate CSS file for the loader styles
 
 const Loader = () => (
   <div className='loader'>

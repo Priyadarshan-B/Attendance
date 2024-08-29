@@ -4,14 +4,6 @@
   border-radius: 8px;
   overflow: hidden;
   padding: 20px;
-  height: 100vh;
-  overflow-y: scroll;
-}
-.favattendance-container {
-  max-width: 100%;
-  background-color: #f4f6fa;
-  border-radius: 8px;
-  overflow: hidden;
 }
 
 .att-table{
@@ -27,6 +19,10 @@
   border-radius: 10px;
 }
 
+/* .custom-table thead {
+  color: white;
+  border-radius: 10px;
+} */
 .custom-table thead  :first-child {
   border-radius: 10px 0px 0px 0px;
 }
@@ -56,10 +52,9 @@
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
-  background-color: #eff4ff;
+  background-color: #f4f6fa;
   border-radius: 10px;
   gap: 15px;
-  border: 1px solid rgb(208, 208, 255);
   /* border-top: 1px solid #ddd; */
 }
 
@@ -89,12 +84,11 @@
 
 .pagination {
   display: flex;
-  border-radius: 10px;
   justify-content: space-between;
-  border: 1px solid rgb(215, 215, 215);
   align-items: center;
   padding: 10px;
-  background-color: #ffffff;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
 }
 
 .pagination button {
@@ -348,66 +342,4 @@
     background: #35dc61;
     box-shadow: 0 -36px 0 -10px transparent, 32px -16px 0 -10px transparent, 32px 16px 0 -10px transparent, 0 36px 0 -10px transparent, -32px 16px 0 -10px transparent, -32px -16px 0 -10px transparent;
   }
-}
-.cbx.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-input[type="checkbox"]:disabled + .cbx {
-  pointer-events: none;
-}
-
-.go-back-button {
-  background: transparent;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  color: rgb(62, 54, 54);
-  margin-bottom: 20px;
-}
-
-/* .go-back-button:hover {
-  text-decoration: underline;
-} */
-
-.fav-attendance {
-  padding: 20px;
-}
-
-
-
-.year-select{
-  width: 50%;
-}
-
-.students-table{
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-
-.submit-attendance{
-  padding: 10px;
-  border-radius: 20px;
-  background-color: #c2d7ff;
-  border: 1px solid rgb(100, 100, 255);
-  color: rgb(0, 0, 0);
-  font-weight: 700;
-  font-size: 16px;
-}
-.submit-attendance:hover{
-  background-color: #79a8ff ;
-}
-.favourites{
-  padding: 10px;
-  border-radius: 20px;
-  background-color: pink;
-  color: rgb(0, 0, 0);
-  float: right;
-}
-
-.favourites:hover{
-background-color: #9be3d2;
 }
