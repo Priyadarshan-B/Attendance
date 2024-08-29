@@ -15,36 +15,36 @@ import WorkOffIcon from "@mui/icons-material/WorkOff";
 import SchoolIcon from "@mui/icons-material/School";
 import AddTaskIcon from '@mui/icons-material/AddTask';
 
+
 function getIconComponent(iconPath) {
   switch (iconPath) {
-    case "DashboardRoundedIcon":
-      return DashboardRoundedIcon;
-    case "HikingRoundedIcon":
-      return HikingRoundedIcon;
-    case "CalendarMonthIcon":
-      return CalendarMonthIcon;
-    case "DateRangeIcon":
-      return DateRangeIcon;
-    case "ScheduleSendIcon":
-      return ScheduleSendIcon;
-    case "AdminPanelSettingsSharpIcon":
-      return AdminPanelSettingsSharpIcon;
-    case "ReceiptLongSharpIcon":
-      return ReceiptLongSharpIcon;
-    case "WorkOffIcon":
-      return WorkOffIcon;
-    case "SchoolIcon":
-      return SchoolIcon;
-    case "AddTaskIcon":
-      return AddTaskIcon
-
+    case 'DashboardRoundedIcon':
+      return <DashboardRoundedIcon style={{ color: '#f57d93', }} className="custom-sidebar-icon" />;
+    case 'HikingRoundedIcon':
+      return <HikingRoundedIcon style={{ color: '#3498db' }} className="custom-sidebar-icon" />;
+    case 'CalendarMonthIcon':
+      return <CalendarMonthIcon style={{ color: '#2eb7a2' }} className="custom-sidebar-icon" />;
+    case 'DateRangeIcon':
+      return <DateRangeIcon style={{ color: '#f39c12' }} className="custom-sidebar-icon" />;
+    case 'ScheduleSendIcon':
+      return <ScheduleSendIcon style={{ color: '#9b59b6' }} className="custom-sidebar-icon" />;
+    case 'AdminPanelSettingsSharpIcon':
+      return <AdminPanelSettingsSharpIcon style={{ color: '#1abc9c' }} className="custom-sidebar-icon" />;
+    case 'ReceiptLongSharpIcon':
+      return <ReceiptLongSharpIcon style={{ color: '#4fb33e' }} className="custom-sidebar-icon" />;
+    case 'WorkOffIcon':
+      return <WorkOffIcon style={{ color: '#95a5a6' }} className="custom-sidebar-icon" />;
+    case 'SchoolIcon':
+      return <SchoolIcon style={{ color: '#d158ff' }} className="custom-sidebar-icon" />;
+    case 'AddTaskIcon':
+      return <AddTaskIcon style={{ color: '#00a8fb' }} className="custom-sidebar-icon" />;
     default:
-      // If the icon path is not found, return a default icon or null
       return null;
   }
+}
 
   // return eval(iconPath)
-}
+
 
 function SideBar(props) {
   const [activeItem, setActiveItem] = useState("");
@@ -78,10 +78,8 @@ function SideBar(props) {
   }, []);
 
   useEffect(() => {
-    // Extract the pathname from the location object
     const pathname = location.pathname;
 
-    // Set the active item based on the current pathname
     const activeItem = sidebarItems.find((item) => item.path === pathname);
     if (activeItem) {
       setActiveItem(activeItem.name);
@@ -92,11 +90,13 @@ function SideBar(props) {
     <div
       className={props.open ? "app-sidebar sidebar-open" : "app-sidebar"}
       style={{
-        backgroundColor: "#ffffff",
+        backgroundColor: "#2a3645",
         borderRight: "1px solid #f2f2f2",
         // borderRight: "0.1px solid rgba(128, 128, 128, 0.296)"
       }}
     >
+      {/* <div className="logo"> <img src={logo} alt="" height={'50px'} /></div> */}
+      <div className="app-name">ATTENDANCE</div>
       <ul className="list-div">
         {sidebarItems.map((item) => (
           <li
@@ -105,16 +105,9 @@ function SideBar(props) {
             onClick={() => setActiveItem(item.name)}
           >
             <Link className="link" to={item.path}>
-              {getIconComponent(item.icon_path) &&
-                React.createElement(getIconComponent(item.icon_path), {
-                  sx: {
-                    marginRight: "10px",
-                    backgroundColor: "white",
-                    color: "#2c7cf3",
-                    padding: "2px",
-                    borderRadius: "5px",
-                  },
-                })}
+              {getIconComponent(item.icon_path) 
+                  }
+                
               {item.name}
             </Link>
           </li>

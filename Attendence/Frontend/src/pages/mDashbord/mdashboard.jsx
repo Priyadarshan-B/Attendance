@@ -67,9 +67,9 @@ function Body() {
           <Groups2TwoToneIcon
             style={{
               fontSize: "40px",
-              color: "blue",
+              color: "#2a3645",
               padding: "10px",
-              backgroundColor: "#93d0fd",
+              backgroundColor: "#9a9a9a",
               borderRadius: "100%",
             }}
           />
@@ -77,7 +77,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "blue",
+                color: "#2a3645",
               }}
             >
               {scount}
@@ -118,6 +118,7 @@ function Body() {
           className="count"
           style={{
             backgroundColor: "white",
+            cursor:'pointer'
           }}
           onClick={() => handleClick("attendees")}
         >
@@ -183,9 +184,9 @@ function Body() {
           <Groups2TwoToneIcon
             style={{
               fontSize: "40px",
-              color: "#5257ff",
+              color: "#2a3645",
               padding: "10px",
-              backgroundColor: "#d0d1ff",
+              backgroundColor: "#9a9a9a",
               borderRadius: "100%",
             }}
           />
@@ -193,7 +194,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "#5257ff",
+                color: "#2a3645",
               }}
             >
               {regcount}
@@ -212,9 +213,9 @@ function Body() {
           <Groups2TwoToneIcon
             style={{
               fontSize: "40px",
-              color: "#5257ff",
+              color: "#2a3645",
               padding: "10px",
-              backgroundColor: "#d0d1ff",
+              backgroundColor: "#9a9a9a",
               borderRadius: "100%",
             }}
           />
@@ -222,7 +223,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "#5257ff",
+                color: "#2a3645",
               }}
             >
               {type2count}

@@ -1,30 +1,33 @@
 import TopBar from './TopBar';
 import SideBar from './SideBar';
-import { useState } from "react";
-import './styles.css'
+import { useState, useRef } from "react";
+import './styles.css';
 
 function AppLayout(props) {
     const [sidebarState, setSideBarState] = useState(false);
-    const handleSideBar = (() => {
-        setSideBarState(!sidebarState)
-    })
+    const scrollRef = useRef(null);
+
+    const handleSideBar = () => {
+        setSideBarState(!sidebarState);
+    };
 
     return (
         <div style={{
             backgroundColor: "white",
             height: '100vh',
             width: '100vw',
-            position: 'fixed'
+            position: 'fixed',
+            display: 'flex'
         }}>
-            <TopBar sidebar={handleSideBar} />
             <div style={{ height: '100%', display: 'flex' }}>
                 <SideBar open={sidebarState} resource={props.rId} />
-                <div className={"app-body"} style={{ width: '100%' }} >{props.body}</div>
+            </div>
+            <div style={{ flex: '1', overflow: 'auto' }} ref={scrollRef}>
+                <TopBar sidebar={handleSideBar} scrollElement={scrollRef.current} />
+                <div className={"app-body"} style={{ width: '100%', height: '100vh' }} >{props.body}</div>
             </div>
         </div>
-    )
+    );
 }
 
-
-export default AppLayout
-
+export default AppLayout;

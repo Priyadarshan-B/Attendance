@@ -345,6 +345,7 @@ function Body({id, roll}) {
       <div className="attendance-percentage-and-status">
         <div className="student-details-container">
           <div className="guage">
+            <br />
             <h3>Attendance Percentage</h3>
             <div>
               <LiquidGauge
@@ -444,8 +445,8 @@ function Body({id, roll}) {
             <div
               className="summary-item"
               style={{
-                backgroundColor: "#dcffd6",
-                border: "1px solid #4ddc72",
+                // backgroundColor: "#dcffd6",
+                // border: "1px solid #4ddc72",
               }}
             >
               <div className="icons-flex">
@@ -482,8 +483,8 @@ function Body({id, roll}) {
             <div
               className="summary-item"
               style={{
-                backgroundColor: "#ffe5e5",
-                border: "1px solid red ",
+                // backgroundColor: "#ffe5e5",
+                // border: "1px solid red ",
               }}
             >
               <div className="icons-flex">
@@ -520,8 +521,8 @@ function Body({id, roll}) {
             <div
               className="summary-item"
               style={{
-                backgroundColor: "#fff5e4",
-                border: "1px solid #ffd691 ",
+                // backgroundColor: "#fff5e4",
+                // border: "1px solid #ffd691 ",
               }}
             >
               <div className="icons-flex">
@@ -593,8 +594,8 @@ function Body({id, roll}) {
             <div
               className="summary-item"
               style={{
-                backgroundColor: "#cdd8ff",
-                border: "1px solid #2c7cf3 ",
+                // backgroundColor: "#cdd8ff",
+                // border: "1px solid #2c7cf3 ",
               }}
             >
               <div className="icons-flex">
@@ -632,8 +633,8 @@ function Body({id, roll}) {
             <div
               className="summary-item"
               style={{
-                backgroundColor: "#f1ebff",
-                border: "1px solid #ba9dff",
+                // backgroundColor: "#f1ebff",
+                // border: "1px solid #ba9dff",
               }}
             >
               <div className="icons-flex">
@@ -670,8 +671,8 @@ function Body({id, roll}) {
             <div
               className="summary-item"
               style={{
-                backgroundColor: "#e6fff5",
-                border: "1px solid #5fffbf",
+                // backgroundColor: "#e6fff5",
+                // border: "1px solid #5fffbf",
               }}
             >
               <div className="icons-flex">
@@ -707,7 +708,7 @@ function Body({id, roll}) {
             <div
               className="summary-item"
               style={{
-                border: "1px solid #343434",
+                // border: "1px solid #343434",
               }}
             >
               <div className="icons-flex">
@@ -743,8 +744,8 @@ function Body({id, roll}) {
             <div
               className="summary-item"
               style={{
-                backgroundColor: "#fffdee",
-                border: "1px solid yellow",
+                backgroundColor: "#ffff",
+                // border: "1px solid yellow",
               }}
             >
               <div className="icons-flex">

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from "@mui/material";
-import AppLayout from "../../components/applayout/AppLayout";
-import '../../components/applayout/styles.css';
 import requestApi from "../../components/utils/axios";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
+import InputBox from "../../components/TextBox/textbox";
 import './placement.css'
 
 function PlacementSub() {
@@ -55,17 +54,18 @@ function Body() {
     return (
         <div>
             <h3>Student Records (Sub-Mentor)</h3>
-            <TextField
+            <br />
+            <InputBox
                 label="Search"
-                variant="outlined"
                 value={search}
+                placeholder="Search by Name, Register Number"
                 onChange={handleSearchChange}
-                size="small"
-                margin="normal"
+                style={{width:'300px'}}
+               
             />
             <div className="place-table">
                 <TableContainer component={Paper}>
-                    <Table>
+                    <Table className="custom-table">
                         <TableHead>
                             <TableRow>
                                 <TableCell sx={{ width: 150 }}><b>Name</b></TableCell>

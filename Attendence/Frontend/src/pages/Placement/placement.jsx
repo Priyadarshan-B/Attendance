@@ -5,6 +5,7 @@ import '../../components/applayout/styles.css';
 import requestApi from "../../components/utils/axios";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
+import InputBox from "../../components/TextBox/textbox";
 import './placement.css'
 import PlacementSub from "./placementSub";
 
@@ -56,18 +57,17 @@ function Body() {
     return (
         <div>
             <div>
-                <h3>Student Records </h3>
-                <TextField
+                <h3>Student Records </h3><br />
+                <InputBox
                     label="Search"
-                    variant="outlined"
                     value={search}
+                    placeholder="Search by Name, Register Number.."
                     onChange={handleSearchChange}
-                    size="small"
-                    margin="normal"
+                    style={{width:'300px'}}
                 />
                 <div className="place-table">
                     <TableContainer component={Paper}>
-                        <Table>
+                        <Table className="custom-table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell sx={{ width: 150 }}><b>Name</b></TableCell>
@@ -116,6 +116,7 @@ function Body() {
                 </div>
             </div>
             <div>
+                <br />
                 <PlacementSub/>
             </div>
         </div>
