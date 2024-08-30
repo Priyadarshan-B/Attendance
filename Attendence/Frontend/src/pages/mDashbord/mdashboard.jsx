@@ -96,7 +96,7 @@ function Body() {
           <Groups2TwoToneIcon
             style={{
               fontSize: "40px",
-              color: "gold",
+              color: "#2a3645",
               padding: "10px",
               backgroundColor: "#f9eac4",
               borderRadius: "100%",
@@ -106,7 +106,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "gold",
+                color: "#2a3645",
               }}
             >
               {subCount}
@@ -125,7 +125,7 @@ function Body() {
           <EventAvailableTwoToneIcon
             style={{
               fontSize: "40px",
-              color: "green",
+              color: "#2a3645",
               padding: "10px",
               backgroundColor: "#a9f2a4",
               borderRadius: "100%",
@@ -135,7 +135,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "green",
+                color: "#2a3645",
               }}
             >
               {tcount}
@@ -154,9 +154,9 @@ function Body() {
           <EventBusyTwoToneIcon
             style={{
               fontSize: "40px",
-              color: "red",
+              color: "#2a3645",
               padding: "10px",
-              backgroundColor: "#f0b5b5",
+              backgroundColor: "#f07070",
               borderRadius: "100%",
             }}
           />
@@ -164,7 +164,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "red",
+                color: "#2a3645",
               }}
             >
               {tabCount}

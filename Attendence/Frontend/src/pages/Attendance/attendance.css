@@ -1,11 +1,9 @@
 .attendance-container {
   max-width: 100%;
-  /* background-color: #f4f6fa; */
   border-radius: 8px;
   overflow: hidden;
-  padding: 20px;
-  /* height: 100vh;
-  overflow-y: scroll; */
+  padding: 10px;
+ 
 }
 .favattendance-container {
   max-width: 100%;
@@ -379,6 +377,7 @@ input[type="checkbox"]:disabled + .cbx {
 
 .year-select{
   width: 50%;
+  height: 100%;
 }
 
 .students-table{

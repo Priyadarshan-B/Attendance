@@ -19,6 +19,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
 import Paper from '@mui/material/Paper';
+import noresult from '../../assets/no-results.png'
 
 function Attendance() {
   const [selectedYear, setSelectedYear] = useState(null);
@@ -126,14 +127,16 @@ function Attendance() {
   const filteredStudents = students.filter(
     (student) =>
       student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      student.register_number.includes(searchQuery)
+      student.register_number.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const filteredFavStudents = FavStudents.filter(
     (student) =>
       student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      student.register_number.includes(searchQuery)
+      student.register_number.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const shouldShowTable = showFavourites || searchQuery.length >= 3;
 
   const handleSubmit = async () => {
     if (selectedStudents.length === 0) {
@@ -213,7 +216,10 @@ function Attendance() {
               </div>
             </div>
           ) : (
-            <div>Please select a year..</div>
+            <div style={{display:'flex', flexDirection:'column-reverse', alignItems:'center'}}>Please select a year..
+              <img src={noresult} alt="" height='200px' width="200px" />
+
+            </div>
           )}
 
           {selectedYear && selectedTimeSlots.length > 0 && (
@@ -230,8 +236,6 @@ function Attendance() {
                 >
                   {showFavourites ? "Show All Students" : "Favourites"}
                 </button>
-
-
               </div>
               <InputBox
                 type="text"
@@ -254,8 +258,13 @@ function Attendance() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {(showFavourites ? filteredFavStudents : filteredStudents)
-                        .length === 0 ? (
+                      {!shouldShowTable ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="no-results">
+                            Search name or  register number to view data...
+                          </TableCell>
+                        </TableRow>
+                      ) : (showFavourites ? filteredFavStudents : filteredStudents).length === 0 ? (
                         <TableRow>
                           <TableCell colSpan={6} className="no-results">
                             No results found
@@ -316,32 +325,34 @@ function Attendance() {
                     </TableBody>
                   </Table>
                 </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={
-                    showFavourites ? filteredFavStudents.length : filteredStudents.length
-                  }
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+                {shouldShowTable && (
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={
+                      showFavourites ? filteredFavStudents.length : filteredStudents.length
+                    }
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                )}
               </Paper>
             </div>
           )}
           <br />
           {selectedYear && selectedTimeSlots.length > 0 && (
-                 <div
-                 style={{
-                   display: "flex",
-                   justifyContent: "center",
-                 }}
-               >
-                 <button className="submit-attendance" onClick={handleSubmit}>
-                   Submit Attendance
-                 </button>
-               </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <button className="submit-attendance" onClick={handleSubmit}>
+                Submit Attendance
+              </button>
+            </div>
           )}
         </div>
       }
