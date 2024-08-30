@@ -8,17 +8,17 @@ import InputBox from "../../components/TextBox/textbox";
 import Select from "react-select";
 import "./attendance.css";
 import toast from "react-hot-toast";
-import Checkbox from "@mui/material/Checkbox";
-import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
-import Favorite from "@mui/icons-material/Favorite";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import TablePagination from "@mui/material/TablePagination";
-import Paper from "@mui/material/Paper";
+import Checkbox from '@mui/material/Checkbox';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TablePagination from '@mui/material/TablePagination';
+import Paper from '@mui/material/Paper';
 
 function Attendance() {
   const [selectedYear, setSelectedYear] = useState(null);
@@ -93,10 +93,7 @@ function Attendance() {
 
   const fetchStudents = async () => {
     try {
-      const response = await requestApi(
-        "GET",
-        `/students-arr?year=${selectedYear.value}`
-      );
+      const response = await requestApi("GET", `/students-arr?year=${selectedYear.value}`);
       setStudents(response.data);
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -233,6 +230,8 @@ function Attendance() {
                 >
                   {showFavourites ? "Show All Students" : "Favourites"}
                 </button>
+
+
               </div>
               <InputBox
                 type="text"
@@ -321,9 +320,7 @@ function Attendance() {
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
                   count={
-                    showFavourites
-                      ? filteredFavStudents.length
-                      : filteredStudents.length
+                    showFavourites ? filteredFavStudents.length : filteredStudents.length
                   }
                   rowsPerPage={rowsPerPage}
                   page={page}
@@ -335,16 +332,16 @@ function Attendance() {
           )}
           <br />
           {selectedYear && selectedTimeSlots.length > 0 && (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <button className="submit-attendance" onClick={handleSubmit}>
-                Submit Attendance
-              </button>
-            </div>
+                 <div
+                 style={{
+                   display: "flex",
+                   justifyContent: "center",
+                 }}
+               >
+                 <button className="submit-attendance" onClick={handleSubmit}>
+                   Submit Attendance
+                 </button>
+               </div>
           )}
         </div>
       }

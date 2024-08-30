@@ -13,86 +13,38 @@ import AdminPanelSettingsSharpIcon from "@mui/icons-material/AdminPanelSettingsS
 import ReceiptLongSharpIcon from "@mui/icons-material/ReceiptLongSharp";
 import WorkOffIcon from "@mui/icons-material/WorkOff";
 import SchoolIcon from "@mui/icons-material/School";
-import AddTaskIcon from "@mui/icons-material/AddTask";
+import AddTaskIcon from '@mui/icons-material/AddTask';
+
 
 function getIconComponent(iconPath) {
   switch (iconPath) {
-    case "DashboardRoundedIcon":
-      return (
-        <DashboardRoundedIcon
-          style={{ color: "#f57d93" }}
-          className="custom-sidebar-icon"
-        />
-      );
-    case "HikingRoundedIcon":
-      return (
-        <HikingRoundedIcon
-          style={{ color: "#3498db" }}
-          className="custom-sidebar-icon"
-        />
-      );
-    case "CalendarMonthIcon":
-      return (
-        <CalendarMonthIcon
-          style={{ color: "#2eb7a2" }}
-          className="custom-sidebar-icon"
-        />
-      );
-    case "DateRangeIcon":
-      return (
-        <DateRangeIcon
-          style={{ color: "#f39c12" }}
-          className="custom-sidebar-icon"
-        />
-      );
-    case "ScheduleSendIcon":
-      return (
-        <ScheduleSendIcon
-          style={{ color: "#9b59b6" }}
-          className="custom-sidebar-icon"
-        />
-      );
-    case "AdminPanelSettingsSharpIcon":
-      return (
-        <AdminPanelSettingsSharpIcon
-          style={{ color: "#1abc9c" }}
-          className="custom-sidebar-icon"
-        />
-      );
-    case "ReceiptLongSharpIcon":
-      return (
-        <ReceiptLongSharpIcon
-          style={{ color: "#4fb33e" }}
-          className="custom-sidebar-icon"
-        />
-      );
-    case "WorkOffIcon":
-      return (
-        <WorkOffIcon
-          style={{ color: "#95a5a6" }}
-          className="custom-sidebar-icon"
-        />
-      );
-    case "SchoolIcon":
-      return (
-        <SchoolIcon
-          style={{ color: "#d158ff" }}
-          className="custom-sidebar-icon"
-        />
-      );
-    case "AddTaskIcon":
-      return (
-        <AddTaskIcon
-          style={{ color: "#00a8fb" }}
-          className="custom-sidebar-icon"
-        />
-      );
+    case 'DashboardRoundedIcon':
+      return <DashboardRoundedIcon style={{ color: '#f57d93', }} className="custom-sidebar-icon" />;
+    case 'HikingRoundedIcon':
+      return <HikingRoundedIcon style={{ color: '#3498db' }} className="custom-sidebar-icon" />;
+    case 'CalendarMonthIcon':
+      return <CalendarMonthIcon style={{ color: '#2eb7a2' }} className="custom-sidebar-icon" />;
+    case 'DateRangeIcon':
+      return <DateRangeIcon style={{ color: '#f39c12' }} className="custom-sidebar-icon" />;
+    case 'ScheduleSendIcon':
+      return <ScheduleSendIcon style={{ color: '#9b59b6' }} className="custom-sidebar-icon" />;
+    case 'AdminPanelSettingsSharpIcon':
+      return <AdminPanelSettingsSharpIcon style={{ color: '#1abc9c' }} className="custom-sidebar-icon" />;
+    case 'ReceiptLongSharpIcon':
+      return <ReceiptLongSharpIcon style={{ color: '#4fb33e' }} className="custom-sidebar-icon" />;
+    case 'WorkOffIcon':
+      return <WorkOffIcon style={{ color: '#95a5a6' }} className="custom-sidebar-icon" />;
+    case 'SchoolIcon':
+      return <SchoolIcon style={{ color: '#d158ff' }} className="custom-sidebar-icon" />;
+    case 'AddTaskIcon':
+      return <AddTaskIcon style={{ color: '#00a8fb' }} className="custom-sidebar-icon" />;
     default:
       return null;
   }
 }
 
-// return eval(iconPath)
+  // return eval(iconPath)
+
 
 function SideBar(props) {
   const [activeItem, setActiveItem] = useState("");
@@ -153,8 +105,9 @@ function SideBar(props) {
             onClick={() => setActiveItem(item.name)}
           >
             <Link className="link" to={item.path}>
-              {getIconComponent(item.icon_path)}
-
+              {getIconComponent(item.icon_path) 
+                  }
+                
               {item.name}
             </Link>
           </li>

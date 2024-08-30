@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import AppLayout from "../../../components/applayout/AppLayout";
-// import "../../../components/applayout/styles.css";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TablePagination, TextField } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TablePagination } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import requestApi from "../../../components/utils/axios";
 import Select from "react-select"; 
@@ -24,6 +22,7 @@ function Body() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
+  const [studentOptions, setStudentOptions] = useState([]);
 
   useEffect(() => {
     requestApi("GET", "/map-role-select")
@@ -40,22 +39,38 @@ function Body() {
   }, []);
 
   useEffect(() => {
-    if (selectedYear) {
-      requestApi("GET", `/all-students?year=${selectedYear.value}`)
+    fetchRoleStudentData();
+  }, []);
+
+  const fetchStudents = (inputValue) => {
+    if (inputValue.length >= 3 && selectedYear) {
+      requestApi("GET", `/all-students?year=${selectedYear.value}&search=${inputValue}`)
         .then((response) => {
           const formattedStudents = response.data.map((student) => ({
             value: student.id,
             label: `${student.name} - ${student.register_number}`,
           }));
-          setStudents(formattedStudents);
+          setStudentOptions(formattedStudents);
         })
         .catch((error) => {
           console.error("Error fetching students:", error);
         });
+    } else {
+      setStudentOptions([]);
     }
-  }, [selectedYear]); // Dependency on selectedYear
+  };
 
-  // Handle form submission
+  const fetchRoleStudentData = () => {
+    requestApi("GET", "/role-student")
+      .then((response) => {
+        setRoleStudentData(response.data);
+
+      })
+      .catch((error) => {
+        console.error("Error fetching role-student data:", error);
+      });
+  };
+
   const handleSubmit = () => {
     const payload = {
       roleId: selectedRole?.value,
@@ -69,33 +84,24 @@ function Body() {
 
         setSelectedRole(null);
         setSelectedStudents([]);
-        setSelectedYear(null)
+        setSelectedYear(null);
+        fetchRoleStudentData();
       })
       .catch((error) => {
         console.error("Error in mapping students to role:", error);
         toast.error("Error in mapping students to role");
       });
-
   };
-  useEffect(() => {
-    requestApi("GET", "/role-student")
-      .then((response) => {
-        setRoleStudentData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching role-student data:", error);
-      });
-  }, []);
 
   const handleDelete = (id) => {
     requestApi("PUT", `/role-student?id=${id}`)
       .then(() => {
-        toast.success("Role-Student mapping deleted successfully!");
-        setRoleStudentData((prevData) => prevData.filter((item) => item.id !== id));
+        toast.success("Mapping deleted successfully!");
+        fetchRoleStudentData();
       })
       .catch((error) => {
         console.error("Error deleting role-student mapping:", error);
-        toast.error("Error deleting role-student mapping");
+        toast.error("Error deleting  mapping");
       });
   };
 
@@ -117,7 +123,8 @@ function Body() {
     item.register_number.toLowerCase().includes(searchQuery) ||
     item.role.toLowerCase().includes(searchQuery)
   );
-  
+ 
+
   const yearOptions = [
     { value: "I", label: "I" },
     { value: "II", label: "II" },
@@ -153,67 +160,84 @@ function Body() {
           <label htmlFor="students-select">Select Students</label>
           <Select
             id="students-select"
-            options={students}
+            options={studentOptions}
             value={selectedStudents}
             onChange={setSelectedStudents}
             placeholder="Select students"
             isMulti
+            onInputChange={fetchStudents}
+            noOptionsMessage={({ inputValue }) => 
+              !selectedYear
+                ? "Please select a year first"
+                : inputValue.length > 0 
+                  ? inputValue.length < 3 
+                    ? "Type at least 3 characters to search" 
+                    : "No students found" 
+                  : "Type to search..."}
           />
         </div>
         <Button onClick={handleSubmit} label="Submit" />
       </div>
       <div className="map-table">
         <h4>Mapped Students</h4>
-      <div>
-        <InputBox
-          label="Search"
-          onChange={handleSearch}
-          placeholder="Search.."
-        />
-      </div>
-      <br />
-      <div>
-        <Paper>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell><b>Role</b></TableCell>
-                <TableCell><b>Student Name</b></TableCell>
-                <TableCell><b>Register Number</b></TableCell>
-                <TableCell><b>Actions</b></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>{row.role}</TableCell>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.register_number}</TableCell>
-                  <TableCell>
-                    <IconButton
-                      onClick={() => handleDelete(row.id)}
-                      color="error"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filteredData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-            </Paper>
-      </div>
+        <div>
+          <InputBox
+            label="Search"
+            onChange={handleSearch}
+            placeholder="Search.."
+          />
+        </div>
+        <br />
+        <div>
+          <Paper>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell><b>Role</b></TableCell>
+                    <TableCell><b>Student Name</b></TableCell>
+                    <TableCell><b>Register Number</b></TableCell>
+                    <TableCell><b>Actions</b></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredData.length > 0 ? (
+                    filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell>{row.role}</TableCell>
+                        <TableCell>{row.name}</TableCell>
+                        <TableCell>{row.register_number}</TableCell>
+                        <TableCell>
+                          <IconButton
+                            onClick={() => handleDelete(row.id)}
+                            color="error"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} align="center">
+                        No data available
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={filteredData.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        </div>
       </div>
     </div>
   );
