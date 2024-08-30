@@ -8,10 +8,10 @@ import {
   Button,
 } from "@mui/material";
 
-const Popup = ({ open, onClose, onConfirm,title, text }) => {
+const Popup = ({ open, onClose, onConfirm, text }) => {
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle>Confirm Disapproval</DialogTitle>
       <DialogContent>
         <DialogContentText>
           {text}

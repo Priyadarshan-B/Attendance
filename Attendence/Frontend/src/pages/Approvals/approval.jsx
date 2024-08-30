@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import AppLayout from "../../components/applayout/AppLayout";
 import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
-import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
-import moment from "moment";
 import {
   Table,
   TableBody,
@@ -20,34 +18,33 @@ import {
 import InputBox from "../../components/TextBox/textbox";
 import Popup from "../../components/popup/popup";
 import LeaveDetails from "./leave_approval";
+import Button from "../../components/Button/Button";
 import "./approval.css";
 
-function calculateTimeLeft(dueDate) {
-  const now = moment();
-  const due = moment(dueDate);
-  const duration = moment.duration(due.diff(now));
+function calculateTimeLeft() {
+  const getNextWednesday = () => {
+    const now = new Date();
+    const nextWednesday = new Date(
+      now.setDate(now.getDate() + ((3 + 7 - now.getDay()) % 7 || 7))
+    );
+    nextWednesday.setHours(0, 0, 0, 0);
+    return nextWednesday;
+  };
 
-  const days = Math.floor(duration.asDays());
-  const hours = duration.hours();
-  const minutes = duration.minutes();
-  const seconds = duration.seconds();
+  const nextWednesday = getNextWednesday();
+  const difference = +nextWednesday - +new Date();
+  let timeLeft = {};
 
-  let timeLeft = { days, hours, minutes, seconds };
-
-  if (days < 0 || hours < 0 || minutes < 0 || seconds < 0) {
-    timeLeft.isNegative = true;
+  if (difference > 0) {
+    timeLeft = {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
   }
 
   return timeLeft;
-}
-
-function formatTimeLeft(timeLeft) {
-  if (timeLeft.isNegative) {
-    return `Overdue by ${Math.abs(timeLeft.days)}d ${Math.abs(
-      timeLeft.hours
-    )}h ${Math.abs(timeLeft.minutes)}m`;
-  }
-  return `${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m`;
 }
 
 function Approvals() {
@@ -65,97 +62,65 @@ function Body() {
   const deid = CryptoJS.AES.decrypt(id, secretKey).toString(CryptoJS.enc.Utf8);
   const [searchTerm, setSearchTerm] = useState("");
   const [openApprovePopup, setOpenApprovePopup] = useState(false);
-  const [selectedStudentId, setSelectedStudentId] = useState(null);
+  const [selectedStudentIndex, setSelectedStudentIndex] = useState(null);
   const [performanceChecked, setPerformanceChecked] = useState(false);
   const [appearanceChecked, setAppearanceChecked] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({});
-  const [loading, setLoading] = useState({});
-  const [openExtend, setOpenExtend] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
-    fetchStudents();
-  }, [deid]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      updateTimeLeft();
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [filteredStudents]);
-
-  useEffect(() => {
-    fetchStudents();
-    const timer = setInterval(() => {
-      updateTimeLeft();
-    }, 60000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const fetchStudents = () => {
     requestApi("GET", `/mentor-students?mentor=${deid}`)
       .then((response) => {
         if (Array.isArray(response.data)) {
           setStudents(response.data);
           setFilteredStudents(response.data);
-          updateTimeLeft(response.data);
         } else {
           console.error("API response is not an array:", response.data);
         }
       })
       .catch((error) => console.error("Error fetching students:", error));
-  };
+  }, [id]);
 
-  const updateTimeLeft = (studentsData = filteredStudents) => {
-    const updatedTimeLeft = {};
-    studentsData.forEach((student) => {
-      updatedTimeLeft[student.id] = calculateTimeLeft(student.due_date);
-    });
-    setTimeLeft(updatedTimeLeft);
-  };
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
 
-  const handleApprove = (studentId) => {
-    setSelectedStudentId(studentId);
+    return () => clearInterval(timer);
+  }, []);
+
+  if (showLeave) {
+    return <LeaveDetails />;
+  }
+
+  const handleApprove = (index) => {
+    setSelectedStudentIndex(index);
     setOpenApprovePopup(true);
-  };
-
-  const handleExtend = (studentId) => {
-    setSelectedStudentId(studentId);
-    setOpenExtend(true);
   };
 
   const handleConfirmApprove = () => {
     if (performanceChecked && appearanceChecked) {
-      const studentId = selectedStudentId;
-      const url = `/att-approve?student=${studentId}`;
+      const updatedStudents = [...filteredStudents];
+      const student = updatedStudents[selectedStudentIndex];
+      const url = `/att-approve?student=${student.id}`;
 
       requestApi("PUT", url)
         .then(() => {
-          const updatedStudents = filteredStudents.map((student) => {
-            if (student.id === studentId) {
-              student.att_status = "1";
-            }
-            return student;
-          });
+          updatedStudents[selectedStudentIndex].att_status = "1";
           setFilteredStudents(updatedStudents);
           setStudents(updatedStudents);
-          updateTimeLeft(updatedStudents);
-          toast.success("Approved!!");
         })
-        .catch((error) => {
-          console.error(`Error updating student approval status:`, error);
-          toast.error("Approval Failed..");
-        });
+        .catch((error) =>
+          console.error(`Error updating student approval status:`, error)
+        );
     } else {
-      toast.error("Check All Boxes..");
+      alert("Please check both Performance and Appearance to approve.");
     }
     handleCloseApprovePopup();
   };
 
   const handleCloseApprovePopup = () => {
     setOpenApprovePopup(false);
-    setSelectedStudentId(null);
+    setSelectedStudentIndex(null);
     setPerformanceChecked(false);
     setAppearanceChecked(false);
   };
@@ -186,48 +151,17 @@ function Body() {
         student.register_number.toLowerCase().includes(value)
     );
     setFilteredStudents(filtered);
-    updateTimeLeft(filtered); // Recalculate time left for filtered students
   };
-
-  const handleExpand = () => {
-    if (selectedStudentId) {
-      setLoading((prevLoading) => ({
-        ...prevLoading,
-        [selectedStudentId]: true,
-      }));
-
-      const url = `/nxt-wed?id=${selectedStudentId}`;
-
-      requestApi("PUT", url)
-        .then(() => {
-          toast.success("Extended 7 days😁..");
-          fetchStudents();
-        })
-        .catch((error) => {
-          console.error(`Error updating due date to next Wednesday:`, error);
-          toast.error("Error Expanding 7 days..");
-        })
-        .finally(() => {
-          setLoading((prevLoading) => ({
-            ...prevLoading,
-            [selectedStudentId]: false,
-          }));
-        });
-
-      setOpenExtend(false);
-      setSelectedStudentId(null);
-    } else {
-      console.error("No student ID found");
-    }
-  };
-
-  if (showLeave) {
-    return <LeaveDetails />;
-  }
 
   return (
     <div>
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -249,22 +183,19 @@ function Body() {
             <Table className="custom-table">
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ width: "10px" }}>
+                  <TableCell sx={{ width: "10%" }}>
                     <h3>S.No</h3>
                   </TableCell>
-                  <TableCell sx={{ width: "10px" }}>
-                    <h3>Year</h3>
-                  </TableCell>
-                  <TableCell sx={{ width: "10px" }}>
+                  <TableCell>
                     <h3>Name</h3>
                   </TableCell>
-                  <TableCell sx={{ width: "0px" }}>
+                  <TableCell>
                     <h3>Register Number</h3>
                   </TableCell>
-                  <TableCell sx={{ width: "10px", textAlign: "center" }}>
+                  <TableCell>
                     <h3>Actions</h3>
                   </TableCell>
-                  <TableCell sx={{ width: "10px" }}>
+                  <TableCell>
                     <h3>Time Left</h3>
                   </TableCell>
                 </TableRow>
@@ -273,12 +204,9 @@ function Body() {
                 {filteredStudents
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((student, index) => (
-                    <TableRow key={student.id}>
+                    <TableRow key={student.register_number}>
                       <TableCell>
                         <b>{page * rowsPerPage + index + 1}</b>
-                      </TableCell>
-                      <TableCell>
-                        <b>{student.year}</b>
                       </TableCell>
                       <TableCell>
                         <b>{student.name}</b>
@@ -286,72 +214,46 @@ function Body() {
                       <TableCell>
                         <b>{student.register_number}</b>
                       </TableCell>
-                      <TableCell sx={{ textAlign: "center" }}>
-                        <div style={{ display: "flex", gap: "10px" }}>
-                          {student.att_status !== "1" ? (
-                            <button
-                              className="status-button"
-                              style={{
-                                backgroundColor: "#fde8e8",
-                                color: "red",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => handleApprove(student.id)}
-                            >
-                              Over Due
-                            </button>
-                          ) : (
-                            <button
-                              className="status-button"
-                              style={{
-                                backgroundColor: loading[student.id]
-                                  ? "#b0bec5"
-                                  : "#c1e6ff ",
-                                color: "#1738fd",
-                                cursor: loading[student.id]
-                                  ? "not-allowed"
-                                  : "pointer",
-                              }}
-                              onClick={() => handleExtend(student.id)}
-                              disabled={loading[student.id]}
-                            >
-                              Extend
-                            </button>
-                          )}
-                        </div>
+                      <TableCell>
+                        <button
+                          className="status-button"
+                          style={{
+                            backgroundColor:
+                              student.att_status === "1"
+                                ? "#e6faf0"
+                                : "#fde8e8", 
+                            color: 
+                              student.att_status === '1'
+                           ? "#2ECC71"
+                           :"red", 
+                          //  border: '0.1px solid ',
+                          //   borderColor:
+                          //     student.att_status === "1"
+                          //       ? "#90e9bb"
+                          //       : "#f49998", 
+                            cursor:
+                              student.att_status === "1"
+                                ? "not-allowed"
+                                : "pointer", // Disable pointer when status is "1"
+                          }}
+                          onClick={() => handleApprove(index)}
+                          disabled={student.att_status === "1"} // Disabled when status is "1"
+                        >
+                          {student.att_status === "1" ? "Approved" : "Approve"}
+                        </button>
                       </TableCell>
                       <TableCell>
                         {student.att_status === "1" ? (
-                          <div
-                            style={{
-                              color: timeLeft[student.id]?.isNegative
-                                ? "red"
-                                : timeLeft[student.id]?.days > 2
-                                ? "green"
-                                : "black",
-                                border: timeLeft[student.id]?.isNegative
-                                ? "1px solid red"
-                                : timeLeft[student.id]?.days > 2
-                                ? "1px solid green"
-                                : "1px solid #ffd691",
-                              borderRadius: "20px",
-                              padding: "2px",
-                              textAlign: "center",
-                              backgroundColor: timeLeft[student.id]?.isNegative
-                                ? "#fde8e8"
-                                : timeLeft[student.id]?.days > 2
-                                ? "#d5f7da"
-                                : "#fff5e4",
-                            }}
-                          >
-                            <b>
-                              {timeLeft[student.id]
-                                ? formatTimeLeft(timeLeft[student.id])
-                                : "Calculating..."}
-                            </b>
-                          </div>
+                          <span style={{
+                            color:'black'
+                          }} >
+                            <p className="time">
+                              {timeLeft.days}d {timeLeft.hours}h{" "}
+                              {timeLeft.minutes}m {timeLeft.seconds}s
+                            </p>
+                          </span>
                         ) : (
-                          "N/A"
+                          "--"
                         )}
                       </TableCell>
                     </TableRow>
@@ -360,9 +262,9 @@ function Body() {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 15]}
+            rowsPerPageOptions={[5, 10, 15, 25]}
             component="div"
-            count={filteredStudents.length}
+            count={students.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -370,6 +272,7 @@ function Body() {
           />
         </Paper>
       </div>
+      {/* Approve Popup */}
       <Popup
         open={openApprovePopup}
         onClose={handleCloseApprovePopup}
@@ -395,16 +298,6 @@ function Body() {
               Appearance
             </div>
           </div>
-        }
-      />
-      <Popup
-        open={openExtend}
-        onClose={() => setOpenExtend(false)}
-        onConfirm={handleExpand}
-        text={
-          <p>
-            Are you sure you want to extend this student's due date by 7 days?
-          </p>
         }
       />
     </div>

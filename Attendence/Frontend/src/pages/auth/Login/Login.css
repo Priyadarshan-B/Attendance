@@ -9,7 +9,7 @@
 
 .login-card {
     height: 65%;
-    width: 23%;
+    width: 25%;
     border-radius: 5px;
     padding: 15px;
     /* box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px; */
@@ -77,24 +77,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f4f6fa;
+    background-color: #ecebf3;
 }
 
 .error-card{
-    width: 100%;
+    width: 50%;
     border-radius: 5px;
     padding: 15px;
-    /* box-shadow: rgba(50, 50, 93, 0.25) 0px 1px 5px -1px, rgba(0, 0, 0, 0.627) 0px 1px 5px -1px; */
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 1px 5px -1px, rgba(0, 0, 0, 0.627) 0px 1px 5px -1px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    /* background-color: rgba(255, 255, 255, 0.773); */
+    background-color: rgba(255, 255, 255, 0.773);
     gap: 20px;
     min-width: 300px;
     
 }
 
 .error-img{
-    height: 500px;
+    height: 300px;
 }

@@ -27,6 +27,10 @@
   border-radius: 10px;
 }
 
+/* .custom-table thead {
+  color: white;
+  border-radius: 10px;
+} */
 .custom-table thead  :first-child {
   border-radius: 10px 0px 0px 0px;
 }
@@ -56,10 +60,9 @@
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
-  background-color: #eff4ff;
+  background-color: #f4f6fa;
   border-radius: 10px;
   gap: 15px;
-  border: 1px solid rgb(208, 208, 255);
   /* border-top: 1px solid #ddd; */
 }
 
@@ -89,12 +92,11 @@
 
 .pagination {
   display: flex;
-  border-radius: 10px;
   justify-content: space-between;
-  border: 1px solid rgb(215, 215, 215);
   align-items: center;
   padding: 10px;
-  background-color: #ffffff;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
 }
 
 .pagination button {
