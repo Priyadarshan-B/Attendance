@@ -17,29 +17,36 @@ exports.get_mentor = async(req, res)=>{
 
 exports.get_students = async (req, res) => {
   const mentor = req.query.mentor;
+  const year = req.query.year;
 
   if (!mentor) {
     return res.status(400).json({ error: "Mentor Id not found" });
   }
-  try {
-    const query = `
-    SELECT s.id, s.name, s.year, s.register_number, s.att_status, s.app_date, s.due_date
-  FROM students s
-  JOIN mentor_student ms ON s.id = ms.student
-  WHERE ms.mentor = ?
-  AND ms.status = '1'
-  AND s.status = '1'
-  ;
 
+  try {
+    let query = `
+      SELECT s.id, s.name, s.year, s.register_number, s.att_status, s.app_date, s.due_date
+      FROM students s
+      JOIN mentor_student ms ON s.id = ms.student
+      WHERE ms.mentor = ?
+      AND ms.status = '1'
+      AND s.status = '1'
     `;
 
-    const students = await get_database(query, [mentor]);
+    const queryParams = [mentor];
+    if (year) {
+      query += ` AND s.year = ?`;
+      queryParams.push(year);
+    }
+
+    const students = await get_database(query, queryParams);
     res.json(students);
   } catch (err) {
     console.error("Error Fetching Mentor-Student List", err);
     res.status(500).json({ error: "Error fetching Mentor-Student List" });
   }
 };
+
 
 exports.update_students_no_att = async (req, res) => {
    const mentor = req.query.mentor;
@@ -67,20 +74,30 @@ AND s.status = '1';
  };
  
  exports.get_students_type_2 = async (req, res) => {
-  // const { email } = req.query;
-  // const currentTime = moment().format('h:mmA'); 
+  const year = req.query.year
+  const dept = req.query.dept
 
   try {
-    const query = `
+    let query = `
       SELECT id, name, register_number, year,att_status
         FROM students
         WHERE type = 2
-        AND status = '1';
+        AND status = '1'
     `;
-    
-    const result = await get_database(query);
-    res.json(result)
-    
+    const queryParams = [];
+
+    if (year) {
+      query += ` AND year = ?`;
+      queryParams.push(year);
+    }
+    if(dept){
+      query += `AND department = ?`
+      queryParams.push(dept)
+    }
+
+    const result = await get_database(query, queryParams);
+    res.json(result);
+
   } catch (err) {
     console.error("Error Fetching Mentor-Student type 2 List", err);
     res.status(500).json({ error: "Error fetching Mentor-Student type 2 List" });

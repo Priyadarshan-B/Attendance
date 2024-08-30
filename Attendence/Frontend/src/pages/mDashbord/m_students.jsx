@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 import requestApi from "../../components/utils/axios";
 import StudentDashboard from "../Students/students";
+import noresult from '../../assets/no-results.png'
 
 function MStudent() {
   return <AppLayout body={<Body />} />;
@@ -43,13 +44,27 @@ function Body() {
 
   return (
     <div>
-      <Select
-        options={studentOptions}
-        onChange={handleSelectChange}
-        placeholder="Select a student"
-        isClearable
-      />
+      <h3>Student Details</h3><br />
+      <div style={{
+        width:'350px'
+      }}>
+        <Select
+          options={studentOptions}
+          onChange={handleSelectChange}
+          placeholder="Select a student"
+          isClearable
+        />
+      </div>
       <br />
+      {!selectedStudent && (
+        <div style={{display:'flex', flexDirection:'column', height:'50vh', justifyContent:'center', alignItems:'center'}}>
+          <img src={noresult} alt="No Result" width='200px' />
+          <h4>Select Students to view Details..</h4>
+        </div>
+      )
+
+      }
+
       {selectedStudent && (
       <div>
           <h3>Student Details - {selectedStudent.registerNumber} </h3> <br />

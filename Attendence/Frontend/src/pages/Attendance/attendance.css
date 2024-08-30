@@ -1,11 +1,11 @@
 .attendance-container {
   max-width: 100%;
-  background-color: #f4f6fa;
+  /* background-color: #f4f6fa; */
   border-radius: 8px;
   overflow: hidden;
   padding: 20px;
-  height: 100vh;
-  overflow-y: scroll;
+  /* height: 100vh;
+  overflow-y: scroll; */
 }
 .favattendance-container {
   max-width: 100%;
@@ -405,7 +405,7 @@ input[type="checkbox"]:disabled + .cbx {
   border-radius: 20px;
   background-color: pink;
   color: rgb(0, 0, 0);
-  float: right;
+  /* float: right; */
 }
 
 .favourites:hover{

@@ -7,10 +7,23 @@ exports.get_student_details = async (req, res) => {
   }
   try {
     const query = `
-        SELECT * FROM students
-        WHERE id = ?
-        AND status = '1';
+      SELECT 
+    GROUP_CONCAT(r.name ORDER BY r.name ASC SEPARATOR ', ') AS roles,
+    rsm.student,
+    s.*
+FROM 
+    role_student_map rsm
+JOIN 
+    roles r ON rsm.role = r.id
+LEFT JOIN 
+    students s ON rsm.student = s.id
+WHERE 
+    rsm.student = 2
+    AND rsm.status = '1'
+GROUP BY 
+    rsm.student, s.name;
         `;
+
     const student = await get_database(query, [id]);
     res.json(student);
   } catch (err) {
@@ -18,30 +31,27 @@ exports.get_student_details = async (req, res) => {
     res.status(500).json({ error: "Error Fetching Student details" });
   }
 };
-exports.get_all_students = async (req, res)=>{
+exports.get_all_students = async (req, res) => {
   const year = req.query.year;
-  if(!year){
-    res.status(400).json({error:"Year required.."})
+  if (!year) {
+    res.status(400).json({ error: "Year required.." });
   }
-try{
-  const query = `
+  try {
+    const query = `
   SELECT * FROM students
   WHERE year = ? AND
    status = '1';
-  `
-  const students = await get_database(query, [year])
-  res.json(students)
-}
-catch(err){
-  console.error("Error Fetching Students", err)
-  res.status(500).json({error: "Error Fetching Students"})
-
-}
-
-}
+  `;
+    const students = await get_database(query, [year]);
+    res.json(students);
+  } catch (err) {
+    console.error("Error Fetching Students", err);
+    res.status(500).json({ error: "Error Fetching Students" });
+  }
+};
 
 //leave apply
-const { format } = require('date-fns');
+const { format } = require("date-fns");
 
 exports.post_leave = async (req, res) => {
   const student = req.query.student;
@@ -50,22 +60,36 @@ exports.post_leave = async (req, res) => {
   console.log(student);
 
   if (!student) {
-      return res.status(400).json({ error: "Student id is required." });
+    return res.status(400).json({ error: "Student id is required." });
   }
 
   try {
-      // Convert dates from DD/MM/YYYY to YYYY-MM-DD
-      const fromDateFormatted = format(new Date(from_date.split('/').reverse().join('-')), 'yyyy-MM-dd');
-      const toDateFormatted = format(new Date(to_date.split('/').reverse().join('-')), 'yyyy-MM-dd');
+    // Convert dates from DD/MM/YYYY to YYYY-MM-DD
+    const fromDateFormatted = format(
+      new Date(from_date.split("/").reverse().join("-")),
+      "yyyy-MM-dd"
+    );
+    const toDateFormatted = format(
+      new Date(to_date.split("/").reverse().join("-")),
+      "yyyy-MM-dd"
+    );
 
-      const query = `
+    const query = `
           INSERT INTO \`leave\`(\`student\`, \`leave\`, \`from_date\`, \`from_time\`, \`to_date\`, \`to_time\`, \`reason\`)
           VALUES (?, ?, ?, ?, ?, ? , ?);
       `;
-      const leaves = await post_database(query, [student, leave, fromDateFormatted, from_time, toDateFormatted, to_time, reason]);
-      res.json(leaves);
+    const leaves = await post_database(query, [
+      student,
+      leave,
+      fromDateFormatted,
+      from_time,
+      toDateFormatted,
+      to_time,
+      reason,
+    ]);
+    res.json(leaves);
   } catch (err) {
-      console.error("Error Inserting Leave", err);
-      res.status(500).json({ error: "Error Inserting Leave" });
+    console.error("Error Inserting Leave", err);
+    res.status(500).json({ error: "Error Inserting Leave" });
   }
 };

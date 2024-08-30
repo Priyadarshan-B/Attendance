@@ -429,13 +429,14 @@ function Body({id, roll}) {
         <div className="attendance-percent-container">
           <h3
             style={{
-              backgroundColor: "rgb(113 137 255 / 13%)",
+              backgroundColor: "#2a3645",
               padding: "10px",
               margin: "0px 0px 0px 0px",
-              border: "1px solid blue",
+              border: "1px solid black",
               borderRadius: "5px",
-              color: "#000078",
+              color: "#ffff",
               boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              textAlign:'center'
             }}
           >
             Attendance & Placement Details
@@ -800,13 +801,14 @@ function Body({id, roll}) {
         <div className="leave-details">
           <h3
             style={{
-              backgroundColor: "rgb(113 137 255 / 13%)",
+              backgroundColor: "#2a3645",
               padding: "10px",
               margin: "0px 0px 0px 0px",
-              border: "1px solid blue",
+              border: "1px solid black",
               borderRadius: "5px",
-              color: "#000078",
+              color: "#fff",
               boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              textAlign:'center'
             }}
           >
             Leave Details
@@ -943,13 +945,13 @@ function Body({id, roll}) {
         <div className="att_det_others">
           <h3
             style={{
-              backgroundColor: "rgb(113 137 255 / 13%)",
-              padding: "10px",
-              margin: "0px 0px 0px 0px",
-              border: "1px solid blue",
-              borderRadius: "5px",
-              color: "#000078",
-              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              // backgroundColor: "",
+              // padding: "10px",
+              // margin: "0px 0px 0px 0px",
+              // border: "1px solid black",
+              // borderRadius: "5px",
+              // color: "#fff",
+              // boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
             }}
           >
             <center>Biometric History</center>
