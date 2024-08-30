@@ -106,7 +106,7 @@
     padding-bottom: 10px;
     /* font-family: "Hind", sans-serif; */
     background-color: #f8f9fb;
-    max-height: 92vh;
+    max-height: 93.7vh;
 }
 
 .sidebar-menu {
@@ -240,7 +240,7 @@
 }
 
 .custom-sidebar-icon{
-    padding: 5px;
+    padding: 2px;
     background-color: #465a73;
     border-radius: 10px;
     margin-right: 10px;
