@@ -21,7 +21,7 @@ router.get("/google/callback", passport.authenticate("google", { failureRedirect
       gmail:req.user.gmail
     };
     console.log(responseJson)
-    console.log(`${process.env.CLIENT_URL}/welcome?data=${encodeURIComponent(JSON.stringify(responseJson))}`)
+    // console.log(`${process.env.CLIENT_URL}/welcome?data=${encodeURIComponent(JSON.stringify(responseJson))}`)
     res.redirect(`${process.env.CLIENT_URL}/welcome?data=${encodeURIComponent(JSON.stringify(responseJson))}`);
 });
 

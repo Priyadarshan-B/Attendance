@@ -18,7 +18,8 @@ import { RiWaterPercentFill } from "react-icons/ri";
 import { BsFillCalendar2MonthFill } from "react-icons/bs";
 import { LuCalendarRange } from "react-icons/lu";
 import CountUp from "react-countup";
-import calendar from "../../assets/calendar.png";
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import hour from "../../assets/1-hour.png";
 import {
   Table,
   TableBody,
@@ -401,6 +402,17 @@ function Body() {
                 </div>
               </div>
             )}
+            <div className="detail-row">
+              <div className="detail-label">
+             Biometrics, 
+            {studentDetails.type === '2'}&& 
+              <p>Hour Attendance</p>
+              
+                        
+              {studentDetails.roles}
+              </div>
+
+            </div>
 
             <div className="detail-row">
               <div className="detail-label">Today's Attendance (P|P):</div>
@@ -431,13 +443,14 @@ function Body() {
         <div className="attendance-percent-container">
           <h3
             style={{
-              backgroundColor: "rgb(113 137 255 / 13%)",
+              backgroundColor: "#2a3645",
               padding: "10px",
               margin: "0px 0px 0px 0px",
-              border: "1px solid blue",
+              border: "1px solid black",
               borderRadius: "5px",
-              color: "#000078",
+              color: "#ffff",
               boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              textAlign:'center'
             }}
           >
             Attendance & Placement Details
@@ -446,10 +459,10 @@ function Body() {
           <div className="attendance-summary">
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#dcffd6",
-                border: "1px solid #4ddc72",
-              }}
+              // style={{
+              //   backgroundColor: "#dcffd6",
+              //   border: "1px solid #4ddc72",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -484,10 +497,10 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#ffe5e5",
-                border: "1px solid red ",
-              }}
+              // style={{
+              //   backgroundColor: "#ffe5e5",
+              //   border: "1px solid red ",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -522,10 +535,10 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#fff5e4",
-                border: "1px solid #ffd691 ",
-              }}
+              // style={{
+              //   backgroundColor: "#fff5e4",
+              //   border: "1px solid #ffd691 ",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -595,10 +608,10 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#cdd8ff",
-                border: "1px solid #2c7cf3 ",
-              }}
+              // style={{
+              //   backgroundColor: "#cdd8ff",
+              //   border: "1px solid #2c7cf3 ",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -634,10 +647,10 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#f1ebff",
-                border: "1px solid #ba9dff",
-              }}
+              // style={{
+              //   backgroundColor: "#f1ebff",
+              //   border: "1px solid #ba9dff",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -672,10 +685,10 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#e6fff5",
-                border: "1px solid #5fffbf",
-              }}
+              // style={{
+              //   backgroundColor: "#e6fff5",
+              //   border: "1px solid #5fffbf",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -709,9 +722,9 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                border: "1px solid #343434",
-              }}
+              // style={{
+              //   border: "1px solid #343434",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -745,10 +758,10 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#fffdee",
-                border: "1px solid yellow",
-              }}
+              // style={{
+              //   backgroundColor: "#fffdee",
+              //   border: "1px solid yellow",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -802,13 +815,14 @@ function Body() {
         <div className="leave-details">
           <h3
             style={{
-              backgroundColor: "rgb(113 137 255 / 13%)",
+              backgroundColor: "#2a3645",
               padding: "10px",
               margin: "0px 0px 0px 0px",
-              border: "1px solid blue",
+              border: "1px solid black",
               borderRadius: "5px",
-              color: "#000078",
+              color: "#ffff",
               boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              textAlign:'center'
             }}
           >
             Leave Details
@@ -945,13 +959,13 @@ function Body() {
         <div className="att_det_others">
           <h3
             style={{
-              backgroundColor: "rgb(113 137 255 / 13%)",
+              // backgroundColor: "rgb(113 137 255 / 13%)",
               padding: "10px",
               margin: "0px 0px 0px 0px",
-              border: "1px solid blue",
+              // border: "1px solid blue",
               borderRadius: "5px",
-              color: "#000078",
-              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              color: "#000",
+              // boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
             }}
           >
             <center>Biometric History</center>

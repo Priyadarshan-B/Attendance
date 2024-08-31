@@ -69,7 +69,7 @@ function Body() {
               fontSize: "40px",
               color: "#2a3645",
               padding: "10px",
-              backgroundColor: "#9a9a9a",
+              backgroundColor: "#f9eac4",
               borderRadius: "100%",
             }}
           />
@@ -186,7 +186,7 @@ function Body() {
               fontSize: "40px",
               color: "#2a3645",
               padding: "10px",
-              backgroundColor: "#9a9a9a",
+              backgroundColor: "#f9eac4",
               borderRadius: "100%",
             }}
           />
@@ -215,7 +215,7 @@ function Body() {
               fontSize: "40px",
               color: "#2a3645",
               padding: "10px",
-              backgroundColor: "#9a9a9a",
+              backgroundColor: "#f9eac4",
               borderRadius: "100%",
             }}
           />

@@ -103,7 +103,7 @@ const AttendanceChart = ({ mentorId }) => {
       <div style={{display:'flex', justifyContent:'center', alignContent:'center', alignItems:'center', gap:'10px'}}>
         <h3>Attendance Summary (last 10 days)</h3>
       </div>
-      <ReactApexChart options={chartData.options} series={chartData.series} type="line" height={450} />
+      <ReactApexChart options={chartData.options} series={chartData.series} type="line"  />
     </div>
   );
 };

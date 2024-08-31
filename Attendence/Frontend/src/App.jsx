@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate,useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Login from "./pages/auth/Login/Login";
 import Welcome from "./pages/welcome/welcome";
@@ -27,23 +27,47 @@ import { Toaster } from "react-hot-toast";
 
 const ProtectedRoute = ({ children }) => {
   const secretKey = "secretKey123";
-  const encryptedRoutes = Cookies.get("allowedRoutes");
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  if (!encryptedRoutes) {
-    return <Navigate to="/attendance/login" />;
+  useEffect(() => {
+    const checkAuth = () => {
+      const detoken = Cookies.get("token");
+      if (detoken) {
+        try {
+          const token = CryptoJS.AES.decrypt(detoken, secretKey).toString(CryptoJS.enc.Utf8);
+          if (token) {
+            setIsAuthenticated(true);
+          } else {
+            setIsAuthenticated(false);
+          }
+        } catch (error) {
+          console.error('Token decryption error:', error);
+          setIsAuthenticated(false);
+        }
+      } else {
+        setIsAuthenticated(false);
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, [secretKey]);
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate('/attendance/login'); 
+    }
+  }, [isLoading, isAuthenticated, navigate]);
+
+  if (isLoading) {
+    return <div>Loading...</div>; 
   }
 
-  const decryptedRoutes = CryptoJS.AES.decrypt(encryptedRoutes, secretKey).toString(CryptoJS.enc.Utf8);
-  const allowedRoutes = JSON.parse(decryptedRoutes);
-
-  const location = window.location.pathname;
-
-  if (allowedRoutes.length === 0 || !allowedRoutes.includes(location)) {
-    return <Navigate to="/attendance/error" />;
-  }
-
-  return children;
+  return isAuthenticated ? children : null;
 };
+
 
 function App() {
   return (
