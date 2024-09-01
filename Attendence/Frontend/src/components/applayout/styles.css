@@ -214,9 +214,9 @@
     transition: all 0.5s;
 }
 
-.list-items:hover .link {
-    /* color: black; */
-}
+/* .list-items:hover .link {
+    color: black;
+} */
 .list-items.active .custom-sidebar-icon{
     background-color: #f4f6fa;
 }
