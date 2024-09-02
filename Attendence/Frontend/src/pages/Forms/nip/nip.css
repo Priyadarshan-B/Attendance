@@ -1,5 +1,5 @@
 .nip-form{
-    background-color: white;
+    background-color: var(--background-2);
     padding: 10px;
     display: flex;
     flex-direction: row;

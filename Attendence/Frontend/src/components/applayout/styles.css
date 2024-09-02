@@ -19,7 +19,7 @@
     border-radius: 5px;
     padding: 10px 10px;
     gap: 5px;
-    color: grey;
+    color: var(--text);
     background-color: rgb(248, 250, 252);
     width: 100%;
     box-sizing: border-box;
@@ -30,8 +30,8 @@
 }
 
 .app-topbar {
-    background-color: #f8f9fb;
-    color: #472d2d;
+    background-color: var(--background-1);
+    color: var(--text);
     display: flex;
     padding: 15px;
     justify-content: space-between;
@@ -45,7 +45,7 @@
   
   .app-topbar.scrolled {
     background-color: #1c0c6a; 
-    color: #ffffff;
+    color: var(--text);
   }
 .topbar-account {
     color: rgb(14, 120, 220);
@@ -59,7 +59,7 @@
 
 .topbar-account:hover {
     background-color: rgb(14, 120, 220);
-    color: white;
+    color: var(--text);
     cursor: pointer;
 }
 
@@ -69,7 +69,7 @@
     letter-spacing: 1px;
     font-size: 18px;
     margin: 0px 15px;
-    color: #000000;
+    color: var(--text);
     letter-spacing: 2px;
 }
 
@@ -105,8 +105,8 @@
     padding: 12px;
     padding-bottom: 10px;
     /* font-family: "Hind", sans-serif; */
-    background-color: #f8f9fb;
-    max-height: 93.7vh;
+    background-color: var(--background-1);
+    max-height: 93vh;
 }
 
 .sidebar-menu {
@@ -172,7 +172,7 @@
     margin: 0px 10px;
     padding: 10px 20px 20px 20px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text);
     font-size: 20px;
     letter-spacing: 3px;
     display: flex;
@@ -210,13 +210,10 @@
 .list-items.active .link {
   
     /* border-left: 5px solid #493d88; */
-    color:#ffffff;
+    color:var(--text);
     transition: all 0.5s;
 }
 
-/* .list-items:hover .link {
-    color: black;
-} */
 .list-items.active .custom-sidebar-icon{
     background-color: #f4f6fa;
 }

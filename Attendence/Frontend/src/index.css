@@ -7,13 +7,14 @@
     font-optical-sizing: auto;
     font-weight: 600;
     font-style: normal;
+    
   }
   p{
     margin: 0;
   }
   
   a {
-    /* font-weight: 500; */
+    font-weight: 500;
     text-decoration: inherit;
   }
   

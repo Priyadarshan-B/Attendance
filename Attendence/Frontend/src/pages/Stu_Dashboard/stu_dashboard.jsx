@@ -18,7 +18,9 @@ import { RiWaterPercentFill } from "react-icons/ri";
 import { BsFillCalendar2MonthFill } from "react-icons/bs";
 import { LuCalendarRange } from "react-icons/lu";
 import CountUp from "react-countup";
-import calendar from "../../assets/calendar.png";
+import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+import FingerprintIcon from "@mui/icons-material/Fingerprint";
+import hour from "../../assets/1-hour.png";
 import {
   Table,
   TableBody,
@@ -30,7 +32,7 @@ import {
   TablePagination,
 } from "@mui/material";
 
-function StuDashboard({id}) {
+function StuDashboard({ id }) {
   return <AppLayout rId={2} body={<Body id={id} />} />;
 }
 
@@ -139,8 +141,8 @@ function Body() {
         });
 
         setPercent(parseFloat(attendance_percentage));
-
-        console.log("Attendance Percentage:", attendance_percentage);
+        console.log(percent)
+        // console.log("Attendance Percentage:", attendance_percentage);
       } catch (error) {
         console.error("Error fetching attendance percent details:", error);
       }
@@ -347,8 +349,38 @@ function Body() {
     <div className="dashboard-flex">
       <div className="attendance-percentage-and-status">
         <div className="student-details-container">
+          <div className="check-in">
+            <div className="detail">
+              
+              <div style={{display:'flex', justifyContent:'center', alignItems:'center',gap:'5px'}}>
+                <InfoTwoToneIcon style={{color:'red'}}/>
+                Ensure Attendance in
+              </div>
+              Biometrics,&nbsp;
+              {studentDetails.type === "2"}
+              Hour Attendance,&nbsp;
+              {studentDetails.roles}
+            </div>
+          </div>
+          <hr style={{ width: "100%" }} />
+          <h3
+            style={{
+              backgroundColor: "#2a3645",
+              padding: "10px",
+              margin: "0px 0px 0px 0px",
+              border: "1px solid black",
+              borderRadius: "5px",
+              color: "#ffff",
+              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              textAlign: "center",
+              width:"93%",
+              marginBottom:"10px"
+            }}
+          >
+            Attendance Details
+          </h3>
           <div className="guage">
-            <h3>Attendance Percentage</h3>
+          
             <div>
               <LiquidGauge
                 value={percent}
@@ -356,6 +388,24 @@ function Body() {
                 height={150}
                 waveFrequency={2}
                 waveAmplitude={5}
+                textRenderer={(props) => {
+                  const value = (props.value);
+                  const radius = Math.min(props.height / 2, props.width / 2);
+                  const textPixels = (props.textSize * radius / 2);
+                  const valueStyle = {
+                      fontSize: textPixels
+                  };
+                  const percentStyle = {
+                      fontSize: textPixels * 0.6
+                  };
+
+                  return (
+                      <tspan>
+                          <tspan className="value" style={valueStyle}>{value}</tspan>
+                          <tspan style={percentStyle}>{props.percent}</tspan>
+                      </tspan>
+                  );
+              }}
                 waveAnimation={true}
                 waveCount={10}
                 circleStyle={{
@@ -401,6 +451,17 @@ function Body() {
                 </div>
               </div>
             )}
+            {/* <div className="detail-row">
+              <div className="detail-label">
+             Biometrics, 
+            {studentDetails.type === '2'}
+              <p>Hour Attendance</p>
+              
+                        
+              {studentDetails.roles}
+              </div>
+
+            </div> */}
 
             <div className="detail-row">
               <div className="detail-label">Today's Attendance (P|P):</div>
@@ -431,13 +492,14 @@ function Body() {
         <div className="attendance-percent-container">
           <h3
             style={{
-              backgroundColor: "rgb(113 137 255 / 13%)",
+              backgroundColor: "#2a3645",
               padding: "10px",
               margin: "0px 0px 0px 0px",
-              border: "1px solid blue",
+              border: "1px solid black",
               borderRadius: "5px",
-              color: "#000078",
+              color: "#ffff",
               boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              textAlign: "center",
             }}
           >
             Attendance & Placement Details
@@ -446,10 +508,10 @@ function Body() {
           <div className="attendance-summary">
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#dcffd6",
-                border: "1px solid #4ddc72",
-              }}
+              // style={{
+              //   backgroundColor: "#dcffd6",
+              //   border: "1px solid #4ddc72",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -474,7 +536,7 @@ function Body() {
                   style={{
                     fontWeight: "700",
                     fontSize: "35px",
-                    marginTop: "10px",
+                    marginTop: "25px",
                     color: "green",
                   }}
                 >
@@ -484,10 +546,10 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#ffe5e5",
-                border: "1px solid red ",
-              }}
+              // style={{
+              //   backgroundColor: "#ffe5e5",
+              //   border: "1px solid red ",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -512,7 +574,7 @@ function Body() {
                   style={{
                     fontWeight: "700",
                     fontSize: "35px",
-                    marginTop: "10px",
+                    marginTop: "25px",
                     color: "red",
                   }}
                 >
@@ -522,10 +584,10 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#fff5e4",
-                border: "1px solid #ffd691 ",
-              }}
+              // style={{
+              //   backgroundColor: "#fff5e4",
+              //   border: "1px solid #ffd691 ",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -552,7 +614,7 @@ function Body() {
                   style={{
                     fontWeight: "700",
                     fontSize: "35px",
-                    marginTop: "10px",
+                    marginTop: "25px",
                   }}
                 >
                   <b>{attendancePercent.current_days}</b>
@@ -586,58 +648,20 @@ function Body() {
                   style={{
                     fontWeight: "700",
                     fontSize: "35px",
-                    marginTop: "10px",
+                    marginTop: "25px",
                   }}
                 >
                   <b>{attendancePercent.total_days}</b>
                 </div>
               </div>
             </div>
+            
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#cdd8ff",
-                border: "1px solid #2c7cf3 ",
-              }}
-            >
-              <div className="icons-flex">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <div>
-                    <RiWaterPercentFill
-                      style={{
-                        color: "#2c7cf3",
-                        fontSize: "35px",
-                      }}
-                    />
-                  </div>
-                  <p>
-                    <h5>Attendance (%)</h5>
-                  </p>
-                </div>
-                <hr style={{ width: "100%" }} />
-                <div
-                  style={{
-                    fontWeight: "700",
-                    fontSize: "35px",
-                    marginTop: "10px",
-                  }}
-                >
-                  <b>{attendancePercent.attendance_percentage}</b>
-                </div>
-              </div>
-            </div>
-            <div
-              className="summary-item"
-              style={{
-                backgroundColor: "#f1ebff",
-                border: "1px solid #ba9dff",
-              }}
+              // style={{
+              //   backgroundColor: "#f1ebff",
+              //   border: "1px solid #ba9dff",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -662,7 +686,7 @@ function Body() {
                   style={{
                     fontWeight: "700",
                     fontSize: "40px",
-                    marginTop: "10px",
+                    marginTop: "25px",
                     color: "#875eff",
                   }}
                 >
@@ -672,10 +696,10 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#e6fff5",
-                border: "1px solid #5fffbf",
-              }}
+              // style={{
+              //   backgroundColor: "#e6fff5",
+              //   border: "1px solid #5fffbf",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -700,7 +724,7 @@ function Body() {
                   style={{
                     fontWeight: "700",
                     fontSize: "30px",
-                    marginTop: "10px",
+                    marginTop: "25px",
                   }}
                 >
                   <b>{placement.placement_group}</b>
@@ -709,9 +733,9 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                border: "1px solid #343434",
-              }}
+              // style={{
+              //   border: "1px solid #343434",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -736,7 +760,7 @@ function Body() {
                   style={{
                     fontWeight: "700",
                     fontSize: "30px",
-                    marginTop: "10px",
+                    marginTop: "25px",
                   }}
                 >
                   <b>{placement.placement_score}</b>
@@ -745,10 +769,10 @@ function Body() {
             </div>
             <div
               className="summary-item"
-              style={{
-                backgroundColor: "#fffdee",
-                border: "1px solid yellow",
-              }}
+              // style={{
+              //   backgroundColor: "#fffdee",
+              //   border: "1px solid yellow",
+              // }}
             >
               <div className="icons-flex">
                 <div
@@ -756,6 +780,7 @@ function Body() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "flex-start",
+                    
                   }}
                 >
                   <EmojiEventsTwoToneIcon
@@ -773,7 +798,7 @@ function Body() {
                   style={{
                     fontWeight: "700",
                     fontSize: "30px",
-                    marginTop: "10px",
+                    marginTop: "25px",
                   }}
                 >
                   <b
@@ -802,13 +827,14 @@ function Body() {
         <div className="leave-details">
           <h3
             style={{
-              backgroundColor: "rgb(113 137 255 / 13%)",
+              backgroundColor: "#2a3645",
               padding: "10px",
               margin: "0px 0px 0px 0px",
-              border: "1px solid blue",
+              border: "1px solid black",
               borderRadius: "5px",
-              color: "#000078",
+              color: "#ffff",
               boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              textAlign: "center",
             }}
           >
             Leave Details
@@ -901,11 +927,12 @@ function Body() {
           </div>
         </div>
         <div className="att_det_today">
+          
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              backgroundColor: "white",
+              backgroundColor: "var(--background-2)",
               padding: "10px",
               borderRadius: "5px",
               width: "100%",
@@ -930,9 +957,7 @@ function Body() {
           </div>
 
           <div className="radial-chart">
-            <h3>
-              <center>Today's Biometrics</center>
-            </h3>
+          
             <Chart
               options={radialChartData.options}
               series={radialChartData.series}
@@ -940,18 +965,33 @@ function Body() {
               height={300}
             />
           </div>
+          <h3
+            style={{
+              backgroundColor: "#2a3645",
+              padding: "10px",
+              margin: "0px 0px 0px 0px",
+              border: "1px solid black",
+              borderRadius: "5px",
+              color: "#ffff",
+              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              textAlign: "center",
+              width:"93%",
+            }}
+          >
+            Today's Biometric
+          </h3>
         </div>
 
         <div className="att_det_others">
           <h3
             style={{
-              backgroundColor: "rgb(113 137 255 / 13%)",
+              // backgroundColor: "rgb(113 137 255 / 13%)",
               padding: "10px",
               margin: "0px 0px 0px 0px",
-              border: "1px solid blue",
+              // border: "1px solid blue",
               borderRadius: "5px",
-              color: "#000078",
-              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              color: "#000",
+              // boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
             }}
           >
             <center>Biometric History</center>
@@ -1008,7 +1048,7 @@ function Body() {
 
       <div className="att_table">
         {studentDetails.type === 2 && (
-          <div style={{flex:'1'}}>
+          <div style={{ flex: "1" }}>
             <h3>NIP/ Re-Appear Attendance Records</h3>
             <br />
             {attendanceRecords.length > 0 ? (
@@ -1016,7 +1056,7 @@ function Body() {
                 <Table className="custom-table">
                   <TableHead>
                     <TableRow>
-                    <TableCell>
+                      <TableCell>
                         <b>S.No</b>
                       </TableCell>
                       <TableCell>
@@ -1035,7 +1075,7 @@ function Body() {
                       .slice(pageNip * rowPage, pageNip * rowPage + rowPage)
                       .map((record, index) => (
                         <TableRow key={index}>
-                          <TableCell>{index+1}</TableCell>
+                          <TableCell>{index + 1}</TableCell>
                           <TableCell>{record.name}</TableCell>
                           <TableCell>{record.label}</TableCell>
                           <TableCell>
@@ -1061,7 +1101,7 @@ function Body() {
           </div>
         )}
 
-        <div className="role" style={{flex:'1'}}>
+        <div className="role" style={{ flex: "1" }}>
           <div>
             <h3>Role Attendance Records</h3>
             <br />

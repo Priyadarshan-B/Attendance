@@ -7,7 +7,7 @@
 
 .button-container {
     margin-bottom: 20px;
-    background-color: #ffffff;
+    background-color: var(--background-2);
     padding: 15px;
     border-radius: 10px;
     width: 100%;
@@ -17,7 +17,7 @@
 }
 
 .nav-button {
-    background-color: #000000;
+    background-color: green;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -35,7 +35,7 @@
 .page-container {
     width: 100%;
     padding: 20px;
-    background-color: #f4f6fa;
+    background-color: var(--background-1);
     border-radius: 10px;
 }
 

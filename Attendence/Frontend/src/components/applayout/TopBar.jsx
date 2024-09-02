@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "@mui/material/Modal";
+import { useNavigate } from "react-router-dom";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import LogoutIcon from '@mui/icons-material/Logout';
 import Cookies from "js-cookie";
@@ -7,10 +8,12 @@ import CryptoJS from "crypto-js";
 import requestApi from "../utils/axios";
 import Popup from "../popup/popup";
 import './styles.css'; // New CSS file for dynamic styles
+import CustomizedSwitches from "./toggleTheme";
 
 function TopBar(props) {
   const [modalOpen, setModalOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate()
   
   const name = Cookies.get('name');
   const secretKey = "secretKey123";
@@ -43,14 +46,21 @@ function TopBar(props) {
 
   const logout = async () => {
     try {
-      await requestApi("POST",`/auth/logout`);
+      await requestApi("POST", `/auth/logout`);
       Cookies.remove("token");
-      window.location.href = "/attendance/login";
+      Cookies.remove("name");
+      Cookies.remove("role");
+      Cookies.remove("id");
+      Cookies.remove("gmail");
+      Cookies.remove("roll");
+      Cookies.remove('allowedRoutes');
+      
+      navigate('/attendance/login');
     } catch (error) {
       console.error("Logout failed", error);
+      navigate('/attendance/login'); 
     }
   };
-
   return (
     <div className={`app-topbar ${scrolled ? "scrolled" : ""}`}>
       <div
@@ -65,7 +75,9 @@ function TopBar(props) {
           <MenuRoundedIcon sx={{ color: "#472d2d", cursor: "pointer" }} />
         </div>
       </div>
+     
       <div className="topbar-right-content">
+      <CustomizedSwitches/>
         <div>
           <p className="user-name">{dename}</p>
         </div>

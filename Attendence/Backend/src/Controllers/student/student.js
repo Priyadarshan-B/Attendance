@@ -8,7 +8,7 @@ exports.get_student_details = async (req, res) => {
   try {
     const query = `
       SELECT 
-    GROUP_CONCAT(r.name ORDER BY r.name ASC SEPARATOR ', ') AS roles,
+    GROUP_CONCAT(r.name ORDER BY r.name ASC SEPARATOR ',  ') AS roles,
     rsm.student,
     s.*
 FROM 

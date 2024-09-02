@@ -22,7 +22,7 @@ function AppLayout(props) {
             <div style={{ height: '100%', display: 'flex' }}>
                 <SideBar open={sidebarState} resource={props.rId} />
             </div>
-            <div style={{ flex: '1', overflow: 'auto' }} ref={scrollRef}>
+            <div style={{ flex: '1', overflow: 'hidden' }} ref={scrollRef}>
                 <TopBar sidebar={handleSideBar} scrollElement={scrollRef.current} />
                 <div className={"app-body"} style={{ width: '100%', height: '100vh' }} >{props.body}</div>
             </div>

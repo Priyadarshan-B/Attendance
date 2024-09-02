@@ -9,7 +9,7 @@
 .custom-table th {
   font-weight: bold;
   background-color: #2a3645;
-  color: white;
+  color:var(--text);
 
 }
 
@@ -85,7 +85,7 @@ display: flex;
   border-radius: 5px;
   background-color: #65ff81;
   border: 1px solid green;
-  color: rgb(0, 0, 0);
+  color: var(--text);
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -99,18 +99,18 @@ display: flex;
   border-radius: 5px;
   background-color: #ff8282;
   border: 1px solid red;
-  color: rgb(0, 0, 0);
+  color: var(--text);
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
   flex: 1;
 }
 .approve-button:hover {
-  color: white;
+  color: var(--text);
   background-color: #45a049;
 }
 .reject-button:hover {
-  color: white;
+  color: var(--text);
   background-color: #e00909;
 }
 

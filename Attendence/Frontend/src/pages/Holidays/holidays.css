@@ -25,7 +25,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #000000;
+    background-color: green;
     color: white;
     position: sticky;
     top: 0px;
@@ -34,7 +34,7 @@
 }
 
 .display-holidays-grid {
-    background-color: white;
+    background-color: var(--background-2);
     height: 300px;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -57,7 +57,7 @@
     text-align: center;
     height: fit-content;
     border-radius: 5px;
-    background-color: white;
+    background-color: var(--background-2);
     border-left: 7px solid #4dcd6e;
     display: flex;
     align-items: center;

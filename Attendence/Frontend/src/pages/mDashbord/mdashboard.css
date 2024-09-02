@@ -10,7 +10,7 @@
     display: flex;  
     gap: 40px;
     align-items: center;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     flex: 1;
     
 }
@@ -37,8 +37,8 @@ h3{
     border-radius: 10px;
    flex: 1;
    /* width: 50%; */
-   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 10px;
-   margin: 5px;
+   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+      margin: 5px;
     }
 
 .s-table{
@@ -77,6 +77,9 @@ h3{
     gap: 10px;
     padding: 10px;
     background-color: white;
+    max-width: 97vw;
+    overflow-x: scroll;
     border-radius: 10px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 10px;
   }
+  

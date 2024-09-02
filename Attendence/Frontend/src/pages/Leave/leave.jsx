@@ -120,7 +120,7 @@ function Body() {
         <form
           onSubmit={handleSubmit}
           style={{
-            backgroundColor: "white",
+            backgroundColor: "var(--background-2)",
             padding: "5px",
             borderRadius: "5px",
             boxShadow:

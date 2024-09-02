@@ -5,13 +5,13 @@
 }
 
 .map-student{
-    background-color: white;
+    background-color: var(--background-2);
     padding: 15px;
     border-radius: 10px;
 }
 
 .map-table{
-    background-color: white;
+    background-color: var(--background-2);
     padding: 10px;
     border-radius: 10px;
 }
