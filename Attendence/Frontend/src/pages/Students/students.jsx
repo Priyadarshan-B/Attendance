@@ -15,6 +15,7 @@ import EmojiEventsTwoToneIcon from "@mui/icons-material/EmojiEventsTwoTone";
 import { RiWaterPercentFill } from "react-icons/ri";
 import { BsFillCalendar2MonthFill } from "react-icons/bs";
 import { LuCalendarRange } from "react-icons/lu";
+import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import CountUp from "react-countup";
 import {
   Table,
@@ -32,13 +33,6 @@ function StudentDashboard({id, roll}) {
 }
 
 function Body({id, roll}) {
-//   const deroll = Cookies.get("roll");
-//   const deid = Cookies.get("id");
-//   const secretKey = "secretKey123";
-//   const roll = CryptoJS.AES.decrypt(deroll, secretKey).toString(
-//     CryptoJS.enc.Utf8
-//   );
-//   const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
   const [studentDetails, setStudentDetails] = useState(null);
   const [attendanceDetails, setAttendanceDetails] = useState([]);
   const [placement, setPlacement] = useState([]);
@@ -344,9 +338,36 @@ function Body({id, roll}) {
     <div className="dashboard-flex">
       <div className="attendance-percentage-and-status">
         <div className="student-details-container">
+          <div className="check-in">
+            <div className="detail">
+              
+              <div style={{display:'flex', justifyContent:'center', alignItems:'center',gap:'5px'}}>
+                <InfoTwoToneIcon style={{color:'red'}}/>
+                Ensure Attendance in
+              </div>
+              Biometrics,&nbsp;
+              {studentDetails.type === "2"}
+              Hour Attendance,&nbsp;
+              {studentDetails.roles}
+            </div>
+          </div>
+          <hr style={{ width: "100%" }} />
+          <h3
+            style={{
+              backgroundColor: "#2a3645",
+              padding: "10px",
+              margin: "0px 0px 0px 0px",
+              border: "1px solid black",
+              borderRadius: "5px",
+              color: "#ffff",
+              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              textAlign: "center",
+              width:"93%",
+              marginBottom:"10px"
+            }}
+          >Attendance Details</h3>
           <div className="guage">
-            <br />
-            <h3>Attendance Percentage</h3>
+
             <div>
               <LiquidGauge
                 value={percent}
@@ -1024,7 +1045,7 @@ function Body({id, roll}) {
                   </TableBody>
                 </Table>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
+                  rowsPerPageOptions={[5]}
                   component="div"
                   count={attendanceRecords.length}
                   rowsPerPage={rowPage}
@@ -1032,9 +1053,9 @@ function Body({id, roll}) {
                   onPageChange={handlePage}
                   onRowsPerPageChange={handleChangeRowsPage}
                   sx={{
-                    backgroundColor: 'var(--text)', // Change this to the color you want
+                    backgroundColor: 'var(--text)', 
                     '.MuiTablePagination-toolbar': {
-                      backgroundColor: 'var(--background-1)', // If needed, apply to the toolbar as well
+                      backgroundColor: 'var(--background-1)', 
                     },
                   }}
                 />
@@ -1080,7 +1101,7 @@ function Body({id, roll}) {
                   </TableBody>
                 </Table>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
+                  rowsPerPageOptions={[5]}
                   component="div"
                   count={attendanceRecords.length}
                   rowsPerPage={rowPage}
@@ -1088,9 +1109,9 @@ function Body({id, roll}) {
                   onPageChange={handlePage}
                   onRowsPerPageChange={handleChangeRowsPage}
                   sx={{
-                    backgroundColor: 'var(--text)', // Change this to the color you want
+                    backgroundColor: 'var(--text)', 
                     '.MuiTablePagination-toolbar': {
-                      backgroundColor: 'var(--background-1)', // If needed, apply to the toolbar as well
+                      backgroundColor: 'var(--background-1)', 
                     },
                   }}
                 />
