@@ -4,12 +4,14 @@
 }
 
 .table-container{
-  padding: 10px;
+ padding: 20px 10px;
+ background-color: var(--background-2);
+ border-radius: 5px;
 }
 .custom-table th {
   font-weight: bold;
-  background-color: #2a3645;
-  color:var(--text);
+  background-color: #1e2631;
+  color:white;
 
 }
 
@@ -40,6 +42,9 @@
  
 }
 
+.custom-table td{
+  font-weight: 600;
+}
   h2{
     margin: 0;
   }

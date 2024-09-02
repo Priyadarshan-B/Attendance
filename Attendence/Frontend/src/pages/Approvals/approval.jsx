@@ -244,131 +244,133 @@ function Body() {
             placeholder="Search.."
           />
         </div>
-        <Paper className="table-container">
-          <TableContainer>
-            <Table className="custom-table">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ width: "10px" }}>
-                    <h3>S.No</h3>
-                  </TableCell>
-                  <TableCell sx={{ width: "10px" }}>
-                    <h3>Year</h3>
-                  </TableCell>
-                  <TableCell sx={{ width: "10px" }}>
-                    <h3>Name</h3>
-                  </TableCell>
-                  <TableCell sx={{ width: "0px" }}>
-                    <h3>Register Number</h3>
-                  </TableCell>
-                  <TableCell sx={{ width: "10px", textAlign: "center" }}>
-                    <h3>Actions</h3>
-                  </TableCell>
-                  <TableCell sx={{ width: "10px" }}>
-                    <h3>Time Left</h3>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredStudents
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((student, index) => (
-                    <TableRow key={student.id}>
-                      <TableCell>
-                        <b>{page * rowsPerPage + index + 1}</b>
-                      </TableCell>
-                      <TableCell>
-                        <b>{student.year}</b>
-                      </TableCell>
-                      <TableCell>
-                        <b>{student.name}</b>
-                      </TableCell>
-                      <TableCell>
-                        <b>{student.register_number}</b>
-                      </TableCell>
-                      <TableCell sx={{ textAlign: "center" }}>
-                        <div style={{ display: "flex", gap: "10px" }}>
-                          {student.att_status !== "1" ? (
-                            <button
-                              className="status-button"
-                              style={{
-                                backgroundColor: "#fde8e8",
-                                color: "red",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => handleApprove(student.id)}
-                            >
-                              Over Due
-                            </button>
-                          ) : (
-                            <button
-                              className="status-button"
-                              style={{
-                                backgroundColor: loading[student.id]
-                                  ? "#b0bec5"
-                                  : "#c1e6ff ",
-                                color: "#1738fd",
-                                cursor: loading[student.id]
-                                  ? "not-allowed"
-                                  : "pointer",
-                              }}
-                              onClick={() => handleExtend(student.id)}
-                              disabled={loading[student.id]}
-                            >
-                              Extend
-                            </button>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {student.att_status === "1" ? (
-                          <div
-                            style={{
-                              color: timeLeft[student.id]?.isNegative
-                                ? "red"
-                                : timeLeft[student.id]?.days > 2
-                                ? "green"
-                                : "black",
-                                border: timeLeft[student.id]?.isNegative
-                                ? "1px solid red"
-                                : timeLeft[student.id]?.days > 2
-                                ? "1px solid green"
-                                : "1px solid #ffd691",
-                              borderRadius: "20px",
-                              padding: "2px",
-                              textAlign: "center",
-                              backgroundColor: timeLeft[student.id]?.isNegative
-                                ? "#fde8e8"
-                                : timeLeft[student.id]?.days > 2
-                                ? "#d5f7da"
-                                : "#fff5e4",
-                            }}
-                          >
-                            <b>
-                              {timeLeft[student.id]
-                                ? formatTimeLeft(timeLeft[student.id])
-                                : "Calculating..."}
-                            </b>
+        <div className="table-container">
+          <Paper>
+            <TableContainer>
+              <Table className="custom-table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ width: "10px" }}>
+                      <b>S.No</b>
+                    </TableCell>
+                    <TableCell sx={{ width: "10px" }}>
+                      <b>Year</b>
+                    </TableCell>
+                    <TableCell sx={{ width: "10px" }}>
+                      <b>Name</b>
+                    </TableCell>
+                    <TableCell sx={{ width: "0px" }}>
+                      <b>Register Number</b>
+                    </TableCell>
+                    <TableCell sx={{ width: "10px", textAlign: "center" }}>
+                      <b>Actions</b>
+                    </TableCell>
+                    <TableCell sx={{ width: "10px" }}>
+                      <b>Time Left</b>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredStudents
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((student, index) => (
+                      <TableRow key={student.id}>
+                        <TableCell>
+                          {page * rowsPerPage + index + 1}
+                        </TableCell>
+                        <TableCell>
+                          {student.year}
+                        </TableCell>
+                        <TableCell>
+                          {student.name}
+                        </TableCell>
+                        <TableCell>
+                          {student.register_number}
+                        </TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          <div style={{ display: "flex", gap: "10px" }}>
+                            {student.att_status !== "1" ? (
+                              <button
+                                className="status-button"
+                                style={{
+                                  backgroundColor: "#fde8e8",
+                                  color: "red",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => handleApprove(student.id)}
+                              >
+                                Over Due
+                              </button>
+                            ) : (
+                              <button
+                                className="status-button"
+                                style={{
+                                  backgroundColor: loading[student.id]
+                                    ? "#b0bec5"
+                                    : "#c1e6ff ",
+                                  color: "#1738fd",
+                                  cursor: loading[student.id]
+                                    ? "not-allowed"
+                                    : "pointer",
+                                }}
+                                onClick={() => handleExtend(student.id)}
+                                disabled={loading[student.id]}
+                              >
+                                Extend
+                              </button>
+                            )}
                           </div>
-                        ) : (
-                          "N/A"
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 15]}
-            component="div"
-            count={filteredStudents.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
+                        </TableCell>
+                        <TableCell>
+                          {student.att_status === "1" ? (
+                            <div
+                              style={{
+                                color: timeLeft[student.id]?.isNegative
+                                  ? "red"
+                                  : timeLeft[student.id]?.days > 2
+                                  ? "green"
+                                  : "black",
+                                  border: timeLeft[student.id]?.isNegative
+                                  ? "1px solid red"
+                                  : timeLeft[student.id]?.days > 2
+                                  ? "1px solid green"
+                                  : "1px solid #ffd691",
+                                borderRadius: "20px",
+                                padding: "2px",
+                                textAlign: "center",
+                                backgroundColor: timeLeft[student.id]?.isNegative
+                                  ? "#fde8e8"
+                                  : timeLeft[student.id]?.days > 2
+                                  ? "#d5f7da"
+                                  : "#fff5e4",
+                              }}
+                            >
+                              <p style={{color:"black"}}>
+                                {timeLeft[student.id]
+                                  ? formatTimeLeft(timeLeft[student.id])
+                                  : "Calculating..."}
+                              </p>
+                            </div>
+                          ) : (
+                            "N/A"
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 15]}
+              component="div"
+              count={filteredStudents.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        </div>
       </div>
       <Popup
         open={openApprovePopup}

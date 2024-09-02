@@ -20,17 +20,17 @@
 .custom-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
-  background-color: white;
-  border-radius: 10px;
+  /* margin-bottom: 20px; */
+  background-color: var(--background-2);
+  /* border-radius: 10px; */
 }
 
 .custom-table thead  :first-child {
-  border-radius: 10px 0px 0px 0px;
+  border-radius: 2px 0px 0px 0px;
 }
 
 .custom-table thead  :last-child{
-  border-radius:  0px 10px 0px 0px
+  border-radius:  0px 2px 0px 0px
 }
 
 .custom-table th, 
@@ -43,7 +43,7 @@
 }
 
 .custom-table tbody tr:hover {
-  background-color: #ffffff;
+  background-color: var(--table-hover);
 }
 
 .custom-table tbody tr {
@@ -54,10 +54,11 @@
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
-  background-color: #eff4ff;
+  background-color: var(--background-2);
   border-radius: 10px;
   gap: 15px;
-  border: 1px solid rgb(208, 208, 255);
+  border: var(--border);
+color: #5775e441;
   /* border-top: 1px solid #ddd; */
 }
 
@@ -92,11 +93,11 @@
   border: 1px solid rgb(215, 215, 215);
   align-items: center;
   padding: 10px;
-  background-color: #ffffff;
+  background-color: var(--background-1);
 }
 
 .pagination button {
-  background-color: #9fd3c7;
+  background-color: var(--background-1);
   color: var(--text);
   border: none;
   padding: 8px 16px;
@@ -106,12 +107,12 @@
 }
 
 .pagination button:disabled {
-  background-color: #ccc;
+  background-color: var(--background-1);
   cursor: not-allowed;
 }
 
 .pagination button:hover:not(:disabled) {
-  background-color: #9be3d2;
+  background-color: var(--background-1);
 }
 
 .pagination select {
@@ -124,6 +125,7 @@
   margin: 0 10px;
   color: var(--text);
 }
+
 
 .checkbox-wrapper-4 * {
   box-sizing: border-box;

@@ -59,8 +59,8 @@ function Body() {
         <div
           className="count"
           style={{
-            backgroundColor: "white",
             cursor: "pointer",
+            backgroundColor:'var(--background-2)'
           }}
           onClick={() => handleClick("mentees")}
         >
@@ -77,7 +77,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "#2a3645",
+                color: "var(--text)",
               }}
             >
               {scount}
@@ -88,7 +88,7 @@ function Body() {
         <div
           className="count"
           style={{
-            backgroundColor: "white",
+            backgroundColor: "var(--background-2)",
             cursor: "pointer",
           }}
           onClick={() => handleClick("monitoring")}
@@ -106,7 +106,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "#2a3645",
+                color: "var(--text)",
               }}
             >
               {subCount}
@@ -117,7 +117,7 @@ function Body() {
         <div
           className="count"
           style={{
-            backgroundColor: "white",
+            backgroundColor: "var(--background-2)",
             cursor:'pointer'
           }}
           onClick={() => handleClick("attendees")}
@@ -135,7 +135,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "#2a3645",
+                color: "var(--text)",
               }}
             >
               {tcount}
@@ -146,7 +146,7 @@ function Body() {
         <div
           className="count"
           style={{
-            backgroundColor: "white",
+            backgroundColor: "var(--background-2)",
             cursor: "pointer",
           }}
           onClick={() => handleClick("absent")}
@@ -164,7 +164,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "#2a3645",
+                color: "var(--text)",
               }}
             >
               {tabCount}
@@ -176,7 +176,7 @@ function Body() {
         <div
           className="count"
           style={{
-            backgroundColor: "white",
+            backgroundColor: "var(--background-2)",
             cursor: "pointer",
           }}
           onClick={() => handleClick("regular")}
@@ -194,7 +194,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "#2a3645",
+                color: "var(--text)",
               }}
             >
               {regcount}
@@ -205,7 +205,7 @@ function Body() {
         <div
           className="count"
           style={{
-            backgroundColor: "white",
+            backgroundColor: "var(--background-2)",
             cursor: "pointer",
           }}
           onClick={() => handleClick("nip")}
@@ -223,7 +223,7 @@ function Body() {
             <p
               className="count-p"
               style={{
-                color: "#2a3645",
+                color: "var(--text)",
               }}
             >
               {type2count}

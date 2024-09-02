@@ -10,7 +10,7 @@
     display: flex;  
     gap: 40px;
     align-items: center;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    box-shadow: var(--background-2);
     flex: 1;
     
 }
@@ -33,7 +33,7 @@ h3{
 }
 
 .att-chart{
-    background-color: white;
+    background-color: var(--background-2);
     border-radius: 10px;
    flex: 1;
    /* width: 50%; */
@@ -76,7 +76,7 @@ h3{
     flex-direction: column;
     gap: 10px;
     padding: 10px;
-    background-color: white;
+    background-color: var(--background-2);
     max-width: 97vw;
     overflow-x: scroll;
     border-radius: 10px;

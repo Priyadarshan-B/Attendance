@@ -11,6 +11,14 @@
   }
   p{
     margin: 0;
+    color: var(--text);
+  }
+  h4, h2, h3, b{
+    color: var(--text);
+  }
+
+  .custom-table b{
+    color: white;
   }
   
   a {

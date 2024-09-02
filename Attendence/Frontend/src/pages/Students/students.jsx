@@ -474,10 +474,9 @@ function Body({id, roll}) {
                     fontWeight: "700",
                     fontSize: "35px",
                     marginTop: "10px",
-                    color: "green",
                   }}
                 >
-                  <p>{attendancePercent.present_days}</p>
+                  <b>{attendancePercent.present_days}</b>
                 </div>
               </div>
             </div>
@@ -512,7 +511,6 @@ function Body({id, roll}) {
                     fontWeight: "700",
                     fontSize: "35px",
                     marginTop: "10px",
-                    color: "red",
                   }}
                 >
                   <b>{attendancePercent.absent_days}</b>
@@ -745,7 +743,7 @@ function Body({id, roll}) {
             <div
               className="summary-item"
               style={{
-                backgroundColor: "#ffff",
+                // backgroundColor: "#ffff",
                 // border: "1px solid yellow",
               }}
             >
@@ -776,13 +774,11 @@ function Body({id, roll}) {
                   }}
                 >
                   <b
-                    style={{
-                      color: "black",
-                    }}
+                   
                   >
                     <CountUp
                       style={{
-                        color: "black",
+                        color: "var(--text)",
                         fontSize: "30px",
                       }}
                       end={placement.reward_points}
@@ -820,22 +816,7 @@ function Body({id, roll}) {
                   key={index}
                   className="leave-row"
                   style={{
-                    backgroundColor:
-                      leave.status === "2"
-                        ? "#fcf9ec"
-                        : leave.status === "3"
-                        ? "#ffe6e6"
-                        : leave.status === "1"
-                        ? "#e6fff2"
-                        : "transparent",
-                    border:
-                      leave.status === "2"
-                        ? " 1px solid #ded2a2"
-                        : leave.status === "3"
-                        ? "1px solid#76292e"
-                        : leave.status === "1"
-                        ? "1px solid #7eac8d"
-                        : "transparent",
+                    backgroundColor:"var(--background-1)"
                   }}
                 >
                   <div>
@@ -905,11 +886,11 @@ function Body({id, roll}) {
             style={{
               display: "flex",
               flexDirection: "column",
-              backgroundColor: "white",
+              backgroundColor: "var(--background-1)",
               padding: "10px",
               borderRadius: "5px",
               width: "100%",
-              border: "1px solid lightgray",
+              border: "1px solid gray",
               maxHeight: "180px",
               overflowY: "scroll",
               overflowX: "hidden",
@@ -944,15 +925,6 @@ function Body({id, roll}) {
 
         <div className="att_det_others">
           <h3
-            style={{
-              // backgroundColor: "",
-              // padding: "10px",
-              // margin: "0px 0px 0px 0px",
-              // border: "1px solid black",
-              // borderRadius: "5px",
-              // color: "#fff",
-              // boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-            }}
           >
             <center>Biometric History</center>
           </h3>
@@ -964,7 +936,7 @@ function Body({id, roll}) {
               }}
             >
               <TableContainer component={Paper}>
-                <Table className="custom-table">
+                <Table className="custom-table" >
                   <TableHead>
                     <TableRow>
                       <TableCell>
@@ -997,6 +969,12 @@ function Body({id, roll}) {
                   page={page}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
+                  sx={{
+                    backgroundColor: 'var(--text)', // Change this to the color you want
+                    '.MuiTablePagination-toolbar': {
+                      backgroundColor: 'var(--background-1)', // If needed, apply to the toolbar as well
+                    },
+                  }}
                 />
               </TableContainer>
             </div>
@@ -1008,7 +986,7 @@ function Body({id, roll}) {
 
       <div className="att_table">
         {studentDetails.type === 2 && (
-          <div style={{flex:'1'}}>
+          <div style={{flex:'1', backgroundColor:"var(--background-2)", padding:"10px", borderRadius:"5px"}}>
             <h3>NIP/ Re-Appear Attendance Records</h3>
             <br />
             {attendanceRecords.length > 0 ? (
@@ -1053,6 +1031,12 @@ function Body({id, roll}) {
                   page={pageNip}
                   onPageChange={handlePage}
                   onRowsPerPageChange={handleChangeRowsPage}
+                  sx={{
+                    backgroundColor: 'var(--text)', // Change this to the color you want
+                    '.MuiTablePagination-toolbar': {
+                      backgroundColor: 'var(--background-1)', // If needed, apply to the toolbar as well
+                    },
+                  }}
                 />
               </TableContainer>
             ) : (
@@ -1062,7 +1046,7 @@ function Body({id, roll}) {
         )}
 
         <div className="role" style={{flex:'1'}}>
-          <div>
+          <div  style={{flex:'1', backgroundColor:"var(--background-2)", padding:"10px", borderRadius:"5px"}}>
             <h3>Role Attendance Records</h3>
             <br />
             {roleatt.length > 0 ? (
@@ -1103,6 +1087,12 @@ function Body({id, roll}) {
                   page={pageNip}
                   onPageChange={handlePage}
                   onRowsPerPageChange={handleChangeRowsPage}
+                  sx={{
+                    backgroundColor: 'var(--text)', // Change this to the color you want
+                    '.MuiTablePagination-toolbar': {
+                      backgroundColor: 'var(--background-1)', // If needed, apply to the toolbar as well
+                    },
+                  }}
                 />
               </TableContainer>
             ) : (

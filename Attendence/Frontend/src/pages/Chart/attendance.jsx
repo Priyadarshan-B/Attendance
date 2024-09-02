@@ -44,11 +44,11 @@ const AttendanceChart = ({ mentorId }) => {
         colors: ['#008000', '#ff0000'],
       },
       tooltip: {
-        theme: 'light',
+        theme: 'dark',
         style: {
           fontSize: '12px',
-          backgroundColor: '#fff',
-          color: '#0000',
+          backgroundColor: 'var(--background-2)',
+          color: 'var(--text)',
           borderRadius: 8,
         },
         y: {

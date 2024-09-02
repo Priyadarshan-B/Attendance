@@ -244,6 +244,7 @@ function Attendance() {
                 onChange={handleSearch}
                 style={{ width: "50%" }}
               />
+              <div className="table-container">
               <Paper>
                 <TableContainer>
                   <Table aria-label="students table" className="custom-table">
@@ -336,9 +337,11 @@ function Attendance() {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
+                    sx={{backgroundColor:'var(--background-1)'}}
                   />
                 )}
               </Paper>
+              </div>
             </div>
           )}
           <br />

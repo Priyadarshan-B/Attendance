@@ -9,7 +9,7 @@ import WbSunnyIcon from '@mui/icons-material/WbSunny';
 // Define the theme 
 const theme = createTheme({
     palette: {
-        mode: "light", // Initially set to light mode
+        mode: "light", 
     },
 });
 
@@ -17,14 +17,21 @@ const lightModeProperties = {
    "--background-1":"#f4f6fa",
    "--background-2":"#ffffff",
    "--text":"#011627",
-   "--text":"#011627"
+   "--table-hover":"#f4f6fa",
+   "--l-app":"#e6fff2",
+    "--border":"1px solid #5775e441"
+
+   
 
 };
 
 const darkModeProperties = {
-   "--background-1":"#4b5159",
+   "--background-1":"#1e2631",
    "--background-2":"#2a3645",
-   "--text":"#ffffff"
+   "--text":"#ffffff",
+   "--table-hover":"#1e2631",
+   "--l-app":"#19623c",
+    "--border":"1px solid #5775e441"
 };
 
 // Set custom properties based on theme mode

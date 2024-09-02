@@ -9,7 +9,7 @@
   transition: border-color 150ms ease-in-out 0s;
   outline: none;
   color: var(--text);
-  background-color: rgb(255, 255, 255);
+  background-color: var(--background-2);
   padding-right: 12px;
   }
   
