@@ -166,6 +166,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 5px;
 }
 
 .app-name {
@@ -241,4 +242,37 @@
     background-color: #465a73;
     border-radius: 10px;
     margin-right: 10px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Adjust the space between the profile picture and the name */
+  }
+  
+  .user-profile-pic {
+    width: 40px; /* Set the desired size for the profile picture */
+    height: 40px;
+    border-radius: 50%; /* Make it a circle */
+    object-fit: cover; /* Ensure the image covers the entire circle */
+  }
+
+
+  .logout-button{
+    width: 100%;
+    padding: 7px 0px;
+    font-size: 14px;
+    font-weight: var(--f-weight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(227, 92, 92);
+    color: white;
+    cursor: pointer;
+}
+
+.logout-button:hover{
+    background-color: rgb(232, 63, 63);
 }

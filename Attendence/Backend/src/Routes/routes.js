@@ -73,7 +73,10 @@ router.put('/arr-attendence',arrear_attendence.delete_arrear_stu_att)
 router.get('/slots', slots.get_slots)
 router.post('/slots', slots.post_slots)
 router.put('/slots', slots.update_slots)
+router.get('/time-slots',slots.get_time_slots)
+router.put('/time-slots', slots.delete_slots)
 router.get('/session',session.get_session)
+
 
 // leave
 router.get('/leave-type', leave.get_leave_type)

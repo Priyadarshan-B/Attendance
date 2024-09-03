@@ -19,7 +19,10 @@ const lightModeProperties = {
    "--text":"#011627",
    "--table-hover":"#f4f6fa",
    "--l-app":"#e6fff2",
-    "--border":"1px solid #5775e441"
+    "--border":"1px solid #5775e441",
+    "--button-hover":"#9fa4a8",
+    "--datepicker":"#ffffff"
+
 
    
 
@@ -31,7 +34,11 @@ const darkModeProperties = {
    "--text":"#ffffff",
    "--table-hover":"#1e2631",
    "--l-app":"#19623c",
-    "--border":"1px solid #5775e441"
+    "--border":"1px solid #5775e441",
+    "--button-hover":"#2a3645",
+    "--datepicker":"#78818e"
+
+
 };
 
 // Set custom properties based on theme mode

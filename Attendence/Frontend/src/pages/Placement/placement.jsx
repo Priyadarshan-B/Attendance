@@ -65,7 +65,8 @@ function Body() {
                     onChange={handleSearchChange}
                     style={{width:'300px'}}
                 />
-                <div className="place-table">
+                <br /><br />
+                <div className="table-container">
                     <TableContainer component={Paper}>
                         <Table className="custom-table">
                             <TableHead>
@@ -111,6 +112,12 @@ function Body() {
                             rowsPerPage={rowsPerPage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                             rowsPerPageOptions={[5, 10, 25]}
+                            sx={{
+                                backgroundColor: 'var(--text)', 
+                                '.MuiTablePagination-toolbar': {
+                                  backgroundColor: 'var(--background-1)', 
+                                },
+                              }}
                         />
                     </TableContainer>
                 </div>

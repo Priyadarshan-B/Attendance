@@ -137,7 +137,7 @@ function Body() {
       ) : (
         <div className="noresult">
           <img src={noResult} alt="" height="200px" width="200px" />
-          No Records Found..
+          <p>No Records Found..</p>
         </div>
       )}
 

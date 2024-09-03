@@ -10,23 +10,27 @@ import {
 
 const Popup = ({ open, onClose, onConfirm,title, text }) => {
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{title}</DialogTitle>
+    <Dialog fullWidth open={open} onClose={onClose} PaperProps={{
+      style: {
+        backgroundColor: 'var(--background-2)', // Background color for the popup
+      }
+    }}>
+      <DialogTitle style={{ color: 'var(--text)' }}>{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText>
+        <DialogContentText style={{ color: 'var(--text)' }}>
           {text}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button
           onClick={onClose}
-          style={{ color: 'black' }} 
+          style={{ color: '#2c7cf3' }} 
         >
           Cancel
         </Button>
         <Button
           onClick={onConfirm}
-          style={{ color: 'blue' }} 
+          style={{ color: '#2c7cf3' }} 
         >
           Confirm
         </Button>

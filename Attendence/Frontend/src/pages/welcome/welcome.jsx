@@ -19,7 +19,7 @@ const Welcome = () => {
         try {
           const decodedData = decodeURIComponent(dataParam);
           const parsedData = JSON.parse(decodedData);
-          const { token, name, role, roll, id, gmail } = parsedData;
+          const { token, name, role, roll, id, gmail, profile } = parsedData;
 
           Cookies.set("token", CryptoJS.AES.encrypt(token, secretKey).toString(), { expires: 1 });
           Cookies.set("name", CryptoJS.AES.encrypt(name, secretKey).toString());
@@ -27,6 +27,8 @@ const Welcome = () => {
           Cookies.set("id", CryptoJS.AES.encrypt(id.toString(), secretKey).toString());
           Cookies.set("roll", CryptoJS.AES.encrypt(roll, secretKey).toString());
           Cookies.set("gmail", CryptoJS.AES.encrypt(gmail, secretKey).toString());
+          Cookies.set("profile", CryptoJS.AES.encrypt(profile, secretKey).toString());
+          
 
           const response = await requestApi("GET", `/auth/resources?role=${role}`);
           const routes = response.data.map(route => route.path);

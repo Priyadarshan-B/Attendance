@@ -85,6 +85,7 @@ function Body() {
           </div>
         </div>
       </div>
+      <br />
       {!selectedStudent ? (
         <div className="no-stu">
           Select a student to view details.

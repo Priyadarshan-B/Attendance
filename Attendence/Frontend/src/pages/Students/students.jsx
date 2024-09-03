@@ -390,7 +390,7 @@ function Body({id, roll}) {
             <div className="detail-row">
               <div className="detail-label">Register Number:</div>
               <div className="detail-value">
-                {studentDetails.register_number}
+                <p>{studentDetails.register_number}</p>
               </div>
             </div>
             <div className="detail-row">
@@ -589,7 +589,7 @@ function Body({id, roll}) {
                   <div>
                     <LuCalendarRange
                       style={{
-                        color: "#fffff",
+                        color: "var(--text)",
                         fontSize: "25px",
                       }}
                     />
@@ -741,7 +741,7 @@ function Body({id, roll}) {
                 >
                   <SportsScoreIcon
                     style={{
-                      color: "#000",
+                      color: "var(--text)",
                       fontSize: "30px",
                     }}
                   />

@@ -154,6 +154,7 @@ function Body() {
                             value={startDate}
                             onChange={(newValue) => setStartDate(newValue)}
                             renderInput={(params) => <TextField {...params} />}
+                            sx={{backgroundColor:'var(--background)', color:'var(--text)'}}
                         />
                         <DatePicker
                             label="End Date"
@@ -169,43 +170,52 @@ function Body() {
             <div>
                 <h3>Available Semester Dates</h3>
             </div>
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell><b>Year</b></TableCell>
-                            <TableCell><b>From Date</b></TableCell>
-                            <TableCell><b>To Date</b></TableCell>
-                            <TableCell><b>Actions</b></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                            <TableRow key={row.id}>
-                                <TableCell>{row.year}</TableCell>
-                                <TableCell>{moment(row.from_date).format('YYYY-MM-DD')}</TableCell>
-                                <TableCell>{moment(row.to_date).format('YYYY-MM-DD')}</TableCell>
-                                <TableCell>
-                                    <IconButton onClick={() => handleEditClick(row)} sx={{ color: 'blue' }}>
-                                        <Edit />
-                                    </IconButton>
-                                    <IconButton onClick={() => handleDelete(row.id)} sx={{ color: 'red' }}>
-                                        <Delete />
-                                    </IconButton>
-                                </TableCell>
+            <br />
+            <div className="table-container">
+                <TableContainer component={Paper}>
+                    <Table className="custom-table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell><b>Year</b></TableCell>
+                                <TableCell><b>From Date</b></TableCell>
+                                <TableCell><b>To Date</b></TableCell>
+                                <TableCell><b>Actions</b></TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                <TablePagination
-                    component="div"
-                    count={data.length}
-                    page={page}
-                    onPageChange={handlePageChange}
-                    rowsPerPage={rowsPerPage}
-                    onRowsPerPageChange={handleRowsPerPageChange}
-                />
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                                <TableRow key={row.id}>
+                                    <TableCell>{row.year}</TableCell>
+                                    <TableCell>{moment(row.from_date).format('YYYY-MM-DD')}</TableCell>
+                                    <TableCell>{moment(row.to_date).format('YYYY-MM-DD')}</TableCell>
+                                    <TableCell>
+                                        <IconButton onClick={() => handleEditClick(row)} sx={{ color: 'blue' }}>
+                                            <Edit />
+                                        </IconButton>
+                                        <IconButton onClick={() => handleDelete(row.id)} sx={{ color: 'red' }}>
+                                            <Delete />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    <TablePagination
+                        component="div"
+                        count={data.length}
+                        page={page}
+                        onPageChange={handlePageChange}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleRowsPerPageChange}
+                        sx={{
+                            backgroundColor: 'var(--text)',
+                            '.MuiTablePagination-toolbar': {
+                              backgroundColor: 'var(--background-1)',
+                            },
+                          }}
+                    />
+                </TableContainer>
+            </div>
 
             <Dialog open={openEdit} onClose={() => setOpenEdit(false)}>
                 <DialogTitle>Edit Semester Dates</DialogTitle>

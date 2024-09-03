@@ -1,5 +1,5 @@
 .time-slot-form-container{
-    background-color: var(--background-2);
+    background-color: var(--datepicker);
     border-radius: 10px;
 }
 .time-form{

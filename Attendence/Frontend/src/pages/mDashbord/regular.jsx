@@ -83,6 +83,12 @@ const RStudentTable = ({ mentor }) => {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
+                    sx={{
+                        backgroundColor: 'var(--text)', 
+                        '.MuiTablePagination-toolbar': {
+                          backgroundColor: 'var(--background-1)', 
+                        },
+                      }}
                 />
             </Paper>
         </div>

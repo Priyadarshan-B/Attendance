@@ -279,65 +279,73 @@ function Body() {
             />
           </div>
           <br />
-          <Paper>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <b>ID</b>
-                    </TableCell>
-                    <TableCell>
-                      <b>Mentor</b>
-                    </TableCell>
-                    <TableCell>
-                      <b>Sub-Mentor</b>
-                    </TableCell>
-                    <TableCell>
-                      <b>Student</b>
-                    </TableCell>
-                    <TableCell>
-                      <b>Register Number</b>
-                    </TableCell>
-                    <TableCell>
-                      <b>Actions</b>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filteredMentorList
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => (
-                      <TableRow key={row.id}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{row.mentor}</TableCell>
-                        <TableCell>{row.sub_mentor || "N/A"}</TableCell>
-                        <TableCell>{row.student}</TableCell>
-                        <TableCell>{row.register_number}</TableCell>
-                        <TableCell>
-                          <IconButton
-                            onClick={() => handleDelete(row.id)}
-                            sx={{
-                              color: "red",
-                            }}
-                          >
-                            <Delete />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              component="div"
-              count={mentorList.length}
-              page={page}
-              onPageChange={handleChangePage}
-              rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
+          <div className="table-container">
+            <Paper>
+              <TableContainer>
+                <Table className="custom-table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
+                        <b>ID</b>
+                      </TableCell>
+                      <TableCell>
+                        <b>Mentor</b>
+                      </TableCell>
+                      <TableCell>
+                        <b>Sub-Mentor</b>
+                      </TableCell>
+                      <TableCell>
+                        <b>Student</b>
+                      </TableCell>
+                      <TableCell>
+                        <b>Register Number</b>
+                      </TableCell>
+                      <TableCell>
+                        <b>Actions</b>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {filteredMentorList
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row, index) => (
+                        <TableRow key={row.id}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{row.mentor}</TableCell>
+                          <TableCell>{row.sub_mentor || "N/A"}</TableCell>
+                          <TableCell>{row.student}</TableCell>
+                          <TableCell>{row.register_number}</TableCell>
+                          <TableCell>
+                            <IconButton
+                              onClick={() => handleDelete(row.id)}
+                              sx={{
+                                color: "red",
+                              }}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                component="div"
+                count={mentorList.length}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                sx={{
+                  backgroundColor: 'var(--text)',
+                  '.MuiTablePagination-toolbar': {
+                    backgroundColor: 'var(--background-1)',
+                  },
+                }}
+              />
+            </Paper>
+          </div>
         </div>
       )}
 

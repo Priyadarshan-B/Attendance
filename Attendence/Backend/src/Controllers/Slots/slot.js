@@ -41,6 +41,25 @@ exports.update_slots = async(req, res)=>{
     res.status(500).json({ error: "Error Updating Slots.." });
     }
 }
+exports.delete_slots = async(req, res)=>{
+    const id = req.query.id
+    if(!id){
+        return res.status(400).json({Error: "Feilds are required.."})
+    }
+    try{
+        const query =`
+        UPDATE time_slots
+        SET status = '0'
+        WHERE id = ?;
+        `
+        const deleteSlots = await post_database(query, [id])
+        res.json(deleteSlots);
+    }
+    catch(err){
+        console.error("Error Deleting Slots", err);
+    res.status(500).json({ error: "Error Deleting Slots.." });
+    }
+}
 
 exports.post_slots = async(req, res) =>{
     const {label,start_time, end_time} = req.body
@@ -58,5 +77,19 @@ exports.post_slots = async(req, res) =>{
     catch(err){
         console.error("Error Updating Slots", err);
     res.status(500).json({ error: "Error Updating Slots.." });
+    }
+}
+
+exports.get_time_slots = async(req, res) =>{
+    try{
+        const query = `
+        SELECT * FROM time_slots WHERE status = '1';
+        `
+        const get_time = await get_database(query)
+        res.json(get_time)
+    }
+    catch(err){
+        console.error("Error Fetching timeSlots", err);
+        res.status(500).json({ error: "Error Fetching time Slots.." });
     }
 }

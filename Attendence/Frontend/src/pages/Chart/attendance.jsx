@@ -32,12 +32,20 @@ const AttendanceChart = ({ mentorId }) => {
       },
       xaxis: {
         categories: [],
-        
+        labels: {
+          style: {
+            colors: 'var(--text)',
+          },
+        },
       },
-      yaxis:{
-        min:0,
-        max:+10,
-        
+      yaxis: {
+        min: 0,
+        max: 10,
+        labels: {
+          style: {
+            colors: 'var(--text)',
+          },
+        },
       },
       fill: {
         opacity: 0.3, 
@@ -55,6 +63,11 @@ const AttendanceChart = ({ mentorId }) => {
           formatter: function (val) {
             return val + " students";
           },
+        },
+      },
+      legend: {
+        labels: {
+          colors: 'var(--text)',
         },
       },
     },

@@ -59,7 +59,7 @@ function Body() {
   const [showLeave, setShowLeave] = useState(false);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const id = Cookies.get("id");
   const secretKey = "secretKey123";
   const deid = CryptoJS.AES.decrypt(id, secretKey).toString(CryptoJS.enc.Utf8);
@@ -368,6 +368,12 @@ function Body() {
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
+              sx={{
+                backgroundColor: 'var(--text)', 
+                '.MuiTablePagination-toolbar': {
+                  backgroundColor: 'var(--background-1)', 
+                },
+              }}
             />
           </Paper>
         </div>

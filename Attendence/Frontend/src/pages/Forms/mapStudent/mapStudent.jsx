@@ -191,7 +191,7 @@ function Body() {
         <div>
           <Paper>
             <TableContainer>
-              <Table>
+              <Table className="custom-table">
                 <TableHead>
                   <TableRow>
                     <TableCell><b>Role</b></TableCell>
@@ -235,6 +235,12 @@ function Body() {
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
+              sx={{
+                backgroundColor: 'var(--text)', 
+                '.MuiTablePagination-toolbar': {
+                  backgroundColor: 'var(--background-1)', 
+                },
+              }}
             />
           </Paper>
         </div>

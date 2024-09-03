@@ -178,6 +178,7 @@ function Attendance() {
               value={selectedYear}
               onChange={handleYearChange}
               placeholder="Select Year"
+              isClearable
             />
           </div>
 
@@ -211,12 +212,13 @@ function Attendance() {
                     </div>
                   ))
                 ) : (
-                  <div>No Slots Available...</div>
+                  <p>No Slots Available...</p>
                 )}
               </div>
             </div>
           ) : (
-            <div style={{display:'flex', flexDirection:'column-reverse', alignItems:'center'}}>Please select a year..
+            <div style={{display:'flex', flexDirection:'column-reverse', alignItems:'center'}}>
+              <p>Please select a year..</p> 
               <img src={noresult} alt="" height='200px' width="200px" />
 
             </div>
@@ -337,7 +339,12 @@ function Attendance() {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
-                    sx={{backgroundColor:'var(--background-1)'}}
+                    sx={{
+                      backgroundColor: 'var(--text)', 
+                      '.MuiTablePagination-toolbar': {
+                        backgroundColor: 'var(--background-1)', 
+                      },
+                    }}
                   />
                 )}
               </Paper>

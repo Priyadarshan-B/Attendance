@@ -10,7 +10,7 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 
 // Callback route
 router.get("/google/callback", passport.authenticate("google", { failureRedirect: `${process.env.CLIENT_URL}/login` }), function(req, res) {
-    req.user.token = generateToken(req.user, 600, req.user.name, req.user.register_number, req.user.role_id, req.user.id, req.user.gmail);
+    req.user.token = generateToken(req.user, 600, req.user.name, req.user.register_number, req.user.role_id, req.user.id, req.user.gmail, req.user.profilePhoto);
     console.log("token:", req.user.token);
     const responseJson = {
       token: req.user.token,
@@ -18,16 +18,16 @@ router.get("/google/callback", passport.authenticate("google", { failureRedirect
       roll: req.user.register_number,
       role: req.user.role_id,
       id: req.user.id,
-      gmail:req.user.gmail
+      gmail:req.user.gmail,
+      profile:req.user.profilePhoto
     };
     console.log(responseJson)
-    // console.log(`${process.env.CLIENT_URL}/welcome?data=${encodeURIComponent(JSON.stringify(responseJson))}`)
     res.redirect(`${process.env.CLIENT_URL}/welcome?data=${encodeURIComponent(JSON.stringify(responseJson))}`);
 });
 
-const generateToken = (user, expiresIn, name, roll, role_id, id, gmail) => {
+const generateToken = (user, expiresIn, name, roll, role_id, id, gmail , profilePhoto) => {
     const JWT_SECRET = process.env.JWT_SECRET;
-    return jwt.sign({ userId: user.id, name: name, roll: roll, role: role_id, id: id, gmail: gmail }, JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign({ userId: user.id, name: name, roll: roll, role: role_id, id: id, gmail: gmail, profile:profilePhoto }, JWT_SECRET, { expiresIn: '1h' });
 };
 
 router.post("/logout", (req, res) => {
