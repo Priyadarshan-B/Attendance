@@ -248,6 +248,7 @@ function Body() {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="Search.."
+            style={{width:'300px'}}
           />
         </div>
         <div className="table-container">
@@ -262,7 +263,7 @@ function Body() {
                     <TableCell sx={{ width: "10px" }}>
                       <b>Year</b>
                     </TableCell>
-                    <TableCell sx={{ width: "10px" }}>
+                    <TableCell sx={{ width: "10px", whiteSpace:'nowrap'  }}>
                       <b>Name</b>
                     </TableCell>
                     <TableCell sx={{ width: "0px" }}>
@@ -271,7 +272,7 @@ function Body() {
                     <TableCell sx={{ width: "10px", textAlign: "center" }}>
                       <b>Actions</b>
                     </TableCell>
-                    <TableCell sx={{ width: "10px" }}>
+                    <TableCell sx={{ width: "10px" , whiteSpace:'nowrap'}}>
                       <b>Time Left</b>
                     </TableCell>
                   </TableRow>

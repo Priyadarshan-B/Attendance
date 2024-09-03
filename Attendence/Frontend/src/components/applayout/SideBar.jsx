@@ -14,6 +14,7 @@ import ReceiptLongSharpIcon from "@mui/icons-material/ReceiptLongSharp";
 import WorkOffIcon from "@mui/icons-material/WorkOff";
 import SchoolIcon from "@mui/icons-material/School";
 import AddTaskIcon from '@mui/icons-material/AddTask';
+import SummarizeTwoToneIcon from '@mui/icons-material/SummarizeTwoTone';
 
 
 function getIconComponent(iconPath) {
@@ -38,6 +39,8 @@ function getIconComponent(iconPath) {
       return <SchoolIcon style={{ color: '#d158ff' }} className="custom-sidebar-icon" />;
     case 'AddTaskIcon':
       return <AddTaskIcon style={{ color: '#00a8fb' }} className="custom-sidebar-icon" />;
+      case 'SummarizeTwoToneIcon':
+        return <SummarizeTwoToneIcon style={{ color: '#00a8fb' }} className="custom-sidebar-icon" />;
     default:
       return null;
   }
@@ -92,11 +95,9 @@ function SideBar(props) {
       style={{
         backgroundColor: "#2a3645",
         borderRight: "1px solid #f2f2f2",
-        // borderRight: "0.1px solid rgba(128, 128, 128, 0.296)"
       }}
     >
-      {/* <div className="logo"> <img src={logo} alt="" height={'50px'} /></div> */}
-      <div className="app-name">ATTENDANCE</div>
+      <p style={{color:'white'}} className="app-name">ATTENDANCE</p>
       <ul className="list-div">
         {sidebarItems.map((item) => (
           <li

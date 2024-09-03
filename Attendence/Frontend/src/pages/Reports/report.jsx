@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AppLayout from "../../components/applayout/AppLayout";
 import '../../components/applayout/styles.css';
 import * as XLSX from 'xlsx';
@@ -13,7 +13,7 @@ import customStyles from "../../components/applayout/selectTheme";
 import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 import './report.css';
 
-function AbReport() {
+function ReportPage() {
     return (
         <ThemeProviderComponent>
             <AppLayout body={<Body />} />
@@ -22,9 +22,11 @@ function AbReport() {
 }
 
 function Body() {
-    const [year, setYear] = useState();
+    const [absentYear, setAbsentYear] = useState();
+    const [presentYear, setPresentYear] = useState();
     const [absentDate, setAbsentDate] = useState(null);
     const [presentDate, setPresentDate] = useState(null);
+    const [selectedYear, setSelectedYear] = useState(null);
 
     const handleDownload = async (type) => {
         try {
@@ -32,17 +34,26 @@ function Body() {
             let fileName;
 
             if (type === 'absent') {
-                apiEndpoint = `/ab-report?year=${year.value}&date=${formatDate(presentDate)}`;
-                fileName = `studentsAbsent-${year.value}-${formatDate(absentDate)}.xlsx`;
+                apiEndpoint = `/ab-report?year=${absentYear.value}&date=${formatDate(absentDate)}`;
+                fileName = `studentsAbsent-${absentYear.value}-${formatDate(absentDate)}.xlsx`;
             } else if (type === 'present') {
-                apiEndpoint = `/pre-report?year=${year.value}&date=${formatDate(presentDate)}`;
-                fileName = `studentsPresent-${year.value}-${formatDate(presentDate)}.xlsx`;
+                apiEndpoint = `/pre-report?year=${presentYear.value}&date=${formatDate(presentDate)}`;
+                fileName = `studentsPresent-${presentYear.value}-${formatDate(presentDate)}.xlsx`;
+            } else if (type === 'student') {
+                const year = selectedYear?.value || 'All';
+                apiEndpoint = `/student-report?year=${year}`;
+                fileName = `StudentReport-${year}.xlsx`;
             }
 
             if (!apiEndpoint || !fileName) return;
 
             const response = await requestApi("GET", apiEndpoint);
-            const data = response.data;
+            let data = response.data;
+
+            if (type === 'student') {
+                // Remove id, student, and status fields from each object
+                data = data.map(({ id, student, status, ...rest }) => rest);
+            }
 
             const worksheet = XLSX.utils.json_to_sheet(data);
             const workbook = XLSX.utils.book_new();
@@ -71,23 +82,24 @@ function Body() {
     ];
 
     return (
-        <div className="report-flex">
-            <div className="absentReport" style={{ flex: '1' }}>
-                <h3>Absentee Report</h3>
-                <br />
-                <div>
-                    <div className="select-date">
-                        <div style={{ flex: '1' }}>
-                            <Select
-                                value={year}
-                                onChange={setYear}
-                                options={yearOptions}
-                                styles={customStyles} 
-                                placeholder='Select Year..'
-                                isClearable
-                            />
-                        </div>
-               
+        <div className="report-container">
+                            <h2>Summary</h2>
+            <div className="report-flex">
+                <div className="absentReport" style={{ flex: '1' }}>
+                    <h3>Absentee Report</h3>
+                    <br />
+                    <div>
+                        <div className="select-date">
+                            <div style={{ flex: '1', width: '300px' }}>
+                                <Select
+                                    value={absentYear}
+                                    onChange={setAbsentYear}
+                                    options={yearOptions}
+                                    styles={customStyles}
+                                    placeholder='Select Year..'
+                                    isClearable
+                                />
+                            </div>
                             <div style={{ flex: '1', textAlign: 'center' }}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
@@ -97,31 +109,29 @@ function Body() {
                                     />
                                 </LocalizationProvider>
                             </div>
-                   
-                    </div>
-                    <Button
-                        onClick={() => handleDownload('absent')}
-                        label='Download Absent Report'
-                    />
-                </div>
-            </div>
-            <div className="presentReport" style={{ flex: '1' }}>
-                <h3>Present Report</h3>
-                <br />
-                <div>
-                    <div className="select-date">
-                        <div style={{ flex: '1' }}>
-                            <Select
-                                value={year}
-                                onChange={setYear}
-                                options={yearOptions}
-                                styles={customStyles}
-                                placeholder='Select Year..'
-                                isClearable
-                            />
                         </div>
-                    
-                            <div style={{ flex: '1' , textAlign:'center'}}>
+                        <Button
+                            onClick={() => handleDownload('absent')}
+                            label='Download Absent Report'
+                        />
+                    </div>
+                </div>
+                <div className="presentReport" style={{ flex: '1' }}>
+                    <h3>Present Report</h3>
+                    <br />
+                    <div>
+                        <div className="select-date">
+                            <div style={{ flex: '1', width: '300px' }}>
+                                <Select
+                                    value={presentYear}
+                                    onChange={setPresentYear}
+                                    options={yearOptions}
+                                    styles={customStyles}
+                                    placeholder='Select Year..'
+                                    isClearable
+                                />
+                            </div>
+                            <div style={{ flex: '1', textAlign: 'center' }}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         value={presentDate}
@@ -130,17 +140,37 @@ function Body() {
                                     />
                                 </LocalizationProvider>
                             </div>
-                    
-                    
-                    </div>
-                    <Button
+                        </div>
+                        <Button
                             onClick={() => handleDownload('present')}
                             label='Download Present Report'
                         />
+                    </div>
+                </div>
+            <div className="presentReport" >
+                <h3>Student Report</h3>
+                <br />
+                <div className="select-year">
+                    <div style={{ flex: '1', width: '300px' }}>
+                        <Select
+                            value={selectedYear}
+                            onChange={setSelectedYear}
+                            options={yearOptions}
+                            styles={customStyles}
+                            placeholder='Select Year..'
+                            isClearable
+                        />
+                    </div>
+                    <Button
+                        onClick={() => handleDownload('student')}
+                        label='Download Student Report'
+                    />
                 </div>
             </div>
+            </div>
+
         </div>
     );
 }
 
-export default AbReport;
+export default ReportPage;

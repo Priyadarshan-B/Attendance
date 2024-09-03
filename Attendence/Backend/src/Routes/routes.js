@@ -25,7 +25,7 @@ const mDash = require('../Controllers/mentor_dashboard/mdashboard')
 const mdashboard = require('../Controllers/mentor_dashboard/mdashboard')
 const report = require('../Controllers/Reports/absent')
 const reportPresent = require('../Controllers/Reports/present')
-
+const reportStudent = require('../Controllers/Reports/student')
 const router = express.Router()
 
 router.get("/mentor-students",mentor.get_students)
@@ -142,5 +142,6 @@ router.get('/mdashboard', mdashboard.dashboard)
 // report
 router.get('/ab-report', report.get_absent_reports)
 router.get('/pre-report', reportPresent.get_present_reports)
+router.get('/student-report', reportStudent.get_student_report)
 
 module.exports = router

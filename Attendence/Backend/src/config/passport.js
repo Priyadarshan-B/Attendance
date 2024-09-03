@@ -56,7 +56,10 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   connection.query(
-    "SELECT id, name, gmail, role_id FROM mentor WHERE id = ? UNION SELECT id, name, gmail, register_number, role_id FROM students WHERE id = ?",
+    `SELECT id, name, gmail, NULL AS register_number, role_id FROM mentor WHERE id = ? 
+UNION 
+SELECT id, name, gmail, register_number, role_id FROM students WHERE id = ?
+    `,
     [id, id],
     (error, results) => {
       if (error) {
