@@ -9,11 +9,17 @@ import AppLayout from "../../components/applayout/AppLayout";
 import "../../components/applayout/styles.css";
 import noResult from "../../assets/no-results.png";
 import Popup from "../../components/popup/popup";
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 import { TextField } from "@mui/material";
 
 
 function LeaveDetails() {
-  return <AppLayout body={<Body />} />;
+  return (
+    <ThemeProviderComponent>
+        <AppLayout body={<Body />} />
+    </ThemeProviderComponent>
+);
+
 }
 
 function Body() {

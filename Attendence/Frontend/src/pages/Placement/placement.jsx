@@ -8,9 +8,14 @@ import CryptoJS from "crypto-js";
 import InputBox from "../../components/TextBox/textbox";
 import './placement.css'
 import PlacementSub from "./placementSub";
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
 function Placement() {
-    return <AppLayout body={<Body />} />;
+    return (
+        <ThemeProviderComponent>
+            <AppLayout body={<Body />} />
+        </ThemeProviderComponent>
+    );
 }
 
 function Body() {

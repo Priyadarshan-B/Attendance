@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Select from "react-select";
+import customStyles from "../../../components/applayout/selectTheme";
 import requestApi from "../../../components/utils/axios";
 import Button from "../../../components/Button/Button";
 import toast from "react-hot-toast";
@@ -95,6 +96,7 @@ function Body() {
                     isMulti
                     options={type1Options}
                     onChange={handleType1Change}
+                    styles={customStyles} 
                     value={selectedType1Options}
                     placeholder="Search students..."
                     onInputChange={fetchType1Students}
@@ -116,6 +118,7 @@ function Body() {
                     onChange={handleType2Change}
                     value={selectedType2Options}
                     placeholder="Search students..."
+                    styles={customStyles} 
                     onInputChange={fetchType2Students}
                     noOptionsMessage={({ inputValue }) => 
                         inputValue.length > 0 

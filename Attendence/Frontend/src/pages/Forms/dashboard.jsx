@@ -7,10 +7,15 @@ import MapStudent from "./mapStudent/mapStudent";
 import SemDates from "./semDates/sem_dates";
 import Holidays from "../Holidays/holidays";
 import TimeSlotForm from "./timeSlots/timeSlots";
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 import './style.css';
 
 function Dashboard() {
-    return <AppLayout rId={1} body={<Body />} />;
+    return (
+        <ThemeProviderComponent>
+            <AppLayout body={<Body />} />
+        </ThemeProviderComponent>
+    );
 }
 
 class Body extends Component {

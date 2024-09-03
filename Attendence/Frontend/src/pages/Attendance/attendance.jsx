@@ -20,6 +20,8 @@ import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
 import Paper from '@mui/material/Paper';
 import noresult from '../../assets/no-results.png'
+import customStyles from "../../components/applayout/selectTheme";
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
 function Attendance() {
   const [selectedYear, setSelectedYear] = useState(null);
@@ -167,6 +169,7 @@ function Attendance() {
   };
 
   return (
+    <ThemeProviderComponent>
     <AppLayout
       body={
         <div className="attendance-container">
@@ -178,6 +181,8 @@ function Attendance() {
               value={selectedYear}
               onChange={handleYearChange}
               placeholder="Select Year"
+              styles={customStyles} 
+
               isClearable
             />
           </div>
@@ -367,6 +372,7 @@ function Attendance() {
         </div>
       }
     />
+    </ThemeProviderComponent>
   );
 }
 

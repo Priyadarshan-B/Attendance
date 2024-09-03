@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import AppLayout from "../../../components/applayout/AppLayout";
-import '../../../components/applayout/styles.css';
 import requestApi from "../../../components/utils/axios";
 import { 
-  TextField, MenuItem, Table, TableBody, TableCell, 
+  TextField,  Table, TableBody, TableCell, 
   TableContainer, TableHead, TableRow, IconButton, 
   Dialog, DialogActions, DialogContent, DialogTitle, 
   Button, Paper, TablePagination 
@@ -19,6 +17,7 @@ import moment from 'moment';
 import './sem_dates.css';
 import Popup from "../../../components/popup/popup";
 import Select from 'react-select';
+import customStyles from "../../../components/applayout/selectTheme";
 
 
 function SemDates() {
@@ -146,6 +145,7 @@ function Body() {
                             options={years}
                             value={selectedYear}
                             onChange={setSelectedYear}
+                            styles={customStyles} 
                             placeholder="Select Year"
                             className="sem-select"
                         />

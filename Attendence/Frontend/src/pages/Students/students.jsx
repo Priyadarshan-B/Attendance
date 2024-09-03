@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import requestApi from "../../components/utils/axios";
 import "../Stu_Dashboard/stu_dashboard.css";
 import Chart from "react-apexcharts";
@@ -679,7 +677,7 @@ function Body({id, roll}) {
                 <div
                   style={{
                     fontWeight: "700",
-                    fontSize: "40px",
+                    fontSize: "35px",
                     marginTop: "10px",
                     color: "#875eff",
                   }}
@@ -753,7 +751,7 @@ function Body({id, roll}) {
                 <div
                   style={{
                     fontWeight: "700",
-                    fontSize: "30px",
+                    fontSize: "35px",
                     marginTop: "10px",
                   }}
                 >
@@ -790,7 +788,7 @@ function Body({id, roll}) {
                 <div
                   style={{
                     fontWeight: "700",
-                    fontSize: "30px",
+                    fontSize: "35px",
                     marginTop: "10px",
                   }}
                 >

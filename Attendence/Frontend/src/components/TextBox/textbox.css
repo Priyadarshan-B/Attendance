@@ -1,5 +1,4 @@
 .text-input {
-  /* width: 100%; */
   height: 36px;
   border-radius: 4px;
   padding-left: 12px;
@@ -11,9 +10,9 @@
   color: var(--text);
   background-color: var(--background-2);
   padding-right: 12px;
-  }
+}
   
   
-  .text-input:hover{
-      box-shadow: rgb(231 238 236) 0px 0px 0px 3px;
-  }
+.text-input:hover{
+      box-shadow: rgb(231 238 236) 0px 0px 0px 1px;
+}

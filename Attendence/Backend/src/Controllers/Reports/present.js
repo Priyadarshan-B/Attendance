@@ -1,8 +1,8 @@
 const { get_database } = require("../../config/db_utils");
 
-exports.get_absent_reports = async(req, res) => {
+exports.get_present_reports = async(req, res) => {
     const {year, date} = req.query;
-    if(!year || !year){
+    if(!year || !date){
         return res.status(400).json({error:"Year is required.."});
     }
 
@@ -26,9 +26,9 @@ exports.get_absent_reports = async(req, res) => {
                     ON s.id = a.student 
                     AND a.date = ?
                 WHERE 
-                    a.id IS NULL  
-                    OR a.forenoon = '0' 
-                    OR a.afternoon = '0';
+                    a.id IS NOT NULL  
+                    OR a.forenoon = '1' 
+                    OR a.afternoon = '1';
             `;
         } else if (year === 'I' || year === 'II' || year === 'III' || year === 'IV') {
             query = `
@@ -46,9 +46,9 @@ exports.get_absent_reports = async(req, res) => {
                     ON s.id = a.student 
                     AND a.date = ?
                 WHERE 
-                    (a.id IS NULL  
-                    OR a.forenoon = '0' 
-                    OR a.afternoon = '0')
+                    (a.id IS NOT NULL  
+                    OR a.forenoon = '1' 
+                    OR a.afternoon = '1')
                     AND s.year = ?;
             `;
             params.push(year);
@@ -56,10 +56,10 @@ exports.get_absent_reports = async(req, res) => {
             return res.status(400).json({error: "Invalid year specified."});
         }
 
-        const get_report_ab = await get_database(query, params);
-        res.json(get_report_ab);
+        const get_report_pre = await get_database(query, params);
+        res.json(get_report_pre);
     } catch(err) {
-        console.error("Error Fetching Ab Report List", err);
-        res.status(500).json({ error: "Error fetching Ab Report List" }); 
+        console.error("Error Fetching Pre Report List", err);
+        res.status(500).json({ error: "Error fetching Pre Report List" }); 
     }
 };

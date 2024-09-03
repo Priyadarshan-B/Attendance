@@ -8,6 +8,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { TextField } from "@mui/material";
 import Button from "../../components/Button/Button";
 import Select from "react-select";
+import customStyles from "../../components/applayout/selectTheme";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 import requestApi from "../../components/utils/axios";
@@ -15,11 +16,14 @@ import { format } from "date-fns";
 import toast from "react-hot-toast";
 import moment from "moment";
 import "./leave.css";
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
 function Leave() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <AppLayout body={<Body />} />
+      <ThemeProviderComponent>
+        <AppLayout body={<Body />} />
+      </ThemeProviderComponent>
     </LocalizationProvider>
   );
 }
@@ -142,11 +146,11 @@ function Body() {
             <p
               style={{ fontSize: "35px", color: "#2c7cf3", fontWeight: "700" }}
             >
-              <center>Apply Leave</center>
+              <p>Apply Leave</p>
             </p>
 
             <p style={{ color: "#2c7cf3" }}>
-              <center>fill all the fields carefully</center>
+              <p>fill all the fields carefully</p>
             </p>
           </div>
           <div className="form-container">
@@ -169,9 +173,11 @@ function Body() {
                     label: leave.type,
                   }))}
                   value={selectedLeaveType}
+                  styles={customStyles} 
                   onChange={setSelectedLeaveType}
                   placeholder="Select Leave Type"
                   required
+                  isClearable
                 />
               </div>
               <br />
@@ -251,22 +257,7 @@ function Body() {
                 key={index}
                 className="leave-row"
                 style={{
-                  backgroundColor:
-                    leave.status === "2"
-                      ? "#fcf9ec"
-                      : leave.status === "3"
-                      ? "#ffe6e6"
-                      : leave.status === "1"
-                      ? "#e6fff2"
-                      : "transparent",
-                   border:
-                        leave.status === "2"
-                          ? " 1px solid #ded2a2"
-                          : leave.status === "3"
-                          ? "1px solid#76292e"
-                          : leave.status === "1"
-                          ? "1px solid #7eac8d"
-                          : "transparent",
+                  backgroundColor:'var(--background-1)'
                 }}
               >
                 <div>
@@ -281,14 +272,7 @@ function Body() {
                         flex: "1",
                         flexDirection: "column",
                         padding: "10px",
-                        backgroundColor:
-                          leave.status === "2"
-                            ? "#fcf9ec"
-                            : leave.status === "3"
-                            ? "#ffe6e6"
-                            : leave.status === "1"
-                            ? "#e6fff2"
-                            : "transparent",
+                        backgroundColor:'var(--background-1)'
                       }}
                     >
                       <div className="space">
@@ -306,22 +290,7 @@ function Body() {
                         flex: "1",
                         flexDirection: "column",
                         padding: "10px",
-                        backgroundColor:
-                          leave.status === "2"
-                            ? "#fcf9ec"
-                            : leave.status === "3"
-                            ? "#ffe6e6"
-                            : leave.status === "1"
-                            ? "#e6fff2"
-                            : "transparent",
-                        border:
-                          leave.status === "2"
-                            ? "#fcf9ec"
-                            : leave.status === "3"
-                            ? "#ffe6e6"
-                            : leave.status === "1"
-                            ? "#e6fff2"
-                            : "transparent",
+                        backgroundColor:'var(--background-1)'
                       }}
                     >
                       <div className="space">

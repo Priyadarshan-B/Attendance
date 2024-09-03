@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import requestApi from "../../../components/utils/axios";
 import Select from "react-select";
+import customStyles from "../../../components/applayout/selectTheme";
 import InputBox from "../../../components/TextBox/textbox";
 import Buttons from "../../../components/Button/Button";
 import toast from "react-hot-toast";
@@ -201,7 +202,8 @@ function Body() {
               options={mentorOptions}
               onChange={setSelectedMentor}
               value={selectedMentor}
-              onInputChange={fetchMentors}
+              onInputChange={fetchMentors}                               
+              styles={customStyles} 
               isClearable
               noOptionsMessage={({ inputValue }) => 
                 inputValue.length > 0 
@@ -217,6 +219,7 @@ function Body() {
               id="sub-mentor-select"
               options={subMentorOptions}
               onChange={setSelectedSubMentor}
+              styles={customStyles} 
               value={selectedSubMentor}
               onInputChange={fetchSubMentors}
               isClearable
@@ -233,8 +236,10 @@ function Body() {
             <Select
               id="year-select"
               options={yearOptions}
+              styles={customStyles} 
               onChange={setSelectedYear}
               value={selectedYear}
+              isClearable
             />
           </div>
           <div className="form-group">
@@ -243,6 +248,7 @@ function Body() {
               id="students-select"
               options={studentOptions}
               onChange={setSelectedStudents}
+              styles={customStyles} 
               value={selectedStudents}
               onInputChange={fetchStudents}
               isMulti

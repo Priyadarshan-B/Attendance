@@ -7,6 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import format from 'date-fns/format';
 import Select from 'react-select';
+import customStyles from "../../../components/applayout/selectTheme";
 import InputBox from "../../../components/TextBox/textbox";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -116,11 +117,13 @@ const TimeSlotForm = ({ onClose }) => {
                 onChange={handleYearChange}
                 placeholder="Select Year"
                 className="year-dropdown"
+                styles={customStyles} 
+
                 isClearable
               />
             </div>
             <div className="form-group">
-              <input
+              <InputBox
                 id="label"
                 type="text"
                 value={label}
@@ -155,7 +158,7 @@ const TimeSlotForm = ({ onClose }) => {
           <Button type="submit" label="Add Time Slots" />
         </form>
       </div>
-
+<br />
       <div className="table-container">
         <InputBox
           placeholder="Search..."

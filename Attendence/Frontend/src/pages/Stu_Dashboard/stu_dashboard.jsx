@@ -5,10 +5,15 @@ import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 import StudentDashboard from "../Students/students";
 import "./stu_dashboard.css";
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
 
 function StuDashboard({ id }) {
-  return <AppLayout rId={2} body={<Body id={id} />} />;
+  return (
+    <ThemeProviderComponent>
+        <AppLayout body={<Body />} />
+    </ThemeProviderComponent>
+);
 }
 
 function Body() {

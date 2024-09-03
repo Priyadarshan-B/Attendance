@@ -20,6 +20,7 @@ import {
 import InputBox from "../../components/TextBox/textbox";
 import Popup from "../../components/popup/popup";
 import LeaveDetails from "./leave_approval";
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 import "./approval.css";
 
 function calculateTimeLeft(dueDate) {
@@ -51,8 +52,13 @@ function formatTimeLeft(timeLeft) {
 }
 
 function Approvals() {
-  return <AppLayout rId={1} body={<Body />} />;
+  return (
+    <ThemeProviderComponent>
+        <AppLayout body={<Body />} />
+    </ThemeProviderComponent>
+);
 }
+
 
 function Body() {
   const [students, setStudents] = useState([]);

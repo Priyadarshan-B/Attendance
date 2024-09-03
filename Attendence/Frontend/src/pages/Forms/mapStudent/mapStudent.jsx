@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import DeleteIcon from "@mui/icons-material/Delete";
 import requestApi from "../../../components/utils/axios";
 import Select from "react-select"; 
+import customStyles from "../../../components/applayout/selectTheme";
 import Button from "../../../components/Button/Button";
 import toast from "react-hot-toast";
 import InputBox from "../../../components/TextBox/textbox";
@@ -143,7 +144,9 @@ function Body() {
             options={roles}
             value={selectedRole}
             onChange={setSelectedRole}
+            styles={customStyles} 
             placeholder="Select Role"
+            isClearable
           />
         </div>
         <div className="form-group">
@@ -152,8 +155,10 @@ function Body() {
             id="role-select"
             options={yearOptions}
             value={selectedYear}
+            styles={customStyles} 
             onChange={setSelectedYear}
             placeholder="Select Year"
+            isClearable
           />
         </div>
         <div className="form-group">
@@ -161,6 +166,7 @@ function Body() {
           <Select
             id="students-select"
             options={studentOptions}
+            styles={customStyles} 
             value={selectedStudents}
             onChange={setSelectedStudents}
             placeholder="Select students"

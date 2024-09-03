@@ -6,6 +6,7 @@ import DatePicker from "react-multi-date-picker";
 import DatePanel from "react-multi-date-picker/plugins/date_panel";
 import Button from "../../components/Button/Button";
 import Select from 'react-select';
+import customStyles from "../../components/applayout/selectTheme";
 import Loader from '../../components/Loader/loader'
 import './holidays.css';
 import date from '../../assets/date.png';
@@ -129,6 +130,7 @@ function Body(){
                             value={selectedYear}
                             onChange={handleYearChange}
                             placeholder="Select Year"
+                            styles={customStyles} 
                             className="year-dropdown"
                             isClearable
                             

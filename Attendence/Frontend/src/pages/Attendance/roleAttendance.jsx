@@ -7,9 +7,14 @@ import CryptoJS from "crypto-js";
 import InputBox from "../../components/TextBox/textbox";
 import toast from "react-hot-toast";
 import "./attendance.css";
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
 function RoleAttendance(){
-  return <AppLayout body={<Body/>} />
+  return (
+    <ThemeProviderComponent>
+        <AppLayout body={<Body />} />
+    </ThemeProviderComponent>
+);
 }
 
 function Body() {

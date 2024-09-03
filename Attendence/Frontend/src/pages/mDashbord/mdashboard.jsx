@@ -14,11 +14,15 @@ import RStudentTable from "./regular";
 import AbsentTable from "./absent";
 import AttendanceTable from "./attendees";
 import Type2Table from "./type2";
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
 function Mdashboard() {
-  return <AppLayout body={<Body />} />;
+  return (
+    <ThemeProviderComponent>
+        <AppLayout body={<Body />} />
+    </ThemeProviderComponent>
+);
 }
-
 function Body() {
   const deid = Cookies.get("id");
   const secretKey = "secretKey123";

@@ -7,9 +7,16 @@ import CryptoJS from "crypto-js";
 import requestApi from "../../components/utils/axios";
 import StudentDashboard from "../Students/students";
 import noresult from '../../assets/no-results.png'
+import customStyles from "../../components/applayout/selectTheme";
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
 function MStudent() {
-  return <AppLayout body={<Body />} />;
+  return (
+    <ThemeProviderComponent>
+        <AppLayout body={<Body />} />
+    </ThemeProviderComponent>
+);
+
 }
 
 function Body() {
@@ -52,6 +59,7 @@ function Body() {
           options={studentOptions}
           onChange={handleSelectChange}
           placeholder="Select a student"
+          styles={customStyles} 
           isClearable
         />
       </div>

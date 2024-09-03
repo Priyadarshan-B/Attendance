@@ -3,14 +3,19 @@ import AppLayout from "../../components/applayout/AppLayout";
 import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
 import "../Stu_Dashboard/stu_dashboard.css";
-
 import StudentDashboard from "./students";
 import noresult from "../../assets/no-results.png";
-
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 import Select from "react-select";
+import customStyles from "../../components/applayout/selectTheme";
 
 function Student({ selectedStudent }) {
-  return <AppLayout body={<Body student={selectedStudent} />} />;
+  return (
+    <ThemeProviderComponent>
+        <AppLayout body={<Body />} />
+    </ThemeProviderComponent>
+);
+
 }
 
 function Body() {
@@ -69,6 +74,8 @@ function Body() {
               options={yearOptions}
               onChange={(option) => setSelectedYear(option?.value)}
               placeholder="Select Year"
+              isClearable
+              styles={customStyles}
             />
           </div>
         </div>
@@ -79,6 +86,7 @@ function Body() {
               options={studentOptions}
               onChange={(option) => setSelectedStudent(option?.value)}
               placeholder="Select Student"
+              styles={customStyles} 
               isDisabled={!selectedYear}
               isClearable
             />
