@@ -23,7 +23,7 @@ const placement = require('../Controllers/placement/placement')
 const favorites = require ('../Controllers/mentor/favourite')
 const mDash = require('../Controllers/mentor_dashboard/mdashboard')
 const mdashboard = require('../Controllers/mentor_dashboard/mdashboard')
-
+const report = require('../Controllers/Reports/absent')
 
 const router = express.Router()
 
@@ -137,5 +137,8 @@ router.post('/favourites', favorites.post_favourites)
 // mentor dashbord
 router.get('/mdash', mDash.get_mdashboard)
 router.get('/mdashboard', mdashboard.dashboard)
+
+// report
+router.get('/ab-report', report.get_absent_reports)
 
 module.exports = router
