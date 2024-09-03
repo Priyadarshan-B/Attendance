@@ -1,0 +1,17 @@
+.report-flex{
+    display: flex;
+    gap: 10px;
+
+}
+
+.absentReport{
+    background-color: var(--background-2);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.presentReport{
+    background-color: var(--background-2);
+    padding: 10px;
+    border-radius: 10px;
+}
