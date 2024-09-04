@@ -213,7 +213,7 @@
 .list-items.active .link {
   
     /* border-left: 5px solid #493d88; */
-    color:var(--text);
+    color:white;
     transition: all 0.5s;
 }
 

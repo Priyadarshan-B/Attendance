@@ -526,8 +526,8 @@ function Body({ id, roll }) {
                     marginTop: "10px",
                   }}
                 >
-                  <b>{attendancePercent.present_days}</b>
-                </div>
+<b>{isNaN(attendancePercent.present_days) ? 0 : attendancePercent.present_days}</b>
+</div>
               </div>
             </div>
             <div
