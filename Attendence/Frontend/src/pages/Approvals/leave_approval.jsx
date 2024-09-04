@@ -16,7 +16,7 @@ import { TextField } from "@mui/material";
 function LeaveDetails() {
   return (
     <ThemeProviderComponent>
-        <AppLayout body={<Body />} />
+          <Body />
     </ThemeProviderComponent>
 );
 

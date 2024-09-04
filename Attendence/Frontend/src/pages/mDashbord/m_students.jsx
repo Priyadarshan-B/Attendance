@@ -13,8 +13,8 @@ import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 function MStudent() {
   return (
     <ThemeProviderComponent>
-        <AppLayout body={<Body />} />
-    </ThemeProviderComponent>
+  <Body />
+  </ThemeProviderComponent>
 );
 
 }

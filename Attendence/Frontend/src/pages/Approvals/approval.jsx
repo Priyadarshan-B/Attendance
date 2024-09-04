@@ -54,7 +54,7 @@ function formatTimeLeft(timeLeft) {
 function Approvals() {
   return (
     <ThemeProviderComponent>
-        <AppLayout body={<Body />} />
+       <Body />
     </ThemeProviderComponent>
 );
 }

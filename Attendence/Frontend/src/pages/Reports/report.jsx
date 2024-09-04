@@ -16,8 +16,8 @@ import './report.css';
 function ReportPage() {
     return (
         <ThemeProviderComponent>
-            <AppLayout body={<Body />} />
-        </ThemeProviderComponent>
+  <Body />
+  </ThemeProviderComponent>
     );
 }
 

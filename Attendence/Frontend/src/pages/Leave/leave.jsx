@@ -22,7 +22,7 @@ function Leave() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ThemeProviderComponent>
-        <AppLayout body={<Body />} />
+      <Body />
       </ThemeProviderComponent>
     </LocalizationProvider>
   );

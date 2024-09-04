@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./styles.css";
 import { Link, useLocation } from "react-router-dom";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
-import requestApi from "../utils/axios";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import HikingRoundedIcon from "@mui/icons-material/HikingRounded";
@@ -15,12 +11,15 @@ import WorkOffIcon from "@mui/icons-material/WorkOff";
 import SchoolIcon from "@mui/icons-material/School";
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import SummarizeTwoToneIcon from '@mui/icons-material/SummarizeTwoTone';
-
+import Cookies from "js-cookie";
+import CryptoJS from "crypto-js";
+import requestApi from "../utils/axios";
+import "./styles.css";
 
 function getIconComponent(iconPath) {
   switch (iconPath) {
     case 'DashboardRoundedIcon':
-      return <DashboardRoundedIcon style={{ color: '#f57d93', }} className="custom-sidebar-icon" />;
+      return <DashboardRoundedIcon style={{ color: '#f57d93' }} className="custom-sidebar-icon" />;
     case 'HikingRoundedIcon':
       return <HikingRoundedIcon style={{ color: '#3498db' }} className="custom-sidebar-icon" />;
     case 'CalendarMonthIcon':
@@ -39,26 +38,21 @@ function getIconComponent(iconPath) {
       return <SchoolIcon style={{ color: '#d158ff' }} className="custom-sidebar-icon" />;
     case 'AddTaskIcon':
       return <AddTaskIcon style={{ color: '#00a8fb' }} className="custom-sidebar-icon" />;
-      case 'SummarizeTwoToneIcon':
-        return <SummarizeTwoToneIcon style={{ color: '#00a8fb' }} className="custom-sidebar-icon" />;
+    case 'SummarizeTwoToneIcon':
+      return <SummarizeTwoToneIcon style={{ color: '#00a8fb' }} className="custom-sidebar-icon" />;
     default:
       return null;
   }
 }
 
-  // return eval(iconPath)
-
-
-function SideBar(props) {
+function SideBar({ open, resource }) {
   const [activeItem, setActiveItem] = useState("");
   const [sidebarItems, setSidebarItems] = useState([]);
-
   const location = useLocation();
 
   useEffect(() => {
     const fetchSidebarItems = async () => {
       try {
-        // Decrypt the role from cookies
         const encryptedGmail = Cookies.get("role");
         const bytes = CryptoJS.AES.decrypt(encryptedGmail, "secretKey123");
         const decryptedGmail = bytes.toString(CryptoJS.enc.Utf8);
@@ -78,11 +72,10 @@ function SideBar(props) {
     };
 
     fetchSidebarItems();
-  }, []);
+  }, [resource]);
 
   useEffect(() => {
     const pathname = location.pathname;
-
     const activeItem = sidebarItems.find((item) => item.path === pathname);
     if (activeItem) {
       setActiveItem(activeItem.name);
@@ -91,13 +84,13 @@ function SideBar(props) {
 
   return (
     <div
-      className={props.open ? "app-sidebar sidebar-open" : "app-sidebar"}
+      className={open ? "app-sidebar sidebar-open" : "app-sidebar"}
       style={{
         backgroundColor: "#2a3645",
         borderRight: "1px solid #f2f2f2",
       }}
     >
-      <p style={{color:'white'}} className="app-name">ATTENDANCE</p>
+      <p style={{ color: 'white' }} className="app-name">ATTENDANCE</p>
       <ul className="list-div">
         {sidebarItems.map((item) => (
           <li
@@ -106,9 +99,7 @@ function SideBar(props) {
             onClick={() => setActiveItem(item.name)}
           >
             <Link className="link" to={item.path}>
-              {getIconComponent(item.icon_path) 
-                  }
-                
+              {getIconComponent(item.icon_path)}
               {item.name}
             </Link>
           </li>
@@ -119,5 +110,3 @@ function SideBar(props) {
 }
 
 export default SideBar;
-
-

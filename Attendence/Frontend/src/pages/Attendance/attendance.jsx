@@ -23,7 +23,15 @@ import noresult from '../../assets/no-results.png'
 import customStyles from "../../components/applayout/selectTheme";
 import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
-function Attendance() {
+
+function Attendance(){
+  return (
+    <ThemeProviderComponent>
+       <Body />
+    </ThemeProviderComponent>
+);
+}
+function Body() {
   const [selectedYear, setSelectedYear] = useState(null);
   const [FavStudents, setFavStudents] = useState([]);
   const [timeSlots, setTimeSlots] = useState([]);
@@ -169,9 +177,9 @@ function Attendance() {
   };
 
   return (
-    <ThemeProviderComponent>
-    <AppLayout
-      body={
+   
+    
+     
         <div className="attendance-container">
           <h2>Students Attendance (Hour)</h2>
 
@@ -370,9 +378,10 @@ function Attendance() {
             </div>
           )}
         </div>
-      }
-    />
-    </ThemeProviderComponent>
+      
+    
+  
+    
   );
 }
 
