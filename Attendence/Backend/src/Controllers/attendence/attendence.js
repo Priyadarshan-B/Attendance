@@ -54,8 +54,9 @@ exports.get_attendence_n_arrear = async (req, res) => {
 const moment = require("moment");
 
 
+
 exports.get_AttendanceCount = async (req, res) => {
-  const  studentId  = req.query.studentId;
+  const studentId = req.query.studentId;
 
   if (!studentId) {
     return res.status(400).json({ error: "Student ID is required" });
@@ -73,8 +74,9 @@ exports.get_AttendanceCount = async (req, res) => {
       return res.status(404).json({ error: "Student not found" });
     }
 
-    const { year, type , register_number} = studentResult[0];
-        console.log(year, type, register_number)
+    const { year, type, register_number } = studentResult[0];
+    console.log(year, type, register_number);
+
     const semDateQuery = `
       SELECT from_date, to_date 
       FROM sem_date 
@@ -90,100 +92,84 @@ exports.get_AttendanceCount = async (req, res) => {
 
     const { from_date, to_date } = semDates[0];
 
-    let forenoon = "0",
-      afternoon = "0";
+    const currentDate = moment().format("YYYY-MM-DD");
 
-    // Define a function to process OD leaves
-    const processLeaves = async (studentId, from_date, to_date) => {
+    // First, check if the student has a record in no_arrear or re_appear for the current date
+    const noArrearQuery = `
+      SELECT * 
+      FROM no_arrear 
+      WHERE student = ? 
+      AND DATE(attendence) = ?;
+    `;
+    const noArrearResult = await get_database(noArrearQuery, [
+      studentId,
+      currentDate,
+    ]);
+
+    const reAppearQuery = `
+      SELECT * 
+      FROM re_appear 
+      WHERE student = ? 
+      AND DATE(att_session) = ?;
+    `;
+    const reAppearResult = await get_database(reAppearQuery, [
+      studentId,
+      currentDate,
+    ]);
+
+    // If the student does not have records in no_arrear or re_appear, check the leave records
+    if (noArrearResult.length === 0 && reAppearResult.length === 0) {
       const leaveQuery = `
         SELECT from_date, to_date 
         FROM \`leave\` 
         WHERE student = ? AND \`leave\` = 2 AND status = '1'
-        AND from_date <= ? AND to_date >= ?;
+        AND ? BETWEEN from_date AND to_date;
       `;
-      const odLeaves = await get_database(leaveQuery, [
+      const leaveResult = await get_database(leaveQuery, [
         studentId,
-        to_date,
-        from_date,
+        currentDate,
       ]);
 
-      if (odLeaves.length > 0) {
-        for (const leave of odLeaves) {
-          const leaveStart = moment(leave.from_date);
-          const leaveEnd = moment(leave.to_date);
+      if (leaveResult.length > 0) {
+        const forenoon = "1";
+        const afternoon = "1";
 
-          let current = leaveStart;
+        // Check if an attendance record already exists for the current date
+        const existingRecordQuery = `
+          SELECT * FROM attendance 
+          WHERE student = ? AND date = ?;
+        `;
+        const existingRecord = await get_database(existingRecordQuery, [
+          studentId,
+          currentDate,
+        ]);
 
-          while (current <= leaveEnd) {
-            const dateStr = current.format("YYYY-MM-DD");
-
-            const noArrearQuery = `
-              SELECT * 
-              FROM no_arrear 
-              WHERE student = ? 
-              AND DATE(attendence) = ?;
-            `;
-            const noArrearResult = await get_database(noArrearQuery, [
-              studentId,
-              dateStr,
-            ]);
-
-            const reAppearQuery = `
-              SELECT * 
-              FROM re_appear 
-              WHERE student = ? 
-              AND DATE(att_session) = ?;
-            `;
-            const reAppearResult = await get_database(reAppearQuery, [
-              studentId,
-              dateStr,
-            ]);
-
-            // If no conflicting records, mark as present
-            if (noArrearResult.length === 0 && reAppearResult.length === 0) {
-              forenoon = "1";
-              afternoon = "1";
-
-              const existingRecordQuery = `
-                SELECT * FROM attendance 
-                WHERE student = ? AND date = ?;
-              `;
-              const existingRecord = await get_database(existingRecordQuery, [
-                studentId,
-                dateStr,
-              ]);
-
-              if (existingRecord.length > 0) {
-                const updateAttendanceQuery = `
-                  UPDATE attendance 
-                  SET forenoon = ?, afternoon = ?
-                  WHERE student = ? AND date = ?;
-                `;
-                await post_database(updateAttendanceQuery, [
-                  forenoon,
-                  afternoon,
-                  studentId,
-                  dateStr,
-                ]);
-              } else {
-                const insertAttendanceQuery = `
-                  INSERT INTO attendance (student, date, forenoon, afternoon) 
-                  VALUES (?, ?, ?, ?);
-                `;
-                await post_database(insertAttendanceQuery, [
-                  studentId,
-                  dateStr,
-                  forenoon,
-                  afternoon,
-                ]);
-              }
-            }
-
-            current = current.add(1, "days");
-          }
+        if (existingRecord.length > 0) {
+          const updateAttendanceQuery = `
+            UPDATE attendance 
+            SET forenoon = ?, afternoon = ?
+            WHERE student = ? AND date = ?;
+          `;
+          await post_database(updateAttendanceQuery, [
+            forenoon,
+            afternoon,
+            studentId,
+            currentDate,
+          ]);
+        } else {
+          const insertAttendanceQuery = `
+            INSERT INTO attendance (student, date, forenoon, afternoon) 
+            VALUES (?, ?, ?, ?);
+          `;
+          await post_database(insertAttendanceQuery, [
+            studentId,
+            currentDate,
+            forenoon,
+            afternoon,
+          ]);
         }
       }
-    };
+    }
 
     // Handle type 1 (regular student with OD leave validation)
     if (type === 1) {

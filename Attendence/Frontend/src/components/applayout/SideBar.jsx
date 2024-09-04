@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import HikingRoundedIcon from "@mui/icons-material/HikingRounded";
@@ -45,42 +45,62 @@ function getIconComponent(iconPath) {
   }
 }
 
-function SideBar({ open, resource }) {
+function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
   const [activeItem, setActiveItem] = useState("");
   const [sidebarItems, setSidebarItems] = useState([]);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSidebarItems = async () => {
       try {
-        const encryptedGmail = Cookies.get("role");
-        const bytes = CryptoJS.AES.decrypt(encryptedGmail, "secretKey123");
-        const decryptedGmail = bytes.toString(CryptoJS.enc.Utf8);
+        const encryptedRole = Cookies.get("role");
 
-        const response = await requestApi(
-          "GET",
-          `/auth/resources?role=${decryptedGmail}`
-        );
+        if (!encryptedRole) {
+          navigate('/attendance/login');
+          return;
+        }
+
+        const bytes = CryptoJS.AES.decrypt(encryptedRole, "secretKey123");
+        const decryptedRole = bytes.toString(CryptoJS.enc.Utf8);
+
+        if (!decryptedRole) {
+          navigate('/attendance/login');
+          return;
+        }
+
+        const response = await requestApi("GET", `/auth/resources?role=${decryptedRole}`);
+
+        if (response.status === 400) {
+          navigate("/attendance/login");
+          return;
+        }
+
         if (response.success) {
           setSidebarItems(response.data);
         } else {
           console.error("Error fetching sidebar items:", response.error);
+          navigate("/attendance/login"); 
         }
       } catch (error) {
         console.error("Error fetching sidebar items:", error);
+        navigate("/attendance/login"); 
       }
     };
 
     fetchSidebarItems();
-  }, [resource]);
+  }, [resource, navigate]);
 
   useEffect(() => {
     const pathname = location.pathname;
     const activeItem = sidebarItems.find((item) => item.path === pathname);
     if (activeItem) {
       setActiveItem(activeItem.name);
+      if (onSidebarItemSelect) {
+        onSidebarItemSelect(activeItem.name);
+      }
     }
-  }, [location, sidebarItems]);
+  }, [location, sidebarItems, onSidebarItemSelect]);
 
   return (
     <div
@@ -96,7 +116,12 @@ function SideBar({ open, resource }) {
           <li
             key={item.path}
             className={`list-items ${activeItem === item.name ? "active" : ""}`}
-            onClick={() => setActiveItem(item.name)}
+            onClick={() => {
+              setActiveItem(item.name);
+              onSidebarItemSelect(item.name);
+              // Toggle the sidebar state in the AppLayout component
+              handleSideBar();
+            }}
           >
             <Link className="link" to={item.path}>
               {getIconComponent(item.icon_path)}

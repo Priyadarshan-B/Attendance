@@ -60,6 +60,30 @@ function Body() {
     fetchLeaveDetails();
   }, [id]);
 
+  const handleFromDateChange = (newValue) => {
+    setFromDate(newValue);
+    if (isSameDate(newValue, new Date())) {
+      setFromTime(new Date());
+    } else {
+      setFromTime(null);
+    }
+  };
+
+  const handleToDateChange = (newValue) => {
+    setToDate(newValue);
+  };
+
+  const isSameDate = (date1, date2) => {
+    if (!date1 || !date2) {
+      return false;
+    }
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  };
+
   const resetForm = () => {
     setFromDate(null);
     setToDate(null);
@@ -73,11 +97,18 @@ function Body() {
     e.preventDefault();
     
     const startDateTime = moment(fromDate)
-        .set({ hour: fromTime.getHours(), minute: fromTime.getMinutes() })
-        .toDate();
-    const endDateTime = moment(toDate)
-        .set({ hour: toTime.getHours(), minute: toTime.getMinutes() })
-        .toDate();
+    .set({
+      hour: fromTime?.getHours() || 0,
+      minute: fromTime?.getMinutes() || 0,
+    })
+    .toDate();
+  
+  const endDateTime = moment(toDate)
+    .set({
+      hour: toTime?.getHours() || 0,
+      minute: toTime?.getMinutes() || 0,
+    })
+    .toDate();
 
     const timeDifference = moment.duration(moment(endDateTime).diff(moment(startDateTime))).asMinutes();
 
@@ -175,7 +206,7 @@ function Body() {
                   value={selectedLeaveType}
                   styles={customStyles} 
                   onChange={setSelectedLeaveType}
-                  placeholder="Select Leave Type"
+                  placeholder=" Leave Type"
                   required
                   isClearable
                 />
@@ -186,7 +217,7 @@ function Body() {
                   label="From Date"
                   sx={{ width: "100%" }}
                   value={fromDate}
-                  onChange={(newValue) => setFromDate(newValue)}
+                  onChange={handleFromDateChange}
                   renderInput={(params) => <TextField {...params} />}
                   inputFormat="dd/MM/yyyy"
                   minDate={now}
@@ -200,7 +231,7 @@ function Body() {
                   value={fromTime}
                   onChange={(newValue) => setFromTime(newValue)}
                   renderInput={(params) => <TextField {...params} />}
-                  minTime={now}
+                minTime={isSameDate(fromDate, new Date()) ? new Date() : null}
                   disabled={!fromDate}
                 />
               </div>

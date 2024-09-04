@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from "react";
-import Modal from "@mui/material/Modal";
 import { useNavigate } from "react-router-dom";
-import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import LogoutIcon from "@mui/icons-material/Logout";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 import requestApi from "../utils/axios";
-import Popup from "../popup/popup";
-import "./styles.css";
-import CustomizedSwitches from "./toggleTheme";
-import MenuIcon from "@mui/icons-material/Menu";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Button from "@mui/material/Button";
-import { Typography, Avatar, Box } from "@mui/material";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Popup from "../popup/popup";
+import CustomizedSwitches from './toggleTheme'
+import "./styles.css";
 
-function TopBar(props) {
+function TopBar({ scrollElement, sidebar, selectedSidebarItem }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -43,21 +34,21 @@ function TopBar(props) {
   );
 
   useEffect(() => {
-    const scrollElement = props.scrollElement;
+    const scrollElementRef = scrollElement;
 
-    if (!scrollElement) return;
+    if (!scrollElementRef) return;
 
     const handleScroll = () => {
-      const scrollTop = scrollElement.scrollTop;
+      const scrollTop = scrollElementRef.scrollTop;
       setScrolled(scrollTop > 0);
     };
 
-    scrollElement.addEventListener("scroll", handleScroll);
+    scrollElementRef.addEventListener("scroll", handleScroll);
 
     return () => {
-      scrollElement.removeEventListener("scroll", handleScroll);
+      scrollElementRef.removeEventListener("scroll", handleScroll);
     };
-  }, [props.scrollElement]);
+  }, [scrollElement]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -81,7 +72,7 @@ function TopBar(props) {
 
   const logout = async () => {
     try {
-      await requestApi("POST", `/auth/logout`);
+      await requestApi("POST", "/auth/logout");
       Cookies.remove("token");
       Cookies.remove("name");
       Cookies.remove("role");
@@ -97,6 +88,7 @@ function TopBar(props) {
       navigate("/attendance/login");
     }
   };
+
   return (
     <div className={`app-topbar ${scrolled ? "scrolled" : ""}`}>
       <div
@@ -107,16 +99,23 @@ function TopBar(props) {
           alignItems: "center",
         }}
       >
-        <div onClick={props.sidebar} className="sidebar-menu">
-          <MenuRoundedIcon sx={{ color: "var(--text)", cursor: "pointer" }} />
-        </div>
+        <div onClick={() => sidebar()} className="sidebar-menu">
+        <MenuRoundedIcon sx={{ color: "var(--text)", cursor: "pointer" }} />
+        </div> &nbsp;
+        <div>
+        {selectedSidebarItem && (
+              <h3 className="selected-sidebar-item">{selectedSidebarItem}</h3>
+            )}
       </div>
+      </div>
+    
 
       <div className="topbar-right-content">
         <CustomizedSwitches />
         <div className="user-info">
           <img src={profile} alt="User Profile" className="user-profile-pic" />
           <p className="user-name">{dename}</p>
+         
         </div>
         <div onClick={handleClick}>
           <LogoutIcon sx={{ color: "var(--text)", cursor: "pointer" }} />
@@ -136,9 +135,9 @@ function TopBar(props) {
           sx={{
             "& .MuiPaper-root": {
               backgroundColor: "var(--background-1)",
-              border: "2px solid var(--border-color)", 
-              width: "250px", 
-              padding: "5px", 
+              border: "2px solid var(--border-color)",
+              width: "250px",
+              padding: "5px",
             },
           }}
         >

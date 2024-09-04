@@ -39,7 +39,7 @@
     gap: 20px;
     position: sticky;
     top: 0;
-    z-index: 500;
+    z-index: 600;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   
@@ -103,7 +103,7 @@
 .app-body {
     overflow: auto;
     padding: 12px;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
     /* font-family: "Hind", sans-serif; */
     background-color: var(--background-1);
     max-height: 93vh;
@@ -130,12 +130,14 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        z-index: 2000;
     }
 
     .sidebar-open {
         display: block;
         position: fixed;
-        z-index: 2;
+        z-index: 600;
+        margin-top: 30px;
         box-shadow: 0.1px 0.5px 0.9px 0.5px rgb(188, 188, 188);
     }
 }

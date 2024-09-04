@@ -1,7 +1,8 @@
 import React from "react";
 import './auth/Login/Login.css'
 import { Link } from "react-router-dom";
-import error from "../assets/404.gif"
+import error from "../assets/404-light.gif"
+import error1 from "../assets/404-dark.gif"
 
 function Error() {
   return (
@@ -14,7 +15,7 @@ function Error() {
           style={{
             margin: "0px",
             fontSize:'20px',
-            color: "black",
+            color: "var(--text)",
             fontWeight: "700",
           }}
         >

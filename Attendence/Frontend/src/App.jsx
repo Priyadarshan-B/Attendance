@@ -39,16 +39,21 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const checkAuth = () => {
       const detoken = Cookies.get("token");
-      if (detoken) {
+      const allowedRoutes = Cookies.get("allowedRoutes");
+
+      if (detoken && allowedRoutes) {
         try {
           const token = CryptoJS.AES.decrypt(detoken, secretKey).toString(CryptoJS.enc.Utf8);
-          if (token) {
+          const routes = JSON.parse(CryptoJS.AES.decrypt(allowedRoutes, secretKey).toString(CryptoJS.enc.Utf8));
+          const currentPath = window.location.pathname;
+
+          if (token && routes.includes(currentPath)) {
             setIsAuthenticated(true);
           } else {
             setIsAuthenticated(false);
           }
         } catch (error) {
-          console.error('Token decryption error:', error);
+          console.error('Token or route decryption error:', error);
           setIsAuthenticated(false);
         }
       } else {
@@ -62,7 +67,7 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      navigate('/attendance/login'); 
+      navigate('/attendance/error'); 
     }
   }, [isLoading, isAuthenticated, navigate]);
 
@@ -80,7 +85,7 @@ function App() {
       <BrowserRouter>
         <Toaster position="top-center" reverseOrder={false} />
         <Routes>
-          <Route path="*" element={<Error />} />
+          <Route path="/attendance/error" element={<Error />} />
           <Route path="/attendance" element={<Login />} />
           <Route path="/attendance/login" element={<Login />} />
           <Route path="/attendance/welcome" element={<Welcome />} />
