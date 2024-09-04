@@ -24,6 +24,7 @@ import Mdashboard from "./pages/mDashbord/mdashboard";
 import MStudent from "./pages/mDashbord/m_students";
 import AbReport from "./pages/Reports/report";
 import Error from "./pages/error";
+import Loader from "./components/Loader/loader";
 import { Toaster } from "react-hot-toast";
 
 const ProtectedRoute = ({ children }) => {
@@ -63,7 +64,7 @@ const ProtectedRoute = ({ children }) => {
   }, [isLoading, isAuthenticated, navigate]);
 
   if (isLoading) {
-    return <div>Loading...</div>; 
+    return <Loader/>; 
   }
 
   return isAuthenticated ? children : null;

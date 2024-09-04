@@ -1,4 +1,4 @@
-const { get_database, post_database } = require("../../config/db_utils");
+const { get_database } = require("../../config/db_utils");
 
 exports.get_student_details = async (req, res) => {
   const id = req.query.id;
@@ -7,30 +7,28 @@ exports.get_student_details = async (req, res) => {
   }
   try {
     const query = `
-      SELECT 
-    GROUP_CONCAT(r.name ORDER BY r.name ASC SEPARATOR ',  ') AS roles,
-    rsm.student,
-    s.*
-FROM 
-    role_student_map rsm
-JOIN 
-    roles r ON rsm.role = r.id
-LEFT JOIN 
-    students s ON rsm.student = s.id
-WHERE 
-    rsm.student = 2
-    AND rsm.status = '1'
-GROUP BY 
-    rsm.student, s.name;
-        `;
+      SELECT s.*, 
+             IFNULL(GROUP_CONCAT(r.name ORDER BY r.name ASC SEPARATOR ', '), NULL) AS roles
+      FROM students s
+      LEFT JOIN role_student_map rsm ON s.id = rsm.student
+      LEFT JOIN roles r ON rsm.role = r.id
+      WHERE s.id = ? AND (rsm.status = '1' OR rsm.status IS NULL)
+      GROUP BY s.id;
+    `;
 
     const student = await get_database(query, [id]);
-    res.json(student);
+
+    if (student.length === 0) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    res.json(student[0]); 
   } catch (err) {
     console.error("Error Fetching Student details", err);
     res.status(500).json({ error: "Error Fetching Student details" });
   }
 };
+
 exports.get_all_students = async (req, res) => {
   const year = req.query.year;
   if (!year) {

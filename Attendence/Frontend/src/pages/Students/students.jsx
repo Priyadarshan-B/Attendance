@@ -15,6 +15,7 @@ import { BsFillCalendar2MonthFill } from "react-icons/bs";
 import { LuCalendarRange } from "react-icons/lu";
 import InfoTwoToneIcon from "@mui/icons-material/InfoTwoTone";
 import CountUp from "react-countup";
+import Loader from "../../components/Loader/loader";
 import {
   Table,
   TableBody,
@@ -79,12 +80,12 @@ function Body({ id, roll }) {
     const fetchStudentDetails = async () => {
       try {
         const response = await requestApi("GET", `/student-details?id=${id}`);
-        const studentData = response.data[0];
+        const studentData = response.data;
         setStudentDetails(studentData);
 
         updateTimeLeft(studentData.due_date);
 
-        fetchAttendancePercent(response.data[0].type);
+        fetchAttendancePercent(response.data.type);
       } catch (error) {
         console.error("Error fetching student details:", error);
       }
@@ -205,7 +206,7 @@ function Body({ id, roll }) {
   }, [roll, id]);
 
   if (!studentDetails) {
-    return <div>Loading...</div>;
+    return <Loader/>;
   }
 
   const todayDate = new Date()
