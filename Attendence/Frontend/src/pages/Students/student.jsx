@@ -12,8 +12,8 @@ import customStyles from "../../components/applayout/selectTheme";
 function Student({ selectedStudent }) {
   return (
     <ThemeProviderComponent>
-        <AppLayout body={<Body />} />
-    </ThemeProviderComponent>
+  <Body />
+  </ThemeProviderComponent>
 );
 
 }

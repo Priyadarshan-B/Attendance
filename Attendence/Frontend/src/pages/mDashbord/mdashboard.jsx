@@ -19,8 +19,8 @@ import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 function Mdashboard() {
   return (
     <ThemeProviderComponent>
-        <AppLayout body={<Body />} />
-    </ThemeProviderComponent>
+  <Body />
+  </ThemeProviderComponent>
 );
 }
 function Body() {

@@ -347,8 +347,7 @@ function Body({ id, roll }) {
                 Ensure Attendance in
               </div>
               Biometrics,&nbsp;
-              {studentDetails.type === "2"}
-              Hour Attendance,&nbsp;
+              {studentDetails.type === 2 ? "Hour Attendance," : ""}              
               {studentDetails.roles}
             </div>
           </div>

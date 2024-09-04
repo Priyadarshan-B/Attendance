@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import AppLayout from "../../components/applayout/AppLayout";
-import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
 import DatePicker from "react-multi-date-picker";
 import DatePanel from "react-multi-date-picker/plugins/date_panel";

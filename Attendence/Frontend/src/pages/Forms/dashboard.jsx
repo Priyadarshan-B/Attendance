@@ -13,8 +13,8 @@ import './style.css';
 function Dashboard() {
     return (
         <ThemeProviderComponent>
-            <AppLayout body={<Body />} />
-        </ThemeProviderComponent>
+  <Body />
+  </ThemeProviderComponent>
     );
 }
 

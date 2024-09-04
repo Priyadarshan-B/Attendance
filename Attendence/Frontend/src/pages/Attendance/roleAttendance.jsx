@@ -12,8 +12,8 @@ import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 function RoleAttendance(){
   return (
     <ThemeProviderComponent>
-        <AppLayout body={<Body />} />
-    </ThemeProviderComponent>
+  <Body />
+  </ThemeProviderComponent>
 );
 }
 
