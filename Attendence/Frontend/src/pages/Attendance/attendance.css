@@ -26,11 +26,11 @@
 }
 
 .custom-table thead  :first-child {
-  border-radius: 2px 0px 0px 0px;
+  border-radius: 5px 0px 0px 0px;
 }
 
 .custom-table thead  :last-child{
-  border-radius:  0px 2px 0px 0px
+  border-radius:  0px 5px 0px 0px
 }
 
 .custom-table th, 

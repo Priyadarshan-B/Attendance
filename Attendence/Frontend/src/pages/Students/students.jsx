@@ -307,9 +307,6 @@ function Body({id, roll}) {
 
   const formatLeaveDate = (date) => {
     return moment(date).format("DD/MM/YYYY");
-    //    +
-    //   " " +
-    //   moment(time, "HH:mm:ss").format("hh:mm A")
   };
   const formatLeaveTime = (time) => {
     return moment(time, "HH:mm:ss").format("hh:mm A");
@@ -367,21 +364,21 @@ function Body({id, roll}) {
           <div className="guage">
 
             <div>
-              <LiquidGauge
-                value={percent}
-                width={200}
-                height={150}
-                waveFrequency={2}
-                waveAmplitude={5}
-                waveAnimation={true}
-                waveCount={10}
-                circleStyle={{
-                  fill: "#55e77a",
-                }}
-                waveStyle={{
-                  fill: "#35dc61",
-                }}
-              />
+            <LiquidGauge
+  value={percent}
+  width={200}
+  height={150}
+  waveFrequency={2}
+  waveAmplitude={5}
+  waveAnimation={true}
+  waveCount={10}
+  circleStyle={{
+    fill: percent < 80 ? "#ff6968" : "#55e77a", 
+  }}
+  waveStyle={{
+    fill: percent < 80 ? "#ff6968" : "#35dc61", 
+  }}
+/>
             </div>
           </div>
           <div className="student-details">

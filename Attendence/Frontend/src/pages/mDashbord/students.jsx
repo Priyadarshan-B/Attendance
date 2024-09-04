@@ -85,7 +85,8 @@ const MentorStudentsTable = ({ mentor }) => {
                                                 alt={student.att_status === "1" ? "Approved" : "Over Due"}
                                                 style={{ width: 20, height: 20 }}
                                             />
-                                        </TableCell>                                    <TableCell>{moment(student.app_date).format('YYYY-MM-DD ')}</TableCell>
+                                        </TableCell>                                   
+                                         <TableCell>{moment(student.app_date).format('YYYY-MM-DD ')}</TableCell>
                                         <TableCell>{moment(student.due_date).format('YYYY-MM-DD ')}</TableCell>
                                     </TableRow>
                                 ))}
