@@ -26,7 +26,7 @@ exports.get_attendence_n_arrear = async (req, res) => {
                 const minutes = String(date.getMinutes()).padStart(2, '0');
                 const seconds = String(date.getSeconds()).padStart(2, '0');
 
-                const hours12 = hours24 % 12 || 12; // Convert 0 to 12 for midnight
+                const hours12 = hours24 % 12 || 12; 
                 const period = hours24 < 12 ? 'AM' : 'PM';
 
                 const formattedDate = `${day} / ${month} / ${year}`;
@@ -39,8 +39,9 @@ exports.get_attendence_n_arrear = async (req, res) => {
             });
 
             res.json(formattedDetails);
-        } else {
-            res.status(404).json({ error: "No attendance data found for the specified student" });
+        } 
+        else {
+            res.json({ error: "No attendance data found for the specified student", data: [] });
         }
     } catch (err) {
         console.error("Error fetching Biometric Details", err);

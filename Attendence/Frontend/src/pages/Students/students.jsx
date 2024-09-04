@@ -13,7 +13,7 @@ import EmojiEventsTwoToneIcon from "@mui/icons-material/EmojiEventsTwoTone";
 import { RiWaterPercentFill } from "react-icons/ri";
 import { BsFillCalendar2MonthFill } from "react-icons/bs";
 import { LuCalendarRange } from "react-icons/lu";
-import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+import InfoTwoToneIcon from "@mui/icons-material/InfoTwoTone";
 import CountUp from "react-countup";
 import {
   Table,
@@ -26,11 +26,11 @@ import {
   TablePagination,
 } from "@mui/material";
 
-function StudentDashboard({id, roll}) {
-  return  <Body id={id} roll={roll} />;
+function StudentDashboard({ id, roll }) {
+  return <Body id={id} roll={roll} />;
 }
 
-function Body({id, roll}) {
+function Body({ id, roll }) {
   const [studentDetails, setStudentDetails] = useState(null);
   const [attendanceDetails, setAttendanceDetails] = useState([]);
   const [placement, setPlacement] = useState([]);
@@ -129,7 +129,6 @@ function Body({id, roll}) {
 
         setPercent(parseFloat(attendance_percentage));
 
-        console.log("Attendance Percentage:", attendance_percentage);
       } catch (error) {
         console.error("Error fetching attendance percent details:", error);
       }
@@ -281,11 +280,11 @@ function Body({id, roll}) {
           dataLabels: {
             name: {
               offsetY: 0,
-              color: "black",
+              color: "var(--text)",
               fontSize: "20px",
             },
             value: {
-              color: "#111",
+              color: "var(--text)",
               fontSize: "16px",
               show: false,
               formatter: function (val) {
@@ -335,9 +334,15 @@ function Body({id, roll}) {
         <div className="student-details-container">
           <div className="check-in">
             <div className="detail">
-              
-              <div style={{display:'flex', justifyContent:'center', alignItems:'center',gap:'5px'}}>
-                <InfoTwoToneIcon style={{color:'red'}}/>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "5px",
+                }}
+              >
+                <InfoTwoToneIcon style={{ color: "var(--text)" }} />
                 Ensure Attendance in
               </div>
               Biometrics,&nbsp;
@@ -357,28 +362,54 @@ function Body({id, roll}) {
               color: "#ffff",
               boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
               textAlign: "center",
-              width:"93%",
-              marginBottom:"10px"
+              width: "93%",
+              marginBottom: "10px",
             }}
-          >Attendance Details</h3>
+          >
+            Attendance Details
+          </h3>
           <div className="guage">
-
             <div>
-            <LiquidGauge
-  value={percent}
-  width={200}
-  height={150}
-  waveFrequency={2}
-  waveAmplitude={5}
-  waveAnimation={true}
-  waveCount={10}
-  circleStyle={{
-    fill: percent < 80 ? "#ff6968" : "#55e77a", 
-  }}
-  waveStyle={{
-    fill: percent < 80 ? "#ff6968" : "#35dc61", 
-  }}
-/>
+              <LiquidGauge
+                value={percent}
+                width={200}
+                height={150}
+                waveFrequency={2}
+                waveAmplitude={5}
+                waveAnimation={true}
+                textStyle={{
+                  fill: 'var(--text)',
+                  
+                }}
+                waveTextStyle={{
+                  fill: 'var(--text)', // Change this to your desired color
+                }}
+                waveCount={10}
+                textRenderer={(props) => {
+                  const value =(props.value);
+                  const radius = Math.min(props.height / 2, props.width / 2);
+                  const textPixels = (props.textSize * radius / 2);
+                  const valueStyle = {
+                      fontSize: textPixels
+                  };
+                  const percentStyle = {
+                      fontSize: textPixels * 0.6
+                  };
+
+                  return (
+                      <tspan>
+                          <tspan className="value" style={valueStyle}>{value}</tspan>
+                          <tspan style={percentStyle}>{props.percent}</tspan>
+                      </tspan>
+                  );
+              }}
+                circleStyle={{
+                  fill: percent < 80 ? "#ff6968" : "#55e77a",
+                }}
+                waveStyle={{
+                  fill: percent < 80 ? "#ff6968" : "#35dc61",
+                }}
+              />
             </div>
           </div>
           <div className="student-details">
@@ -452,7 +483,7 @@ function Body({id, roll}) {
               borderRadius: "5px",
               color: "#ffff",
               boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              textAlign:'center'
+              textAlign: "center",
             }}
           >
             Attendance & Placement Details
@@ -461,10 +492,12 @@ function Body({id, roll}) {
           <div className="attendance-summary">
             <div
               className="summary-item"
-              style={{
-                // backgroundColor: "#dcffd6",
-                // border: "1px solid #4ddc72",
-              }}
+              style={
+                {
+                  // backgroundColor: "#dcffd6",
+                  // border: "1px solid #4ddc72",
+                }
+              }
             >
               <div className="icons-flex">
                 <div
@@ -498,10 +531,12 @@ function Body({id, roll}) {
             </div>
             <div
               className="summary-item"
-              style={{
-                // backgroundColor: "#ffe5e5",
-                // border: "1px solid red ",
-              }}
+              style={
+                {
+                  // backgroundColor: "#ffe5e5",
+                  // border: "1px solid red ",
+                }
+              }
             >
               <div className="icons-flex">
                 <div
@@ -535,10 +570,12 @@ function Body({id, roll}) {
             </div>
             <div
               className="summary-item"
-              style={{
-                // backgroundColor: "#fff5e4",
-                // border: "1px solid #ffd691 ",
-              }}
+              style={
+                {
+                  // backgroundColor: "#fff5e4",
+                  // border: "1px solid #ffd691 ",
+                }
+              }
             >
               <div className="icons-flex">
                 <div
@@ -608,10 +645,12 @@ function Body({id, roll}) {
             </div>
             <div
               className="summary-item"
-              style={{
-                // backgroundColor: "#cdd8ff",
-                // border: "1px solid #2c7cf3 ",
-              }}
+              style={
+                {
+                  // backgroundColor: "#cdd8ff",
+                  // border: "1px solid #2c7cf3 ",
+                }
+              }
             >
               <div className="icons-flex">
                 <div
@@ -647,10 +686,12 @@ function Body({id, roll}) {
             </div>
             <div
               className="summary-item"
-              style={{
-                // backgroundColor: "#f1ebff",
-                // border: "1px solid #ba9dff",
-              }}
+              style={
+                {
+                  // backgroundColor: "#f1ebff",
+                  // border: "1px solid #ba9dff",
+                }
+              }
             >
               <div className="icons-flex">
                 <div
@@ -685,10 +726,12 @@ function Body({id, roll}) {
             </div>
             <div
               className="summary-item"
-              style={{
-                // backgroundColor: "#e6fff5",
-                // border: "1px solid #5fffbf",
-              }}
+              style={
+                {
+                  // backgroundColor: "#e6fff5",
+                  // border: "1px solid #5fffbf",
+                }
+              }
             >
               <div className="icons-flex">
                 <div
@@ -722,9 +765,11 @@ function Body({id, roll}) {
             </div>
             <div
               className="summary-item"
-              style={{
-                // border: "1px solid #343434",
-              }}
+              style={
+                {
+                  // border: "1px solid #343434",
+                }
+              }
             >
               <div className="icons-flex">
                 <div
@@ -758,10 +803,12 @@ function Body({id, roll}) {
             </div>
             <div
               className="summary-item"
-              style={{
-                // backgroundColor: "#ffff",
-                // border: "1px solid yellow",
-              }}
+              style={
+                {
+                  // backgroundColor: "#ffff",
+                  // border: "1px solid yellow",
+                }
+              }
             >
               <div className="icons-flex">
                 <div
@@ -789,9 +836,7 @@ function Body({id, roll}) {
                     marginTop: "10px",
                   }}
                 >
-                  <b
-                   
-                  >
+                  <b>
                     <CountUp
                       style={{
                         color: "var(--text)",
@@ -820,7 +865,7 @@ function Body({id, roll}) {
               borderRadius: "5px",
               color: "#fff",
               boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              textAlign:'center'
+              textAlign: "center",
             }}
           >
             Leave Details
@@ -832,7 +877,7 @@ function Body({id, roll}) {
                   key={index}
                   className="leave-row"
                   style={{
-                    backgroundColor:"var(--background-1)"
+                    backgroundColor: "var(--background-1)",
                   }}
                 >
                   <div>
@@ -940,8 +985,7 @@ function Body({id, roll}) {
         </div>
 
         <div className="att_det_others">
-          <h3
-          >
+          <h3>
             <center>Biometric History</center>
           </h3>
           <br />
@@ -952,7 +996,7 @@ function Body({id, roll}) {
               }}
             >
               <TableContainer component={Paper}>
-                <Table className="custom-table" >
+                <Table className="custom-table">
                   <TableHead>
                     <TableRow>
                       <TableCell>
@@ -986,9 +1030,9 @@ function Body({id, roll}) {
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                   sx={{
-                    backgroundColor: 'var(--text)', // Change this to the color you want
-                    '.MuiTablePagination-toolbar': {
-                      backgroundColor: 'var(--background-1)', // If needed, apply to the toolbar as well
+                    backgroundColor: "var(--text)", // Change this to the color you want
+                    ".MuiTablePagination-toolbar": {
+                      backgroundColor: "var(--background-1)", // If needed, apply to the toolbar as well
                     },
                   }}
                 />
@@ -1002,7 +1046,14 @@ function Body({id, roll}) {
 
       <div className="att_table">
         {studentDetails.type === 2 && (
-          <div style={{flex:'1', backgroundColor:"var(--background-2)", padding:"10px", borderRadius:"5px"}}>
+          <div
+            style={{
+              flex: "1",
+              backgroundColor: "var(--background-2)",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
             <h3>NIP/ Re-Appear Attendance Records</h3>
             <br />
             {attendanceRecords.length > 0 ? (
@@ -1010,7 +1061,7 @@ function Body({id, roll}) {
                 <Table className="custom-table">
                   <TableHead>
                     <TableRow>
-                    <TableCell>
+                      <TableCell>
                         <b>S.No</b>
                       </TableCell>
                       <TableCell>
@@ -1029,7 +1080,7 @@ function Body({id, roll}) {
                       .slice(pageNip * rowPage, pageNip * rowPage + rowPage)
                       .map((record, index) => (
                         <TableRow key={index}>
-                          <TableCell>{index+1}</TableCell>
+                          <TableCell>{index + 1}</TableCell>
                           <TableCell>{record.name}</TableCell>
                           <TableCell>{record.label}</TableCell>
                           <TableCell>
@@ -1048,9 +1099,9 @@ function Body({id, roll}) {
                   onPageChange={handlePage}
                   onRowsPerPageChange={handleChangeRowsPage}
                   sx={{
-                    backgroundColor: 'var(--text)', 
-                    '.MuiTablePagination-toolbar': {
-                      backgroundColor: 'var(--background-1)', 
+                    backgroundColor: "var(--text)",
+                    ".MuiTablePagination-toolbar": {
+                      backgroundColor: "var(--background-1)",
                     },
                   }}
                 />
@@ -1061,8 +1112,15 @@ function Body({id, roll}) {
           </div>
         )}
 
-        <div className="role" style={{flex:'1'}}>
-          <div  style={{flex:'1', backgroundColor:"var(--background-2)", padding:"10px", borderRadius:"5px"}}>
+        <div className="role" style={{ flex: "1" }}>
+          <div
+            style={{
+              flex: "1",
+              backgroundColor: "var(--background-2)",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
             <h3>Role Attendance Records</h3>
             <br />
             {roleatt.length > 0 ? (
@@ -1104,9 +1162,9 @@ function Body({id, roll}) {
                   onPageChange={handlePage}
                   onRowsPerPageChange={handleChangeRowsPage}
                   sx={{
-                    backgroundColor: 'var(--text)', 
-                    '.MuiTablePagination-toolbar': {
-                      backgroundColor: 'var(--background-1)', 
+                    backgroundColor: "var(--text)",
+                    ".MuiTablePagination-toolbar": {
+                      backgroundColor: "var(--background-1)",
                     },
                   }}
                 />

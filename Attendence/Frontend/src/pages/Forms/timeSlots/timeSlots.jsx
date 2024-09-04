@@ -190,7 +190,7 @@ const TimeSlotForm = ({ onClose }) => {
                       <TableCell>{slot.start_time}</TableCell>
                       <TableCell>{slot.end_time}</TableCell>
                       <TableCell>
-                        <DeleteIcon onClick={() => handleDelete(slot.id)}/>
+                        <DeleteIcon style={{color:'#ff5858'}} onClick={() => handleDelete(slot.id)}/>
                       </TableCell>
                     </TableRow>
                   ))}

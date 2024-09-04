@@ -37,8 +37,8 @@ const Welcome = () => {
 
           let redirectPath = "/attendance/role_attendance"; 
 
-          if (role === 1 && routes.includes("/attendance/approval")) {
-            redirectPath = "/attendance/approval";
+          if (role === 1 && routes.includes("/attendance/mdashboard")) {
+            redirectPath = "/attendance/mdashboard";
           } else if (role === 2 && routes.includes("/attendance/dashboard")) {
             redirectPath = "/attendance/dashboard";
           } else if (role === 3 && routes.includes("/attendance/student")) {
@@ -57,6 +57,7 @@ const Welcome = () => {
           Cookies.remove("role");
           Cookies.remove("id");
           Cookies.remove("gmail");
+          Cookies.remove("profile")
           navigate("/attendance/error");
         }
       } else {
