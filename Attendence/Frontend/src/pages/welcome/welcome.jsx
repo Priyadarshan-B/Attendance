@@ -36,7 +36,7 @@ const Welcome = () => {
           Cookies.set("allowedRoutes", CryptoJS.AES.encrypt(JSON.stringify(routes), secretKey).toString(), { expires: 1 });
 
           let redirectPath = "/attendance/role_attendance"; 
-
+          console.log(role)
           if (role === 1 && routes.includes("/attendance/mdashboard")) {
             redirectPath = "/attendance/mdashboard";
           } else if (role === 2 && routes.includes("/attendance/dashboard")) {
@@ -45,7 +45,6 @@ const Welcome = () => {
             redirectPath = "/attendance/student";
           }
 
-          // Delay navigation to ensure cookies are set
           setTimeout(() => {
             navigate(redirectPath);
           }, 200);

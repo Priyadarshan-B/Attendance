@@ -1,4 +1,4 @@
-const { get_database } = require("../../config/db_utils");
+const { get_database, post_database } = require("../../config/db_utils");
 
 exports.get_student_details = async (req, res) => {
   const id = req.query.id;

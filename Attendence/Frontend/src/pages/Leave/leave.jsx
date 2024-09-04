@@ -90,9 +90,9 @@ function Body() {
       student: parseInt(id),
       leave: selectedLeaveType ? selectedLeaveType.value : null,
       from_date: fromDate ? format(fromDate, "dd/MM/yyyy") : null,
-      from_time: fromTime ? format(fromTime, "HH:mm") : null,
+      from_time: fromTime ? format(fromTime, "HH:mm:ss") : null,
       to_date: toDate ? format(toDate, "dd/MM/yyyy") : null,
-      to_time: toTime ? format(toTime, "HH:mm") : null,
+      to_time: toTime ? format(toTime, "HH:mm:ss") : null,
       reason: reason, 
     };
     console.log(data);

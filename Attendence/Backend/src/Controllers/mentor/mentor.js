@@ -81,7 +81,7 @@ AND s.status = '1';
     let query = `
       SELECT id, name, register_number, year,att_status
         FROM students
-        WHERE type = 2
+        WHERE type IN ('1', '2')
         AND status = '1'
     `;
     const queryParams = [];
