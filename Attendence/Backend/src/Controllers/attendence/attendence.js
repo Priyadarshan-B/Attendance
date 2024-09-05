@@ -105,7 +105,7 @@ exports.get_AttendanceCount = async (req, res) => {
       studentId,
       currentDate,
     ]);
-
+ 
     const reAppearQuery = `
       SELECT * 
       FROM re_appear 

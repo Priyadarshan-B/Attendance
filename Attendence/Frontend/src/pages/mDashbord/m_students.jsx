@@ -8,13 +8,10 @@ import requestApi from "../../components/utils/axios";
 import StudentDashboard from "../Students/students";
 import noresult from '../../assets/no-results.png'
 import customStyles from "../../components/applayout/selectTheme";
-import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
 function MStudent() {
   return (
-    <ThemeProviderComponent>
   <Body />
-  </ThemeProviderComponent>
 );
 
 }

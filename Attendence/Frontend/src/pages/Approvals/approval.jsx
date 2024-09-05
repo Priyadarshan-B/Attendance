@@ -20,7 +20,6 @@ import {
 import InputBox from "../../components/TextBox/textbox";
 import Popup from "../../components/popup/popup";
 import LeaveDetails from "./leave_approval";
-import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 import "./approval.css";
 
 function calculateTimeLeft(dueDate) {
@@ -53,9 +52,7 @@ function formatTimeLeft(timeLeft) {
 
 function Approvals() {
   return (
-    <ThemeProviderComponent>
        <Body />
-    </ThemeProviderComponent>
 );
 }
 
@@ -376,9 +373,16 @@ function Body() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               sx={{
-                backgroundColor: 'var(--text)', 
+                backgroundColor: 'var(--text)',
                 '.MuiTablePagination-toolbar': {
-                  backgroundColor: 'var(--background-1)', 
+                  backgroundColor: 'var(--background-1)',
+                },
+                // Customizing the arrow icon color
+                '.MuiTablePagination-actions svg': {
+                  color: 'var(--text)',  // Replace this with the desired color
+                },
+                '.MuiSelect-icon': {
+                  color: 'var(--text)',  // This changes the color of the select dropdown icon
                 },
               }}
             />

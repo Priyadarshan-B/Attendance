@@ -4,6 +4,7 @@ import google from "../../../assets/google.png";
 import LoginGif from "../../../assets/Calendar-light.gif";
 import LoginDark from "../../../assets/Calendar-dark.gif"
 import apiHost from "../../../components/utils/api";
+import TopBar from "../../../components/applayout/TopBar";
 
 function Login() {
   const [theme, setTheme] = useState("light");
@@ -18,32 +19,23 @@ function Login() {
   };
 
   return (
-    <div
-      className="total-login-page"
-      style={{
-        backgroundColor: theme === "dark" ? "#1e2631" : "#f4f6fa", 
-        color: theme === "dark" ? "#fff" : "#000",
-      }}
-    >
-      <div className="login-card" style={{
-        backgroundColor: theme === "dark" ? "#2a3645" : "#ffffff", 
-        color: theme === "dark" ? "#fff" : "#000",
-      }}>
+    <div>
+      <div style={{display:'none'}}><TopBar/></div>
+      <div
+        className="total-login-page"
+      >
+        <div className="login-card">
+          {theme === 'dark'? (<img src={LoginDark} alt="Login Image" className="login-image" />)
+          :(<img src={LoginGif} alt="Login Image" className="login-image" />)
+          }
+          <button className="signin-button" onClick={handleGoogleLogin}
 
-        {theme === 'dark'? (<img src={LoginDark} alt="Login Image" className="login-image" />)
-        :(<img src={LoginGif} alt="Login Image" className="login-image" />)
-
-        }
-        <button className={`signin-button ${theme}`} onClick={handleGoogleLogin} 
-        style={{
-          backgroundColor: theme === "dark" ? "#1e2631" : "#f4f6fa", 
-          color: theme === "dark" ? "#fff" : "#000",
-        }}
-        >
-          <img src={google} alt="GoogleImage" className="google-logo"   
-          />
-          Sign in with Google
-        </button>
+          >
+            <img src={google} alt="GoogleImage" className="google-logo"
+            />
+            Sign in with Google
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -31,6 +31,14 @@
   padding: 0 16px; 
 }
 
+ .MuiTablePagination-actions svg{
+  color: var(--text)
+}
+
+.MuiSelect-icon{
+  color: var(--text);
+}
+
 .status-button{
   border: none;
   padding: 5px 10px 7px 10px;

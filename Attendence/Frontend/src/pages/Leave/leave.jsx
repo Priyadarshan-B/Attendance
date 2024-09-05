@@ -16,14 +16,11 @@ import { format } from "date-fns";
 import toast from "react-hot-toast";
 import moment from "moment";
 import "./leave.css";
-import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
 function Leave() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <ThemeProviderComponent>
-      <Body />
-      </ThemeProviderComponent>
+        <Body />
     </LocalizationProvider>
   );
 }

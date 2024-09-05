@@ -354,13 +354,11 @@ function Body({ id, roll }) {
           <hr style={{ width: "100%" }} />
           <h3
             style={{
-              backgroundColor: "#2a3645",
+              backgroundColor: "var(--head-1)",
               padding: "10px",
               margin: "0px 0px 0px 0px",
-              border: "1px solid black",
               borderRadius: "5px",
               color: "#ffff",
-              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
               textAlign: "center",
               width: "93%",
               marginBottom: "10px",
@@ -479,10 +477,8 @@ function Body({ id, roll }) {
               backgroundColor: "#2a3645",
               padding: "10px",
               margin: "0px 0px 0px 0px",
-              border: "1px solid black",
               borderRadius: "5px",
               color: "#ffff",
-              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
               textAlign: "center",
             }}
           >
@@ -845,7 +841,6 @@ function Body({ id, roll }) {
                       end={placement.reward_points}
                       duration={2}
                     />
-                    {/* {placement.reward_points} */}
                   </b>
                 </div>
               </div>
@@ -861,11 +856,11 @@ function Body({ id, roll }) {
               backgroundColor: "#2a3645",
               padding: "10px",
               margin: "0px 0px 0px 0px",
-              border: "1px solid black",
               borderRadius: "5px",
               color: "#fff",
-              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
               textAlign: "center",
+              position:'sticky',
+              top:'0'
             }}
           >
             Leave Details

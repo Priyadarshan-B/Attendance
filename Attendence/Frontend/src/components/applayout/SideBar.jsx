@@ -107,7 +107,6 @@ function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
       className={open ? "app-sidebar sidebar-open" : "app-sidebar"}
       style={{
         backgroundColor: "#2a3645",
-        borderRight: "1px solid #f2f2f2",
       }}
     >
       <p style={{ color: 'white' }} className="app-name">ATTENDANCE</p>
@@ -119,7 +118,6 @@ function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
             onClick={() => {
               setActiveItem(item.name);
               onSidebarItemSelect(item.name);
-              // Toggle the sidebar state in the AppLayout component
               handleSideBar();
             }}
           >

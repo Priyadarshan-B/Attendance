@@ -10,14 +10,11 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import TextField from "@mui/material/TextField";
 import customStyles from "../../components/applayout/selectTheme";
-import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 import './report.css';
 
 function ReportPage() {
     return (
-        <ThemeProviderComponent>
   <Body />
-  </ThemeProviderComponent>
     );
 }
 

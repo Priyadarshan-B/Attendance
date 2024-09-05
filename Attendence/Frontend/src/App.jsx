@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AppLayout from "./components/applayout/AppLayout";
 import './components/applayout/styles.css'
-import { BrowserRouter, Routes, Route, Navigate,useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Login from "./pages/auth/Login/Login";
 import Welcome from "./pages/welcome/welcome";
@@ -80,6 +80,21 @@ const ProtectedRoute = ({ children }) => {
 
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate a delay for loading the app
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // Example delay of 2 seconds
+
+    return () => clearTimeout(timer); 
+  }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <ThemeProviderComponent>
       <BrowserRouter>

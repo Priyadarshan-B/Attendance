@@ -7,8 +7,18 @@ export const ThemeProviderComponent = ({ children }) => {
     const [darkMode, setDarkMode] = useState(false);
 
     useEffect(() => {
-        const preferredTheme = localStorage.getItem("preferredTheme");
-        setDarkMode(preferredTheme === "dark");
+        const updateThemeFromStorage = () => {
+            const preferredTheme = localStorage.getItem("preferredTheme") || "light";
+            setDarkMode(preferredTheme === "dark");
+        };
+
+        updateThemeFromStorage();  
+
+        window.addEventListener('storage', updateThemeFromStorage);
+
+        return () => {
+            window.removeEventListener('storage', updateThemeFromStorage);
+        };
     }, []);
 
     const toggleDarkMode = () => {

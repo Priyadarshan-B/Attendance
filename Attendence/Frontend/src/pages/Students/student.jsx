@@ -5,15 +5,12 @@ import requestApi from "../../components/utils/axios";
 import "../Stu_Dashboard/stu_dashboard.css";
 import StudentDashboard from "./students";
 import noresult from "../../assets/no-results.png";
-import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 import Select from "react-select";
 import customStyles from "../../components/applayout/selectTheme";
 
-function Student({ selectedStudent }) {
+function Student() {
   return (
-    <ThemeProviderComponent>
   <Body />
-  </ThemeProviderComponent>
 );
 
 }

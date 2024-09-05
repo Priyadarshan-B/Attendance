@@ -14,13 +14,10 @@ import RStudentTable from "./regular";
 import AbsentTable from "./absent";
 import AttendanceTable from "./attendees";
 import Type2Table from "./type2";
-import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
 function Mdashboard() {
   return (
-    <ThemeProviderComponent>
   <Body />
-  </ThemeProviderComponent>
 );
 }
 function Body() {

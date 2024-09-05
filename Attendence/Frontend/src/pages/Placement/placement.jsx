@@ -8,13 +8,10 @@ import CryptoJS from "crypto-js";
 import InputBox from "../../components/TextBox/textbox";
 import './placement.css'
 import PlacementSub from "./placementSub";
-import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 
 function Placement() {
     return (
-        <ThemeProviderComponent>
   <Body />
-  </ThemeProviderComponent>
     );
 }
 

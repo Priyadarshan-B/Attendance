@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import { useThemeToggle } from "../../components/applayout/dateTheme"; // Ensure the path is correct
-
+import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 const lightModeProperties = {
     "--background-1": "#f4f6fa",
     "--background-2": "#ffffff",
@@ -13,7 +13,9 @@ const lightModeProperties = {
     "--border": "1px solid #5775e441",
     "--button-hover": "#9fa4a8",
     "--datepicker": "#ffffff",
-    "--date": "light",
+    "--button": "#f4f6fa",
+    "--button-hover-1": "#fffff",
+    "--head-1": "#2a3645"
 };
 
 const darkModeProperties = {
@@ -25,7 +27,9 @@ const darkModeProperties = {
     "--border": "1px solid #5775e441",
     "--button-hover": "#2a3645",
     "--datepicker": "#78818e",
-    "--date": "dark",
+    "--button": "#1e2631",
+    "--button-hover-1": "#fffff",
+    "--head-1": "#1e2631"
 };
 
 const setCustomProperties = (mode) => {
@@ -37,7 +41,7 @@ const setCustomProperties = (mode) => {
 };
 
 export default function CustomizedSwitches() {
-    const { darkMode, toggleDarkMode } = useThemeToggle(); // Use the theme toggle from the context
+    const { darkMode, toggleDarkMode } = useThemeToggle();
 
     useEffect(() => {
         const preferredTheme = localStorage.getItem("preferredTheme") || "light";
@@ -45,10 +49,13 @@ export default function CustomizedSwitches() {
     }, []);
 
     const handleToggle = () => {
-        toggleDarkMode(); 
+        toggleDarkMode();
+
         const newMode = darkMode ? "light" : "dark";
         setCustomProperties(newMode);
+
         localStorage.setItem("preferredTheme", newMode);
+        ThemeProviderComponent()
     };
 
     return (

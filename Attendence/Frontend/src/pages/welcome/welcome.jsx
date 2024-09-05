@@ -20,7 +20,6 @@ const Welcome = () => {
           const parsedData = JSON.parse(decodedData);
           const { token, name, role, roll, id, gmail, profile } = parsedData;
 
-          // Set cookies
           Cookies.set("token", CryptoJS.AES.encrypt(token, secretKey).toString(), { expires: 1 });
           Cookies.set("name", CryptoJS.AES.encrypt(name, secretKey).toString(), { expires: 1 });
           Cookies.set("role", CryptoJS.AES.encrypt(role.toString(), secretKey).toString(), { expires: 1 });
@@ -29,7 +28,6 @@ const Welcome = () => {
           Cookies.set("gmail", CryptoJS.AES.encrypt(gmail, secretKey).toString(), { expires: 1 });
           Cookies.set("profile", CryptoJS.AES.encrypt(profile, secretKey).toString(), { expires: 1 });
 
-          // Verify if cookies are set properly
           const cookiesToCheck = ["token", "name", "role", "id", "roll", "gmail", "profile"];
           const areCookiesSet = cookiesToCheck.every((key) => Cookies.get(key));
 
@@ -37,14 +35,11 @@ const Welcome = () => {
             throw new Error("One or more cookies were not set properly.");
           }
 
-          // Fetch allowed routes based on role
           const response = await requestApi("GET", `/auth/resources?role=${role}`);
           const routes = response.data.map(route => route.path);
 
-          // Store allowed routes in cookies
           Cookies.set("allowedRoutes", CryptoJS.AES.encrypt(JSON.stringify(routes), secretKey).toString(), { expires: 1 });
 
-          // Determine redirect path based on role
           let redirectPath = "/attendance/role_attendance"; 
           if (role === 1 && routes.includes("/attendance/mdashboard")) {
             redirectPath = "/attendance/mdashboard";

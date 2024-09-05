@@ -4,7 +4,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f4f6fa;
+    background-color: var(--background-1);
 }
 
 .login-card {
@@ -14,7 +14,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--background-2);
     gap: 20px;
     min-width: 350px;
 }
@@ -36,15 +36,18 @@
     width: 100%;
     border: none;
     border-radius: 5px;
-    background-color: rgba(223, 219, 219, 0.185);
-        font-size: 15px;
+    background-color:var(--button);
+    font-size: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
-    color: black;
+    color: var(--text);
     cursor: pointer;
     transition: all 0.5s;
+}
+.signin-button:hover{
+    background-color: var(--button-hover-1);
 }
 
 .google-logo {
@@ -55,10 +58,7 @@
     width: 100%;
 }
 
-
-
 /* error */
-
 
 .error-page{
     height: 100vh;

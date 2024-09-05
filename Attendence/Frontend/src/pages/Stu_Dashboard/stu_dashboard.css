@@ -99,7 +99,7 @@
     flex: 1;
     background-color: var(--background-2);
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    padding: 10px;
+    padding: 0px 10px;
     border-radius: 5px;
     max-height: 492px;
     overflow-y: scroll;
