@@ -24,13 +24,13 @@ const Popup = ({ open, onClose, onConfirm,title, text }) => {
       <DialogActions>
         <Button
           onClick={onClose}
-          style={{ color: '#2c7cf3' }} 
+          style={{ color: 'var(--pop-button)' }} 
         >
           Cancel
         </Button>
         <Button
           onClick={onConfirm}
-          style={{ color: '#2c7cf3' }} 
+          style={{ color: 'var(--pop-button)', fontWeight:'400' }} 
         >
           Confirm
         </Button>

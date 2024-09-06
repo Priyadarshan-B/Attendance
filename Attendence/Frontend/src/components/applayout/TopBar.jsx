@@ -5,7 +5,6 @@ import CryptoJS from "crypto-js";
 import requestApi from "../utils/axios";
 import Menu from "@mui/material/Menu";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Popup from "../popup/popup";
@@ -19,19 +18,23 @@ function TopBar({ scrollElement, sidebar, selectedSidebarItem }) {
   const navigate = useNavigate();
   const openMenu = Boolean(anchorEl);
 
-  const name = Cookies.get("name");
-  const deprofile = Cookies.get("profile");
-  const degmail = Cookies.get("gmail");
-  const secretKey = "secretKey123";
-  const dename = CryptoJS.AES.decrypt(name, secretKey).toString(
-    CryptoJS.enc.Utf8
-  );
-  const profile = CryptoJS.AES.decrypt(deprofile, secretKey).toString(
-    CryptoJS.enc.Utf8
-  );
-  const gmail = CryptoJS.AES.decrypt(degmail, secretKey).toString(
-    CryptoJS.enc.Utf8
-  );
+  
+  const name = Cookies.get("name") || "";
+  const deprofile = Cookies.get("profile") || "";
+  const degmail = Cookies.get("gmail") || "";
+  const secretKey='secretKey123'
+  const decrypt = (data) => {
+    try {
+      return CryptoJS.AES.decrypt(data, secretKey).toString(CryptoJS.enc.Utf8);
+    } catch (e) {
+      console.error("Decryption failed", e);
+      return "";
+    }
+  };
+
+  const dename = decrypt(name);
+  const profile = decrypt(deprofile);
+  const gmail = decrypt(degmail);
 
   useEffect(() => {
     const scrollElementRef = scrollElement;
@@ -113,12 +116,10 @@ function TopBar({ scrollElement, sidebar, selectedSidebarItem }) {
       <div className="topbar-right-content">
         <CustomizedSwitches />
         <div className="user-info">
-          <img src={profile} alt="User Profile" className="user-profile-pic" />
+        <img src={profile} alt="User Profile" className="user-profile-pic" onClick={handleClick}/>
+
           <p className="user-name">{dename}</p>
          
-        </div>
-        <div onClick={handleClick}>
-          <LogoutIcon sx={{ color: "var(--text)", cursor: "pointer" }} />
         </div>
         <Menu
           anchorEl={anchorEl}

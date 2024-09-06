@@ -49,7 +49,6 @@ const Welcome = () => {
             redirectPath = "/attendance/student";
           }
 
-          // Navigate to the determined path
           setTimeout(() => {
             navigate(redirectPath);
           }, 200);
