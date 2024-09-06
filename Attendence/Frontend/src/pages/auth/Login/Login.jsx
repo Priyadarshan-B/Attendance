@@ -20,7 +20,7 @@ function Login() {
 
   return (
     <div>
-      <div style={{display:'none'}}><TopBar/></div>
+      {/* <div style={{display:'none'}}><TopBar/></div> */}
       <div
         className="total-login-page"
       >

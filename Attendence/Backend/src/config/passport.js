@@ -2,6 +2,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const jwt = require("jsonwebtoken");
 const connection = require('./database');
+const {get_database} = require('./db_utils')
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
@@ -19,30 +20,22 @@ passport.use(
         const profilePhoto = profile.photos[0]?.value;
 
         const mentorQuery = "SELECT id, name, gmail, role_id FROM mentor WHERE gmail = ?";
-        connection.query(mentorQuery, [email], (error, results) => {
-          if (error) {
-            return done(error);
-          }
+        let results = await get_database(mentorQuery, [email]);
 
-          if (results.length > 0) {
-            const user = { ...results[0], profilePhoto };
-            return done(null, user);
-          } else {
-            const studentQuery = "SELECT id, name, gmail, register_number, role_id FROM students WHERE gmail = ?";
-            connection.query(studentQuery, [email], (error, results) => {
-              if (error) {
-                return done(error);
-              }
+        if (results.length > 0) {
+          const user = { ...results[0], profilePhoto };
+          return done(null, user);
+        } 
 
-              if (results.length > 0) {
-                const user = { ...results[0], profilePhoto };
-                return done(null, user);
-              } else {
-                return done(null, false, { message: "User not found" });
-              }
-            });
-          }
-        });
+        const studentQuery = "SELECT id, name, gmail, register_number, role_id FROM students WHERE gmail = ?";
+        results = await get_database(studentQuery, [email]);
+
+        if (results.length > 0) {
+          const user = { ...results[0], profilePhoto };
+          return done(null, user);
+        } 
+
+        return done(null, false, { message: "User not found" });
       } catch (error) {
         return done(error);
       }
@@ -54,25 +47,28 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
-  connection.query(
-    `SELECT id, name, gmail, NULL AS register_number, role_id FROM mentor WHERE id = ? 
-UNION 
-SELECT id, name, gmail, register_number, role_id FROM students WHERE id = ?
-    `,
-    [id, id],
-    (error, results) => {
-      if (error) {
-        return done(error);
-      }
-
-      if (results.length > 0) {
-        return done(null, results[0]);
-      } else {
-        return done(null, false);
-      }
+passport.deserializeUser(async (id, done) => {
+  try {
+    const query = `
+      SELECT id, name, gmail, NULL AS register_number, role_id 
+      FROM mentor 
+      WHERE id = ? 
+      UNION 
+      SELECT id, name, gmail, register_number, role_id 
+      FROM students 
+      WHERE id = ?
+    `;
+    
+    const results = await get_database(query, [id, id]);
+    
+    if (results.length > 0) {
+      return done(null, results[0]);
+    } else {
+      return done(null, false);
     }
-  );
+  } catch (error) {
+    return done(error);
+  }
 });
 
 module.exports = passport;
