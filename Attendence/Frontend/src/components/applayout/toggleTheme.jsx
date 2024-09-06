@@ -15,7 +15,9 @@ const lightModeProperties = {
     "--datepicker": "#ffffff",
     "--button": "#f4f6fa",
     "--button-hover-1": "#fffff",
-    "--head-1": "#2a3645"
+    "--head-1": "#2a3645",
+    "--pop-button": "#2c7cf3",
+
 };
 
 const darkModeProperties = {
@@ -29,7 +31,9 @@ const darkModeProperties = {
     "--datepicker": "#78818e",
     "--button": "#1e2631",
     "--button-hover-1": "#fffff",
-    "--head-1": "#1e2631"
+    "--head-1": "#1e2631",
+    "--pop-button": "#64a2ff",
+
 };
 
 const setCustomProperties = (mode) => {

@@ -72,6 +72,7 @@ router.put('/arr-attendence',arrear_attendence.delete_arrear_stu_att)
 
 //slots
 router.get('/slots', slots.get_slots)
+router.get('/slot-year', slots.get_slotsYear)
 router.post('/slots', slots.post_slots)
 router.put('/slots', slots.update_slots)
 router.get('/time-slots',slots.get_time_slots)
@@ -141,7 +142,9 @@ router.get('/mdashboard', mdashboard.dashboard)
 
 // report
 router.get('/ab-report', report.get_absent_reports)
+router.get('/abs-report', report.get_absent_slot)
 router.get('/pre-report', reportPresent.get_present_reports)
+router.get('/pres-report',reportPresent.get_present_slot)
 router.get('/student-report', reportStudent.get_student_report)
 
 module.exports = router

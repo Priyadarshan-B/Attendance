@@ -21,6 +21,22 @@ exports.get_slots = async (req, res) => {
     }
 };
 
+exports.get_slotsYear = async (req, res) => {
+    const { year } = req.query; 
+    try {
+        const query = `
+            SELECT * FROM time_slots 
+            WHERE year = ? 
+            AND status = '1'
+        `;
+        const slotsYear = await get_database(query, [year]);
+
+        res.json(slotsYear);
+    } catch (err) {
+        console.error("Error Fetching Slots", err);
+        res.status(500).json({ error: "Error fetching Slots" });
+    }
+};
 
 exports.update_slots = async(req, res)=>{
     const {id, label, start_time, end_time} = req.body

@@ -435,7 +435,7 @@ function Body({ id, roll }) {
                 <div
                   className="time"
                   style={{
-                    color: "#4c91e2",
+                    color:timeLeft.isNegative?"#ff6968":"#4dcd6e",
                     fontSize: "17px",
                     fontWeight: "600",
                   }}
