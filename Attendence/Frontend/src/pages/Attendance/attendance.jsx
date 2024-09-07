@@ -8,26 +8,23 @@ import InputBox from "../../components/TextBox/textbox";
 import Select from "react-select";
 import "./attendance.css";
 import toast from "react-hot-toast";
-import Checkbox from '@mui/material/Checkbox';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import Favorite from '@mui/icons-material/Favorite';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TablePagination from '@mui/material/TablePagination';
-import Paper from '@mui/material/Paper';
-import noresult from '../../assets/no-results.png'
+import Checkbox from "@mui/material/Checkbox";
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import Favorite from "@mui/icons-material/Favorite";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TablePagination from "@mui/material/TablePagination";
+import Paper from "@mui/material/Paper";
+import noresult from "../../assets/no-results.png";
+import Logs from "./logs";
 import customStyles from "../../components/applayout/selectTheme";
 
-
-function Attendance(){
-  return (
-       <Body />
-  
-);
+function Attendance() {
+  return <Body />;
 }
 function Body() {
   const [selectedYear, setSelectedYear] = useState(null);
@@ -40,6 +37,7 @@ function Body() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
+  const [logs, setLogs] = useState(false);
 
   const deid = Cookies.get("id");
   const secretKey = "secretKey123";
@@ -102,7 +100,10 @@ function Body() {
 
   const fetchStudents = async () => {
     try {
-      const response = await requestApi("GET", `/students-arr?year=${selectedYear.value}`);
+      const response = await requestApi(
+        "GET",
+        `/students-arr?year=${selectedYear.value}`
+      );
       setStudents(response.data);
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -175,89 +176,98 @@ function Body() {
   };
 
   return (
-   
-    
-     
-        <div className="attendance-container">
-          <h2>Students Attendance (Hour)</h2>
+    <div className="attendance-container">
+      <h2>Students Attendance (Hour)</h2>
 
-          <div className="year-select">
-            <Select
-              options={yearOptions}
-              value={selectedYear}
-              onChange={handleYearChange}
-              placeholder="Select Year"
-              styles={customStyles} 
+      <button className="favourites" onClick={() => setLogs(!logs)}>
+        {logs ? "Show All Students" : "Attendance Logs"}
+      </button>
+      <br /><br />
 
-              isClearable
-            />
+      {logs? 
+      <Logs/>:(
+      <div>
+        <div className="year-select">
+          <Select
+            options={yearOptions}
+            value={selectedYear}
+            onChange={handleYearChange}
+            placeholder="Select Year"
+            styles={customStyles}
+            isClearable
+          />
+        </div>
+
+        {selectedYear ? (
+          <div className="time-slots-container">
+            <h4>Select Time Slots</h4>
+            <div className="time-slots">
+              {timeSlots.length > 0 ? (
+                timeSlots.map((slot) => (
+                  <div key={slot.id} className="time-slot checkbox-wrapper-4">
+                    <input
+                      className="inp-cbx"
+                      id={`slot-${slot.id}`}
+                      type="checkbox"
+                      checked={selectedTimeSlots.includes(slot.id)}
+                      onChange={() => handleTimeSlotChange(slot.id)}
+                    />
+                    <label className="cbx" htmlFor={`slot-${slot.id}`}>
+                      <span>
+                        <svg width="12px" height="10px">
+                          <use xlinkHref="#check-4"></use>
+                        </svg>
+                      </span>
+                      <span>{slot.label}</span>
+                    </label>
+                    <svg className="inline-svg">
+                      <symbol id="check-4" viewBox="0 0 12 10">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                      </symbol>
+                    </svg>
+                  </div>
+                ))
+              ) : (
+                <p>No Slots Available...</p>
+              )}
+            </div>
           </div>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column-reverse",
+              alignItems: "center",
+            }}
+          >
+            <p>Please select a year..</p>
+            <img src={noresult} alt="" height="200px" width="200px" />
+          </div>
+        )}
 
-          {selectedYear ? (
-            <div className="time-slots-container">
-              <h4>Select Time Slots</h4>
-              <div className="time-slots">
-                {timeSlots.length > 0 ? (
-                  timeSlots.map((slot) => (
-                    <div key={slot.id} className="time-slot checkbox-wrapper-4">
-                      <input
-                        className="inp-cbx"
-                        id={`slot-${slot.id}`}
-                        type="checkbox"
-                        checked={selectedTimeSlots.includes(slot.id)}
-                        onChange={() => handleTimeSlotChange(slot.id)}
-                      />
-                      <label className="cbx" htmlFor={`slot-${slot.id}`}>
-                        <span>
-                          <svg width="12px" height="10px">
-                            <use xlinkHref="#check-4"></use>
-                          </svg>
-                        </span>
-                        <span>{slot.label}</span>
-                      </label>
-                      <svg className="inline-svg">
-                        <symbol id="check-4" viewBox="0 0 12 10">
-                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                        </symbol>
-                      </svg>
-                    </div>
-                  ))
-                ) : (
-                  <p>No Slots Available...</p>
-                )}
-              </div>
+        {selectedYear && selectedTimeSlots.length > 0 && (
+          <div className="students-table">
+            <div className="table-header">
+              <h4>
+                {showFavourites
+                  ? "Favourite Students"
+                  : `Students List - ${selectedYear.value} Year`}
+              </h4>
+              <button
+                className="favourites"
+                onClick={() => setShowFavourites(!showFavourites)}
+              >
+                {showFavourites ? "Show All Students" : "Favourites"}
+              </button>
             </div>
-          ) : (
-            <div style={{display:'flex', flexDirection:'column-reverse', alignItems:'center'}}>
-              <p>Please select a year..</p> 
-              <img src={noresult} alt="" height='200px' width="200px" />
-
-            </div>
-          )}
-
-          {selectedYear && selectedTimeSlots.length > 0 && (
-            <div className="students-table">
-              <div className="table-header">
-                <h4>
-                  {showFavourites
-                    ? "Favourite Students"
-                    : `Students List - ${selectedYear.value} Year`}
-                </h4>
-                <button
-                  className="favourites"
-                  onClick={() => setShowFavourites(!showFavourites)}
-                >
-                  {showFavourites ? "Show All Students" : "Favourites"}
-                </button>
-              </div>
-              <InputBox
-                type="text"
-                placeholder="Search students"
-                value={searchQuery}
-                onChange={handleSearch}
-                style={{ width: "50%" }}
-              />
-              <div className="table-container">
+            <InputBox
+              type="text"
+              placeholder="Search students"
+              value={searchQuery}
+              onChange={handleSearch}
+              style={{ width: "50%" }}
+            />
+            <div className="table-container">
               <Paper>
                 <TableContainer>
                   <Table aria-label="students table" className="custom-table">
@@ -275,10 +285,13 @@ function Body() {
                       {!shouldShowTable ? (
                         <TableRow>
                           <TableCell colSpan={6} className="no-results">
-                            Search name or  register number to view data...
+                            Search name or register number to view data...
                           </TableCell>
                         </TableRow>
-                      ) : (showFavourites ? filteredFavStudents : filteredStudents).length === 0 ? (
+                      ) : (showFavourites
+                          ? filteredFavStudents
+                          : filteredStudents
+                        ).length === 0 ? (
                         <TableRow>
                           <TableCell colSpan={6} className="no-results">
                             No results found
@@ -344,42 +357,41 @@ function Body() {
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
                     count={
-                      showFavourites ? filteredFavStudents.length : filteredStudents.length
+                      showFavourites
+                        ? filteredFavStudents.length
+                        : filteredStudents.length
                     }
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                     sx={{
-                      backgroundColor: 'var(--text)', 
-                      '.MuiTablePagination-toolbar': {
-                        backgroundColor: 'var(--background-1)', 
+                      backgroundColor: "var(--text)",
+                      ".MuiTablePagination-toolbar": {
+                        backgroundColor: "var(--background-1)",
                       },
                     }}
                   />
                 )}
               </Paper>
-              </div>
             </div>
-          )}
-          <br />
-          {selectedYear && selectedTimeSlots.length > 0 && (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <button className="submit-attendance" onClick={handleSubmit}>
-                Submit Attendance
-              </button>
-            </div>
-          )}
-        </div>
-      
-    
-  
-    
+          </div>
+        )}
+        <br />
+        {selectedYear && selectedTimeSlots.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <button className="submit-attendance" onClick={handleSubmit}>
+              Submit Attendance
+            </button>
+          </div>
+        )}
+      </div>)}
+    </div>
   );
 }
 

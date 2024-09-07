@@ -109,23 +109,23 @@ cron.schedule('56 23 * * *', async () => {
   }
 });
 
-cron.schedule('52 09 * * *', async () => {
-  try {
-      console.log('Executing update_biometrics cron job...');
-      await update_biometrics();
-      await processAttendanceForAllStudents();
-  } catch (error) {
-      console.error('Error during scheduled update_biometrics:', error);
-  }
-});cron.schedule('0 18 * * *', async () => {
-  try {
-      console.log('Executing update_biometrics cron job...');
-      await update_biometrics();
-      await processAttendanceForAllStudents();
-  } catch (error) {
-      console.error('Error during scheduled update_biometrics:', error);
-  }
-});
+// cron.schedule('52 09 * * *', async () => {
+//   try {
+//       console.log('Executing update_biometrics cron job...');
+//       await update_biometrics();
+//       await processAttendanceForAllStudents();
+//   } catch (error) {
+//       console.error('Error during scheduled update_biometrics:', error);
+//   }
+// });cron.schedule('0 18 * * *', async () => {
+//   try {
+//       console.log('Executing update_biometrics cron job...');
+//       await update_biometrics();
+//       await processAttendanceForAllStudents();
+//   } catch (error) {
+//       console.error('Error during scheduled update_biometrics:', error);
+//   }
+// });
 
 
 
