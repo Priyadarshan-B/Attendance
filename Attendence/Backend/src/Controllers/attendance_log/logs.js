@@ -12,7 +12,7 @@ JOIN students s
 ON re.student = s.id
 JOIN time_slots ts
 ON re.slot = ts.id
-WHERE DATE(re.att_session) = '2024-09-06'
+WHERE DATE(re.att_session) = CURRENT_DATE
 AND re.faculty = ?
 AND re.status = '1'
     `
