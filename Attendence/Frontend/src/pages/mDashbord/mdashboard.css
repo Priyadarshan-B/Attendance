@@ -83,9 +83,9 @@ h3{
     gap: 10px;
     padding: 10px;
     background-color: var(--background-2);
-    max-width: 97vw;
+    max-width: 95vw;
     overflow-x: scroll;
     border-radius: 10px;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 10px;
+    /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 10px; */
   }
   

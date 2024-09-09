@@ -9,7 +9,6 @@ const AttendanceChart = ({ mentorId }) => {
     options: {
       chart: {
         type: 'line',
-        // height: 500,
       },
       dataLabels: {
         enabled: false,
@@ -17,17 +16,17 @@ const AttendanceChart = ({ mentorId }) => {
           colors: ['#008000', '#ff0000'],
         },
       },
-      colors: ['#008000', '#ff0000'], 
+      colors: ['#008000', '#ff0000'],
       stroke: {
         curve: 'smooth',
         width: 5,
         colors: ['#008000', '#ff0000'],
       },
       markers: {
-        size: 5, 
+        size: 5,
         colors: ['#008000', '#ff0000'],
         hover: {
-          size: 7, 
+          size: 7,
         },
       },
       xaxis: {
@@ -48,7 +47,7 @@ const AttendanceChart = ({ mentorId }) => {
         },
       },
       fill: {
-        opacity: 0.3, 
+        opacity: 0.3,
         colors: ['#008000', '#ff0000'],
       },
       tooltip: {
@@ -73,11 +72,20 @@ const AttendanceChart = ({ mentorId }) => {
     },
   });
 
+  const [noData, setNoData] = useState(false);
+
   useEffect(() => {
     const fetchAttendanceData = async () => {
       try {
         const response = await requestApi("GET", `/mdashboard?mentor=${mentorId}`);
         const attendanceSummary = response.data.attendance_summary;
+
+        if (attendanceSummary.length === 0) {
+          setNoData(true);
+          return;
+        } else {
+          setNoData(false); 
+        }
 
         const dates = attendanceSummary.map(item => moment(item.date).format('MMM DD'));
         const presentCounts = attendanceSummary.map(item => item.present_count);
@@ -105,6 +113,7 @@ const AttendanceChart = ({ mentorId }) => {
         }));
       } catch (err) {
         console.error("Error fetching attendance data", err);
+        setNoData(true); // Handle error case by showing no data
       }
     };
 
@@ -116,7 +125,13 @@ const AttendanceChart = ({ mentorId }) => {
       <div style={{display:'flex', justifyContent:'center', alignContent:'center', alignItems:'center', gap:'10px'}}>
         <h3>Attendance Summary (last 10 days)</h3>
       </div>
-      <ReactApexChart options={chartData.options} series={chartData.series} type="line"  />
+      {noData ? (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <h4>No Data Available</h4>
+        </div>
+      ) : (
+        <ReactApexChart options={chartData.options} series={chartData.series} type="line" />
+      )}
     </div>
   );
 };

@@ -104,32 +104,31 @@ exports.dashboard = async (req, res) => {
 
   try {
     const query = `
-WITH past_ten_days AS (
-  SELECT CURDATE() - INTERVAL n DAY AS date
-  FROM (
-    SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 
-    UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 
-    UNION ALL SELECT 8 UNION ALL SELECT 9
-  ) AS days
-)
-SELECT 
-    d.date,
-    COUNT(a.student) AS present_count
-FROM 
-    past_ten_days d
-LEFT JOIN 
-    attendance a ON d.date = a.date
-LEFT JOIN 
-    mentor_student m ON a.student = m.student
-    AND m.mentor = ?
-    AND m.status = '1'
-WHERE 
-    a.forenoon = '1'
-    AND a.afternoon = '1'
-GROUP BY 
-    d.date
-ORDER BY 
-    d.date DESC;
+    WITH past_ten_days AS (
+      SELECT CURDATE() - INTERVAL n DAY AS date
+      FROM (
+        SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 
+        UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 
+        UNION ALL SELECT 8 UNION ALL SELECT 9
+      ) AS days
+    )
+    SELECT 
+        d.date,
+        COUNT(a.student) AS present_count
+    FROM 
+        past_ten_days d
+    LEFT JOIN 
+        attendance a ON d.date = a.date
+        AND a.forenoon = '1'
+        AND a.afternoon = '1'
+    LEFT JOIN 
+        mentor_student m ON a.student = m.student
+        AND m.mentor = ?
+        AND m.status = '1'
+    GROUP BY 
+        d.date
+    ORDER BY 
+        d.date DESC;
     `;
     const stuData = await get_database(query, [mentor]);
 
