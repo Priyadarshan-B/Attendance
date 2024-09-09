@@ -90,6 +90,7 @@ exports.get_absent_slot = async (req, res) => {
             LEFT JOIN mentor m
                 ON ms.mentor = m.id
             WHERE r.id IS NULL 
+            AND s.type = '2'
             AND s.year = ?;
         `;
         
@@ -105,7 +106,8 @@ exports.get_absent_slot = async (req, res) => {
                 AND ms.status = '1'
             LEFT JOIN mentor m
                 ON ms.mentor = m.id
-            WHERE r.id IS NULL 
+            WHERE r.id IS NULL
+            AND s.type = '2'
             AND s.year = ?;
         `;
 

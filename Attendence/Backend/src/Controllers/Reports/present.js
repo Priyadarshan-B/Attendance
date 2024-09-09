@@ -1,17 +1,17 @@
 const { get_database } = require("../../config/db_utils");
 
-exports.get_present_reports = async(req, res) => {
-    const {year, date} = req.query;
-    if(!year || !date){
-        return res.status(400).json({error:"Year is required.."});
-    }
+exports.get_present_reports = async (req, res) => {
+  const { year, date } = req.query;
+  if (!year || !date) {
+    return res.status(400).json({ error: "Year is required.." });
+  }
 
-    try {
-        let query;
-        let params = [date];
+  try {
+    let query;
+    let params = [date];
 
-        if(year === 'All'){
-            query = `
+    if (year === "All") {
+      query = `
                 SELECT 
                     s.id AS student_id, 
                     s.name,
@@ -30,8 +30,13 @@ exports.get_present_reports = async(req, res) => {
                     OR a.forenoon = '1' 
                     OR a.afternoon = '1';
             `;
-        } else if (year === 'I' || year === 'II' || year === 'III' || year === 'IV') {
-            query = `
+    } else if (
+      year === "I" ||
+      year === "II" ||
+      year === "III" ||
+      year === "IV"
+    ) {
+      query = `
                 SELECT 
                     s.id AS student_id, 
                     s.name,
@@ -51,29 +56,29 @@ exports.get_present_reports = async(req, res) => {
                     OR a.afternoon = '1')
                     AND s.year = ?;
             `;
-            params.push(year);
-        } else {
-            return res.status(400).json({error: "Invalid year specified."});
-        }
-
-        const get_report_pre = await get_database(query, params);
-        res.json(get_report_pre);
-    } catch(err) {
-        console.error("Error Fetching Pre Report List", err);
-        res.status(500).json({ error: "Error fetching Pre Report List" }); 
+      params.push(year);
+    } else {
+      return res.status(400).json({ error: "Invalid year specified." });
     }
+
+    const get_report_pre = await get_database(query, params);
+    res.json(get_report_pre);
+  } catch (err) {
+    console.error("Error Fetching Pre Report List", err);
+    res.status(500).json({ error: "Error fetching Pre Report List" });
+  }
 };
 exports.get_present_slot = async (req, res) => {
-    const { year, slot, date } = req.query;
-    if (!year || !slot || !date) {
-        return res.status(400).json({ error: "Fields are required.." });
-    }
+  const { year, slot, date } = req.query;
+  if (!year || !slot || !date) {
+    return res.status(400).json({ error: "Fields are required.." });
+  }
 
-    try {
-        let detailsQuery, countQuery, queryParams;
+  try {
+    let detailsQuery, countQuery, queryParams;
 
-        if (slot === 'All') {
-            detailsQuery = `
+    if (slot === "All") {
+      detailsQuery = `
                SELECT DISTINCT 
                    s.id AS student_id,
                    s.name AS student_name,
@@ -102,10 +107,11 @@ exports.get_present_slot = async (req, res) => {
                LEFT JOIN mentor m
                    ON ms.mentor = m.id
                WHERE present_students.student IS NOT NULL 
+                           AND s.type = '2'
                AND s.year = ?
             `;
-            
-            countQuery = `
+
+      countQuery = `
                SELECT COUNT(DISTINCT s.id) AS count
                FROM students s
                LEFT JOIN (
@@ -127,9 +133,9 @@ exports.get_present_slot = async (req, res) => {
                AND s.year = ?
             `;
 
-            queryParams = [date, year, year, year];
-        } else {
-            detailsQuery = `
+      queryParams = [date, year, year, year];
+    } else {
+      detailsQuery = `
                SELECT DISTINCT 
     s.id AS student_id,
     s.name AS student_name,
@@ -150,10 +156,11 @@ LEFT JOIN mentor m
 LEFT JOIN mentor mf  
     ON r.faculty = mf.id
 WHERE r.id IS NOT NULL 
+AND s.type = '2'
 AND s.year = ?
             `;
-            
-            countQuery = `
+
+      countQuery = `
                SELECT COUNT(DISTINCT s.id) AS count
                FROM students s
                LEFT JOIN re_appear r
@@ -166,25 +173,26 @@ AND s.year = ?
                LEFT JOIN mentor m
                    ON ms.mentor = m.id
                WHERE r.id IS NOT NULL 
+                AND s.type = '2'
                AND s.year = ?
             `;
 
-            queryParams = [date, slot, year];
-        }
-
-        const [studentDetails, [countResult]] = await Promise.all([
-            get_database(detailsQuery, queryParams),
-            get_database(countQuery, queryParams)
-        ]);
-
-        const totalPresentStudents = countResult.count;
-
-        res.json({
-            total_present_students: totalPresentStudents,
-            students: studentDetails
-        });
-    } catch (err) {
-        console.error("Error Fetching Present Slot Report List", err);
-        res.status(500).json({ error: "Error fetching Present Slot Report List" });
+      queryParams = [date, slot, year];
     }
+
+    const [studentDetails, [countResult]] = await Promise.all([
+      get_database(detailsQuery, queryParams),
+      get_database(countQuery, queryParams),
+    ]);
+
+    const totalPresentStudents = countResult.count;
+
+    res.json({
+      total_present_students: totalPresentStudents,
+      students: studentDetails,
+    });
+  } catch (err) {
+    console.error("Error Fetching Present Slot Report List", err);
+    res.status(500).json({ error: "Error fetching Present Slot Report List" });
+  }
 };
