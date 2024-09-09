@@ -12,9 +12,9 @@ const db1Connection = mysql.createPool({
 
 // Create a pool for the second database (DB2)
 const db2Connection = mysql.createPool({
-    host: process.env.HOST, 
-    user: process.env.USER_NAME,
-    password: process.env.PASSWORD,
+    host: process.env.HOST2, 
+    user: process.env.USER_NAME2,
+    password: process.env.PASSWORD2,
     database: process.env.DB2 
 });
 
