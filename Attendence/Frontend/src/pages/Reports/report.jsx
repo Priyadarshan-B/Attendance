@@ -88,14 +88,16 @@ function ReportPage() {
             "student_name",
             "register_number",
             "mail",
-            "mentor_name"
+            "mentor_name",
+            "slot"
           ];
           const studentRows = studentData.map(
-            ({ student_name, register_number, mail, mentor_name }) => [
+            ({ student_name, register_number, mail, mentor_name, slot }) => [
               student_name,
               register_number,
               mail,
               mentor_name,
+              slot
             ]
           );
   
@@ -118,15 +120,17 @@ function ReportPage() {
               "register_number",
               "mail",
               "mentor_name",
-              "attendance_taken"
+              "attendance_taken",
+              "slot"
             ];
             const studentRows = studentData.map(
-              ({ student_name, register_number, mail, mentor_name, attendance_taken }) => [
+              ({ student_name, register_number, mail, mentor_name, attendance_taken, slot }) => [
                 student_name,
                 register_number,
                 mail,
                 mentor_name,
-                attendance_taken
+                attendance_taken,
+                slot
               ]
             );
     
@@ -174,7 +178,8 @@ function ReportPage() {
       
           // Add the "All" option to the slot options
           const allOption = { value: "All", label: "All" };
-          const updatedSlots = [allOption, ...slots];
+          const All = {value:"AllSlots",label:"All Slots"}
+          const updatedSlots = [allOption, All, ...slots];
       
           if (type === "absent") {
             setSlotOptions(updatedSlots);
