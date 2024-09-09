@@ -47,6 +47,7 @@
     background-color: #1c0c6a; 
     color: var(--text);
   }
+  
 .topbar-account {
     color: rgb(14, 120, 220);
     display: flex;
