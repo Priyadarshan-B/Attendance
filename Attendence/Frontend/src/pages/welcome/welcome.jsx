@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
@@ -40,14 +40,9 @@ const Welcome = () => {
 
           Cookies.set("allowedRoutes", CryptoJS.AES.encrypt(JSON.stringify(routes), secretKey).toString(), { expires: 1 });
 
-          let redirectPath = "/attendance/role_attendance"; 
-          if (role === 1 && routes.includes("/attendance/mdashboard")) {
-            redirectPath = "/attendance/mdashboard";
-          } else if (role === 2 && routes.includes("/attendance/dashboard")) {
-            redirectPath = "/attendance/dashboard";
-          } else if (role === 3 && routes.includes("/attendance/student")) {
-            redirectPath = "/attendance/student";
-          }
+          // Redirect to the first route in the allowedRoutes list
+          const allowedRoutes = JSON.parse(CryptoJS.AES.decrypt(Cookies.get("allowedRoutes"), secretKey).toString(CryptoJS.enc.Utf8));
+          const redirectPath = allowedRoutes.length > 0 ? allowedRoutes[0] : "/attendance/error";
 
           setTimeout(() => {
             navigate(redirectPath);
