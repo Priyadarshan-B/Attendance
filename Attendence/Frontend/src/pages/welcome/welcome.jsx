@@ -40,7 +40,6 @@ const Welcome = () => {
 
           Cookies.set("allowedRoutes", CryptoJS.AES.encrypt(JSON.stringify(routes), secretKey).toString(), { expires: 1 });
 
-          // Redirect to the first route in the allowedRoutes list
           const allowedRoutes = JSON.parse(CryptoJS.AES.decrypt(Cookies.get("allowedRoutes"), secretKey).toString(CryptoJS.enc.Utf8));
           const redirectPath = allowedRoutes.length > 0 ? allowedRoutes[0] : "/attendance/error";
 
