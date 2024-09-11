@@ -18,10 +18,10 @@ import './sem_dates.css';
 import Popup from "../../../components/popup/popup";
 import Select from 'react-select';
 import customStyles from "../../../components/applayout/selectTheme";
-
+import { ThemeProviderComponent } from "../../../components/applayout/dateTheme";
 
 function SemDates() {
-    return <Body />;
+    return <Body />
 }
 
 function Body() {

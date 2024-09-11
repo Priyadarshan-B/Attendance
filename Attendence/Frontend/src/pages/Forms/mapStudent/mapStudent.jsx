@@ -80,7 +80,6 @@ function Body() {
 
     requestApi("POST", "/map-role", payload)
       .then((response) => {
-        console.log("Mapping successful:", response.data);
         toast.success("Role Mapped successfully!");
 
         setSelectedRole(null);

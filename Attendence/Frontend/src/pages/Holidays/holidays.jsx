@@ -45,7 +45,6 @@ function Body(){
     const fetchHolidays = async () => {
         try {
             const response = await requestApi("GET", "/dates");
-            console.log('Response from backend:', response);
             if (!response || !response.success) {
                 throw new Error('Failed to fetch holidays');
             }
@@ -85,7 +84,6 @@ function Body(){
                 dates: selectedDates });
 
             if (response.success) {
-                console.log('Response from backend:', response);
                 fetchHolidays();
             } else {
                 console.log('Error response from backend:', response.error);

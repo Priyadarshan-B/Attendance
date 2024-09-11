@@ -30,12 +30,19 @@ function Body() {
 
     const fetchPlacementData = async () => {
         try {
-            const response = await requestApi("GET", `/placement?mentor=${id}`);
-            setData(response.data.data); // Access the 'data' key from the response
+          const response = await requestApi("GET", `/placement?mentor=${id}`);
+          if (response.success && response.data) {
+            setData(response.data.data || []); // Set data or an empty array if no data
+          } else {
+            console.error("No data found or error occurred:", response.error);
+            setData([]); // Set empty array if no data found
+          }
         } catch (error) {
-            console.error("Error fetching placement data", error);
+          console.error("Error fetching placement data", error);
+          setData([]); // Set empty array on error
         }
-    };
+      };
+      
 
     const handleSearchChange = (event) => {
         setSearch(event.target.value);

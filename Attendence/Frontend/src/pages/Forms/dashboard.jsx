@@ -1,20 +1,15 @@
 import React, { Component } from "react";
-import AppLayout from "../../components/applayout/AppLayout";
-import '../../components/applayout/styles.css';
 import MentorMapping from "./mentor/mentor";
 import Nip from "./nip/nip";
 import MapStudent from "./mapStudent/mapStudent";
 import SemDates from "./semDates/sem_dates";
 import Holidays from "../Holidays/holidays";
 import TimeSlotForm from "./timeSlots/timeSlots";
-import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 import './style.css';
 
 function Dashboard() {
     return (
-        <ThemeProviderComponent>
   <Body />
-  </ThemeProviderComponent>
     );
 }
 

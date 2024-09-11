@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import AppLayout from "./components/applayout/AppLayout";
-import './components/applayout/styles.css'
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import "./components/applayout/styles.css";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import Cookies from "js-cookie";
 import Login from "./pages/auth/Login/Login";
 import Welcome from "./pages/welcome/welcome";
@@ -43,8 +49,14 @@ const ProtectedRoute = ({ children }) => {
 
       if (detoken && allowedRoutes) {
         try {
-          const token = CryptoJS.AES.decrypt(detoken, secretKey).toString(CryptoJS.enc.Utf8);
-          const routes = JSON.parse(CryptoJS.AES.decrypt(allowedRoutes, secretKey).toString(CryptoJS.enc.Utf8));
+          const token = CryptoJS.AES.decrypt(detoken, secretKey).toString(
+            CryptoJS.enc.Utf8
+          );
+          const routes = JSON.parse(
+            CryptoJS.AES.decrypt(allowedRoutes, secretKey).toString(
+              CryptoJS.enc.Utf8
+            )
+          );
           const currentPath = window.location.pathname;
 
           if (token && routes.includes(currentPath)) {
@@ -53,7 +65,7 @@ const ProtectedRoute = ({ children }) => {
             setIsAuthenticated(false);
           }
         } catch (error) {
-          console.error('Token or route decryption error:', error);
+          console.error("Token or route decryption error:", error);
           setIsAuthenticated(false);
         }
       } else {
@@ -67,28 +79,37 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      navigate('/attendance/error'); 
+      const cookiesToRemove = [
+        "token",
+        "name",
+        "role",
+        "id",
+        "roll",
+        "gmail",
+        "profile",
+        "allowedRoutes",
+      ];
+      cookiesToRemove.forEach((key) => Cookies.remove(key));
+      navigate("/attendance/error");
     }
   }, [isLoading, isAuthenticated, navigate]);
 
   if (isLoading) {
-    return <Loader/>; 
+    return <Loader />;
   }
 
   return isAuthenticated ? children : null;
 };
 
-
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate a delay for loading the app
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // Example delay of 2 seconds
+    }, 2000); 
 
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer);
   }, []);
 
   if (isLoading) {
@@ -108,27 +129,34 @@ function App() {
             path="/attendance/*"
             element={
               <ProtectedRoute>
-                <AppLayout body={<Routes>
-                  <Route path="attendance" element={<Attendence />} />
-                  <Route path="role_attendance" element={<RoleAttendance />} />
-                  <Route path="admin" element={<AdminDashboard />} />
-                  <Route path="mdashboard" element={<Mdashboard />} />
-                  <Route path="placement" element={<Placement />} />
-                  <Route path="student" element={<Student />} />
-                  <Route path="approval" element={<Approvals />} />
-                  <Route path="add" element={<Dashboard />} />
-                  <Route path="dashboard" element={<StuDashboard />} />
-                  <Route path="timetable" element={<TimeUpload />} />
-                  <Route path="mentor_map" element={<MentorMapping />} />
-                  <Route path="holidays" element={<Holidays />} />
-                  <Route path="sem-dates" element={<SemDates />} />
-                  <Route path="leave_approval" element={<LeaveDetails />} />
-                  <Route path="change-type" element={<Nip />} />
-                  <Route path="map-student" element={<MapStudent />} />
-                  <Route path="leave" element={<Leave />} />
-                  <Route path="mstudent" element={<MStudent />} />
-                  <Route path="report" element={<AbReport />} />
-                </Routes>} />
+                <AppLayout
+                  body={
+                    <Routes>
+                      <Route path="attendance" element={<Attendence />} />
+                      <Route
+                        path="role_attendance"
+                        element={<RoleAttendance />}
+                      />
+                      <Route path="admin" element={<AdminDashboard />} />
+                      <Route path="mdashboard" element={<Mdashboard />} />
+                      <Route path="placement" element={<Placement />} />
+                      <Route path="student" element={<Student />} />
+                      <Route path="approval" element={<Approvals />} />
+                      <Route path="add" element={<Dashboard />} />
+                      <Route path="dashboard" element={<StuDashboard />} />
+                      <Route path="timetable" element={<TimeUpload />} />
+                      <Route path="mentor_map" element={<MentorMapping />} />
+                      <Route path="holidays" element={<Holidays />} />
+                      <Route path="sem-dates" element={<SemDates />} />
+                      <Route path="leave_approval" element={<LeaveDetails />} />
+                      <Route path="change-type" element={<Nip />} />
+                      <Route path="map-student" element={<MapStudent />} />
+                      <Route path="leave" element={<Leave />} />
+                      <Route path="mstudent" element={<MStudent />} />
+                      <Route path="report" element={<AbReport />} />
+                    </Routes>
+                  }
+                />
               </ProtectedRoute>
             }
           />

@@ -7,6 +7,7 @@ const session = require("express-session");
 const passportConfig = require("./config/passport");
 const cron = require('node-cron');
 const {get_database, post_database} = require('./config/db_utils')
+const authenticateGoogleJWT = require('./middleware/authenticate');
 const { update_7_days } = require('./Controllers/attendence/biometric'); 
 const {update_biometrics} = require('./Controllers/attendence/biometric')
 const {get_AttendanceCount} = require('./Controllers/attendence/attendence')
@@ -49,7 +50,7 @@ app.use(morgan_config);
 // routes
 app.use("/attendance/api/auth", resources_route);
 app.use("/attendance/api/auth", auth_route);
-app.use("/attendance/api",routes);
+app.use("/attendance/api",authenticateGoogleJWT,routes);
 
 
 const processAttendanceForAllStudents = async () => {
