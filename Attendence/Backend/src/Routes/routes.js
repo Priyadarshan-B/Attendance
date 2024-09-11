@@ -26,6 +26,7 @@ const mdashboard = require('../Controllers/mentor_dashboard/mdashboard')
 const report = require('../Controllers/Reports/absent')
 const reportPresent = require('../Controllers/Reports/present')
 const reportStudent = require('../Controllers/Reports/student')
+const consolidate = require('../Controllers/Reports/consolidate')
 const Log = require('../Controllers/attendance_log/logs')
 const router = express.Router()
 
@@ -124,7 +125,6 @@ router.post('/role-student', role_student.post_attendance)
 //dashboard
 router.get('/dashboard',dashboard.get_dashboard_details)
 
-
 // role amp
 router.get('/role-map', roleMap.get_all_roles_map)
 
@@ -147,7 +147,7 @@ router.get('/abs-report', report.get_absent_slot)
 router.get('/pre-report', reportPresent.get_present_reports)
 router.get('/pres-report',reportPresent.get_present_slot)
 router.get('/student-report', reportStudent.get_student_report)
-
+router.get('/consolidate', consolidate.get_attendance_status)
 // logs
 router.get('/logs', Log.get_att_logs)
 

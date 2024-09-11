@@ -51,6 +51,7 @@ app.use("/attendance/api/auth", resources_route);
 app.use("/attendance/api/auth", auth_route);
 app.use("/attendance/api",routes);
 
+
 const processAttendanceForAllStudents = async () => {
   try {
     const studentsQuery = 'SELECT id FROM students';
