@@ -68,16 +68,20 @@ exports.get_present_reports = async (req, res) => {
     res.status(500).json({ error: "Error fetching Pre Report List" });
   }
 };
+
 exports.get_present_slot = async (req, res) => {
   const { year, slot, date } = req.query;
+
   if (!year || !slot || !date) {
-    return res.status(400).json({ error: "Fields are required.." });
+    return res.status(400).json({ error: "Fields are required." });
   }
 
   try {
-    let detailsQuery, countQuery, queryParams;
+    let detailsQuery, countQuery;
+    let detailsParams, countParams;
 
-      if (slot === "All") {
+
+    if (slot === "All") {
       detailsQuery = `
         SELECT 
           s.id AS student_id,
@@ -114,7 +118,7 @@ exports.get_present_slot = async (req, res) => {
         LEFT JOIN mentor m
           ON ms.mentor = m.id
         LEFT JOIN mentor mf  
-    ON r.faculty = mf.id
+          ON r.faculty = mf.id
         WHERE present_students.student IS NOT NULL 
         AND s.type = '2'
         AND s.year = ?;
@@ -139,98 +143,94 @@ exports.get_present_slot = async (req, res) => {
           )
         ) AS present_students ON s.id = present_students.student
         WHERE present_students.student IS NOT NULL 
-        AND s.year = ?
+        AND s.year = ?;
       `;
 
-      queryParams = [date, year, year, date, year,date, year , year, year];
+      detailsParams = [date, year, year, date, year]; 
+      countParams = [date, year, year, year];  
 
-    } else if(slot ==='AllSlots'){
-      detailsQuery=`
-      SELECT DISTINCT
-    r.student AS student_id,
-    s.name AS student_name,
-    s.register_number,
-    s.gmail AS mail,
-    ts1.label AS slot,
-    ms.mentor AS mentor,
-    mf.name AS faculty_name
-FROM re_appear r
-LEFT JOIN students s ON r.student = s.id
-LEFT JOIN time_slots ts1 ON r.slot = ts1.id
-LEFT JOIN mentor_student ms ON s.id = ms.student AND ms.status = '1'
-LEFT JOIN mentor m ON ms.mentor = m.id
-LEFT JOIN mentor mf ON r.faculty = mf.id
-WHERE DATE(r.att_session) = ?
-  AND ts1.year = ?
-  AND ts1.status = '1';
-      `;
-      countQuery=`
-      SELECT COUNT(DISTINCT r.student) AS count
-FROM re_appear r
-LEFT JOIN students s ON r.student = s.id
-LEFT JOIN time_slots ts1 ON r.slot = ts1.id
-LEFT JOIN mentor_student ms ON s.id = ms.student AND ms.status = '1'
-LEFT JOIN mentor m ON ms.mentor = m.id
-LEFT JOIN mentor mf ON r.faculty = mf.id
-WHERE DATE(r.att_session) = ?
-  AND ts1.year = ?
-  AND ts1.status = '1';
-      `
-      queryParams=[date, year, date, year]
-    }
-    
-    else {
+    } else if (slot === 'AllSlots') {
       detailsQuery = `
-               SELECT DISTINCT 
-    s.id AS student_id,
-    s.name AS student_name,
-    s.register_number,
-    s.gmail AS mail,
-    m.name AS mentor_name,  
-    mf.name AS attendance_taken, 
-    ts.label AS slot
-FROM students s
-LEFT JOIN re_appear r
-    ON s.id = r.student 
-    AND DATE(r.att_session) = ?
-    AND r.slot = ?
-LEFT JOIN mentor_student ms
-    ON s.id = ms.student 
-    AND ms.status = '1'
-LEFT JOIN mentor m
-    ON ms.mentor = m.id
-LEFT JOIN mentor mf  
-    ON r.faculty = mf.id
-LEFT JOIN time_slots ts
- ON r.slot = ts.id
-WHERE r.id IS NOT NULL 
-AND s.type = '2'
-AND s.year = ?
-            `;
+        SELECT DISTINCT
+          r.student AS student_id,
+          s.name AS student_name,
+          s.register_number,
+          s.gmail AS mail,
+          ts1.label AS slot,
+          ms.mentor AS mentor,
+          mf.name AS faculty_name
+        FROM re_appear r
+        LEFT JOIN students s ON r.student = s.id
+        LEFT JOIN time_slots ts1 ON r.slot = ts1.id
+        LEFT JOIN mentor_student ms ON s.id = ms.student AND ms.status = '1'
+        LEFT JOIN mentor m ON ms.mentor = m.id
+        LEFT JOIN mentor mf ON r.faculty = mf.id
+        WHERE DATE(r.att_session) = ?
+        AND ts1.year = ?
+        AND ts1.status = '1';
+      `;
 
       countQuery = `
-               SELECT COUNT(DISTINCT s.id) AS count
-               FROM students s
-               LEFT JOIN re_appear r
-                   ON s.id = r.student 
-                   AND DATE(r.att_session) = ?
-                   AND r.slot = ?
-               LEFT JOIN mentor_student ms
-                   ON s.id = ms.student 
-                   AND ms.status = '1'
-               LEFT JOIN mentor m
-                   ON ms.mentor = m.id
-               WHERE r.id IS NOT NULL 
-                AND s.type = '2'
-               AND s.year = ?
-            `;
+        SELECT COUNT(DISTINCT r.student) AS count
+        FROM re_appear r
+        LEFT JOIN students s ON r.student = s.id
+        LEFT JOIN time_slots ts1 ON r.slot = ts1.id
+        WHERE DATE(r.att_session) = ?
+        AND ts1.year = ?
+        AND ts1.status = '1';
+      `;
 
-      queryParams = [date, slot, year];
+      detailsParams = [date, year];
+      countParams= [date, year]
+
+    } else {
+      detailsQuery = `
+        SELECT DISTINCT 
+          s.id AS student_id,
+          s.name AS student_name,
+          s.register_number,
+          s.gmail AS mail,
+          m.name AS mentor_name,  
+          mf.name AS attendance_taken, 
+          ts.label AS slot
+        FROM students s
+        LEFT JOIN re_appear r
+          ON s.id = r.student 
+          AND DATE(r.att_session) = ?
+          AND r.slot = ?
+        LEFT JOIN mentor_student ms
+          ON s.id = ms.student 
+          AND ms.status = '1'
+        LEFT JOIN mentor m
+          ON ms.mentor = m.id
+        LEFT JOIN mentor mf  
+          ON r.faculty = mf.id
+        LEFT JOIN time_slots ts
+          ON r.slot = ts.id
+        WHERE r.id IS NOT NULL 
+        AND s.type = '2'
+        AND s.year = ?;
+      `;
+
+      countQuery = `
+        SELECT COUNT(DISTINCT s.id) AS count
+        FROM students s
+        LEFT JOIN re_appear r
+          ON s.id = r.student 
+          AND DATE(r.att_session) = ?
+          AND r.slot = ?
+        WHERE r.id IS NOT NULL 
+        AND s.type = '2'
+        AND s.year = ?;
+      `;
+
+      detailsParams = [date, slot, year];
+      countParams = [date, slot, year]
     }
 
     const [studentDetails, [countResult]] = await Promise.all([
-      get_database(detailsQuery, queryParams),
-      get_database(countQuery, queryParams),
+      get_database(detailsQuery, detailsParams),  
+      get_database(countQuery, countParams),
     ]);
 
     const totalPresentStudents = countResult.count;
@@ -239,6 +239,7 @@ AND s.year = ?
       total_present_students: totalPresentStudents,
       students: studentDetails,
     });
+
   } catch (err) {
     console.error("Error Fetching Present Slot Report List", err);
     res.status(500).json({ error: "Error fetching Present Slot Report List" });
