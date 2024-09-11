@@ -8,6 +8,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import TextField from "@mui/material/TextField";
 import customStyles from "../../components/applayout/selectTheme";
+import moment from "moment";
 import "./report.css";
 
 function ReportPage() {
@@ -28,9 +29,9 @@ function Body() {
   const [presentSlotYear, setPresentSlotYear] = useState(null);
   const [presentSlotDate, setPresentSlotDate] = useState(null);
   const [presentSlotOptions, setPresentSlotOptions] = useState([]);
-  const [consolidateFDate , setConsolidateFDate] = useState(null)
-  const [consolidateTDate, setConsolidateTDate] = useState(null)
-  const [conYear, setConYear]= useState()
+  const [consolidateFDate, setConsolidateFDate] = useState(null);
+  const [consolidateTDate, setConsolidateTDate] = useState(null);
+  const [conYear, setConYear] = useState();
 
   const handleDownload = async (type) => {
     try {
@@ -72,28 +73,25 @@ function Body() {
         fileName = `studentsPresent-${presentSlotYear.value}-${formatDate(
           presentSlotDate
         )}-${presentSlot.label || "All"}.xlsx`;
-      } else if (type === "consolidate") {
-        console.log(formatDate(consolidateFDate))
-        console.log(conYear.value)
-        requestBody = {
-          from_date: formatDate(consolidateFDate),
-          to_date: formatDate(consolidateTDate),
-          year: conYear?.value,
-        };
-        apiEndpoint = `/consolidate`;
+      } 
+      // consolidate
+      else if (type === "consolidate") {
+        apiEndpoint = `/consolidate?from_date=${formatDate(consolidateFDate)}&to_date=${formatDate(consolidateTDate)}&year=${conYear.value}`;
         fileName = `ConsolidateReport-${conYear?.value || "All"}-${formatDate(
           consolidateFDate
         )}-to-${formatDate(consolidateTDate)}.xlsx`;
+        console.log("Request Body:", requestBody);
       }
+
 
       if (!apiEndpoint || !fileName) return;
 
-      const response = await requestApi("GET", apiEndpoint, requestBody);
+      const response = await requestApi("GET", apiEndpoint);
       let data = response.data;
+      console.log("API Response Data:", data);
 
       let workbook = XLSX.utils.book_new();
       let worksheet;
-      let worksheetData = [];
 
       if (type === "absent-slot") {
         const totalAbsentStudents = `Total Absent Students: ${data.total_absent_students}`;
@@ -157,36 +155,73 @@ function Body() {
           ...studentRows,
         ]);
       } else if (type === "consolidate") {
-        data.forEach((day) => {
-          worksheetData.push([`Date: ${day.date}`]);
-          worksheetData.push([
-            "Student Name",
-            "Register Number",
-            "Email",
-            "Status",
-          ]);
-          day.attendance.forEach((student) => {
-            worksheetData.push([
-              student.student_name,
-              student.register_number,
-              student.gmail,
-              student.STATUS,
-            ]);
+        if (!data.attendance_details || !data.student_summary) {
+          throw new Error("Invalid data format: Missing 'attendance_details' or 'student_summary'");
+        }
+      
+        let attendanceDetails = data.attendance_details;
+        let studentSummary = data.student_summary;
+      
+        // Collect unique dates
+        let dates = [...new Set(attendanceDetails.map(detail => detail.date))];
+      
+        // Create a map for student attendance
+        let studentsMap = {};
+      
+        attendanceDetails.forEach(detail => {
+          detail.attendance.forEach(entry => {
+            if (!studentsMap[entry.student_id]) {
+              studentsMap[entry.student_id] = {
+                student_name: entry.student_name,
+                register_number: entry.register_number,
+                gmail: entry.gmail,
+                attendance: {},
+                total_present: 0,
+                total_absent: 0,
+                total_days: 0,
+                percentage_present: "0.00"
+              };
+            }
+            studentsMap[entry.student_id].attendance[detail.date] = entry.STATUS;
           });
-          worksheetData.push([]); 
         });
-        worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-      } else {
-        worksheet = XLSX.utils.json_to_sheet(data);
+      
+        studentSummary.forEach(summary => {
+          if (studentsMap[summary.student_id]) {
+            studentsMap[summary.student_id].total_present = summary.total_present;
+            studentsMap[summary.student_id].total_absent = summary.total_absent;
+            studentsMap[summary.student_id].total_days = summary.total_days;
+            studentsMap[summary.student_id].percentage_present = summary.percentage_present;
+          }
+        });
+      
+        // Prepare headers
+        let headers = ["Name", "Register Number", "Email", ...dates, "Present", "Absent", "Total Days", "Percentage"];
+        let rows = [];
+      
+        Object.values(studentsMap).forEach(student => {
+          let row = [
+            student.student_name,
+            student.register_number,
+            student.gmail,
+            ...dates.map(date => student.attendance[date] || "NA"),
+            student.total_present,
+            student.total_absent,
+            student.total_days,
+            student.percentage_present
+          ];
+          rows.push(row);
+        });
+      
+        let worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+      
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Consolidate Report");
+        XLSX.writeFile(workbook, fileName);
       }
-
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
-      XLSX.writeFile(workbook, fileName);
     } catch (error) {
       console.error(`Error downloading the ${type} report`, error);
     }
   };
-
 
   useEffect(() => {
     if (slotYear) {
@@ -222,12 +257,10 @@ function Body() {
     }
   };
 
+  // Using moment.js for date formatting
   const formatDate = (date) => {
     if (!date) return "";
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
+    return moment(date).format("YYYY-MM-DD");
   };
 
   const yearOptions = [
@@ -237,6 +270,8 @@ function Body() {
     { value: "III", label: "III" },
     { value: "IV", label: "IV" },
   ];
+
+
   return (
     <div className="report-container">
       <h2>Summary</h2>
@@ -421,39 +456,36 @@ function Body() {
             <div
               style={{ display: "flex", flexDirection: "column", gap: "10px" }}
             >
-              <div style={{ flex: "1" }}>
-                <Select
-                  value={conYear}
-                  onChange={setConYear}
-                  options={yearOptions}
-                  styles={customStyles}
-                  placeholder="Select Year.."
-                  isClearable
+              <Select
+                value={conYear}
+                onChange={(e) => setConYear(e)}
+                options={yearOptions}
+                placeholder="Select Year"
+                styles={customStyles}
+              />
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="From Date"
+                  value={consolidateFDate}
+                  onChange={(newValue) => setConsolidateFDate(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
                 />
-              </div>
-              <div style={{ flex: "1", textAlign: "center" }}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    value={consolidateFDate}
-                    onChange={(newValue) => setConsolidateFDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-              </div>
-              <div style={{ flex: "1", textAlign: "center" }}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    value={consolidateTDate}
-                    onChange={(newValue) => setConsolidateTDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-              </div>
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="To Date"
+                  value={consolidateTDate}
+                  onChange={(newValue) => setConsolidateTDate(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+              <Button
+                name="Download"
+                className="save-btn"
+                onClick={() => handleDownload("consolidate")}
+                label='Download Consolidate Report..'
+              />
             </div>
-            <Button
-              onClick={() => handleDownload("consolidate")}
-              label="Download Consolidate Report"
-            />
           </div>
         </div>
       </div>
