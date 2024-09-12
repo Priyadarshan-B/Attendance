@@ -58,64 +58,45 @@ exports.get_attendance_status = async (req, res) => {
       const yearCondition = isNaN(year) ? `'${year}'` : year;
 
       const query = `
-        WITH SlotRequirements AS (
-            SELECT DISTINCT
-                ts.year AS student_year,
-                ts.id AS slot_id
-            FROM time_slots ts
-        ),
-        StudentAttendance AS (
-            SELECT 
+        SELECT 
+            final.student_id,
+            final.student_name,
+            final.register_number,
+            final.gmail,
+            CASE
+                WHEN final.total_slots = final.attended_slots THEN 'PR'
+                ELSE 'AB'
+            END AS STATUS
+        FROM (
+            SELECT
                 s.id AS student_id,
                 s.name AS student_name,
                 s.register_number,
                 s.gmail,
-                sr.slot_id,
-                COALESCE(r.status, '0') AS attendance_status
+                COUNT(DISTINCT sr.slot_id) AS total_slots,
+                SUM(CASE WHEN COALESCE(r.status, '0') = '1' THEN 1 ELSE 0 END) AS attended_slots
             FROM students s
-            JOIN SlotRequirements sr ON s.year = sr.student_year
+            JOIN (
+                SELECT DISTINCT ts.year AS student_year, ts.id AS slot_id
+                FROM time_slots ts
+            ) sr ON s.year = sr.student_year
             LEFT JOIN re_appear r
                 ON s.id = r.student
                 AND sr.slot_id = r.slot
                 AND DATE(r.att_session) = '${formatted_date}'
             WHERE s.type = 2
-            AND s.year = ${yearCondition} 
-        ),
-        AttendanceSummary AS (
-            SELECT
-                sa.student_id,
-                sa.student_name,
-                sa.register_number,
-                sa.gmail,
-                COUNT(DISTINCT sr.slot_id) AS total_slots,
-                SUM(CASE WHEN sa.attendance_status = '1' THEN 1 ELSE 0 END) AS attended_slots
-            FROM StudentAttendance sa
-            JOIN SlotRequirements sr ON sa.slot_id = sr.slot_id
-            GROUP BY sa.student_id, sa.student_name, sa.register_number, sa.gmail
-        ),
-        FinalStatus AS (
-            SELECT
-                a.student_id,
-                a.student_name,
-                a.register_number,
-                a.gmail,
-                CASE
-                    WHEN a.total_slots = a.attended_slots THEN 'PR'        
-                    ELSE 'AB'
-                END AS STATUS
-            FROM AttendanceSummary a
-        )
-        SELECT
-            student_id,
-            student_name,
-            register_number,
-            gmail,
-            STATUS
-        FROM FinalStatus
-        ORDER BY student_id;
+            AND s.year = ${yearCondition}
+            GROUP BY s.id, s.name, s.register_number, s.gmail
+        ) AS final
+        ORDER BY final.student_id;
       `;
 
       const attendanceStatus = await get_database(query);
+
+      if (!attendanceStatus) {
+        console.error('No attendance data fetched for the date:', formatted_date);
+        continue;
+      }
 
       attendanceStatus.forEach(student => {
         if (!studentAttendanceMap[student.student_id]) {
@@ -138,7 +119,6 @@ exports.get_attendance_status = async (req, res) => {
 
       all_results.push({ date: formatted_date, attendance: attendanceStatus });
 
-      // Move to the next day
       current_date = addDays(current_date, 1);
     }
 
