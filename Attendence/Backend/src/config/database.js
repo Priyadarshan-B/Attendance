@@ -2,15 +2,13 @@ const mysql = require("mysql2");
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
-// Create a pool for the first database (DB1)
 const db1Connection = mysql.createPool({
-    host: process.env.HOST, 
-    user: process.env.USER_NAME,
-    password: process.env.PASSWORD,
-    database: process.env.NAME 
+    host: process.env.DB_HOST, 
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME 
 });
 
-// Create a pool for the second database (DB2)
 const db2Connection = mysql.createPool({
     host: process.env.HOST2, 
     user: process.env.USER_NAME2,
@@ -18,7 +16,6 @@ const db2Connection = mysql.createPool({
     database: process.env.DB2 
 });
 
-// Connect to DB1
 db1Connection.getConnection((err, conn) => {
     if (err) {
         console.error("Error connecting to DB1:", err);
@@ -29,7 +26,6 @@ db1Connection.getConnection((err, conn) => {
     }
 });
 
-// Connect to DB2
 db2Connection.getConnection((err, conn) => {
     if (err) {
         console.error("Error connecting to DB2:", err);
@@ -40,7 +36,6 @@ db2Connection.getConnection((err, conn) => {
     }
 });
 
-// Handle pool errors for DB1
 db1Connection.on('error', err => {
     console.error("MySQL DB1 Pool Error:", err);
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
@@ -49,7 +44,6 @@ db1Connection.on('error', err => {
     }
 });
 
-// Handle pool errors for DB2
 db2Connection.on('error', err => {
     console.error("MySQL DB2 Pool Error:", err);
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
@@ -59,7 +53,6 @@ db2Connection.on('error', err => {
 });
 
 
-// Log when connections are acquired and released for DB1
 db1Connection.on("acquire", connection => {
     console.log("MySQL DB1 Acquired");
 });
@@ -68,7 +61,6 @@ db1Connection.on("release", connection => {
     console.log("MySQL DB1 Released");
 });
 
-// Log when connections are acquired and released for DB2
 db2Connection.on("acquire", connection => {
     console.log("MySQL DB2 Acquired");
 });

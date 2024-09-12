@@ -73,47 +73,55 @@ exports.get_absent_slot = async (req, res) => {
     }
   
     try {
-      let detailsQuery, countQuery, queryParams;
-  
+      let detailsQuery, countQuery;
+      let detailsParams, countParams;  
+
       if (slot === "All") {
         detailsQuery = `
           SELECT DISTINCT 
-            s.id AS student_id,
-            s.name AS student_name,
-            s.register_number,
-            s.gmail AS mail,
-            m.name AS mentor_name
-          FROM students s
-          LEFT JOIN re_appear r
-            ON s.id = r.student 
-            AND DATE(r.att_session) = ?
-          LEFT JOIN mentor_student ms
-            ON s.id = ms.student 
-            AND ms.status = '1'
-          LEFT JOIN mentor m
-            ON ms.mentor = m.id
-          WHERE r.id IS NULL
-            AND s.type = '2'
-            AND s.year = ?;
+    s.id AS student_id,
+    s.name AS student_name,
+    s.register_number,
+    s.gmail AS mail,
+    m.name AS mentor_name
+FROM students s
+LEFT JOIN re_appear r
+    ON s.id = r.student 
+    AND DATE(r.att_session) = ?
+LEFT JOIN mentor_student ms
+    ON s.id = ms.student 
+    AND ms.status = '1'
+LEFT JOIN mentor m
+    ON ms.mentor = m.id
+LEFT JOIN time_slots ts
+    ON s.year = ts.year
+LEFT JOIN re_appear ra
+    ON s.id = ra.student
+    AND DATE(ra.att_session) = ?
+    AND ts.id = ra.slot
+WHERE ra.id IS NULL
+    AND s.type = '2'
+    AND s.year = ?
+    AND ts.status = '1';
         `;
         
         countQuery = `
-          SELECT COUNT(*) AS count
-          FROM students s
-          LEFT JOIN re_appear r
-            ON s.id = r.student 
-            AND DATE(r.att_session) = ?
-          LEFT JOIN mentor_student ms
-            ON s.id = ms.student 
-            AND ms.status = '1'
-          LEFT JOIN mentor m
-            ON ms.mentor = m.id
-          WHERE r.id IS NULL
-            AND s.type = '2'
-            AND s.year = ?;
+          SELECT COUNT(DISTINCT s.id) AS count
+FROM students s
+LEFT JOIN time_slots ts
+    ON s.year = ts.year
+LEFT JOIN re_appear ra
+    ON s.id = ra.student
+    AND DATE(ra.att_session) = ?
+    AND ts.id = ra.slot
+WHERE ra.id IS NULL
+    AND s.type = '2'
+    AND s.year = ?
+    AND ts.status = '1';
         `;
         
-        queryParams = [date, year, date, year];
+        detailsParams = [date, date, year];
+        countParams = [date, year]
   
       } 
       else if(slot ==='AllSlots'){
@@ -160,7 +168,8 @@ WHERE s.year = ?
 AND s.type = '2'
 AND r.id IS NULL;
         `
-        queryParams = [year ,date, year,year ,date, year]
+        detailsParams = [year ,date, year]
+        countParams = [year ,date, year]
 
       }
       else {
@@ -210,12 +219,13 @@ WHERE r.id IS NULL
   AND ts.year = ?;
         `;
         
-        queryParams = [slot, date, year, year,slot, date, year, year];
+        detailsParams = [slot, date, year, year];
+        countParams = [slot, date, year, year];
       }
   
       const [studentDetails, [countResult]] = await Promise.all([
-        get_database(detailsQuery, queryParams),
-        get_database(countQuery, queryParams)
+        get_database(detailsQuery, detailsParams),
+        get_database(countQuery, countParams)
       ]);
   
       const totalAbsentStudents = countResult.count;

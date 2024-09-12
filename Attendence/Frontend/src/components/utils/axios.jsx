@@ -7,7 +7,6 @@ const apiHost = import.meta.env.VITE_API_HOST;
 const requestApi = async (method, url, data) => {
 
   try {
-    // Get decrypted token from cookies
     const token = getDecryptedCookie("token");
 
     const headers = {
