@@ -123,6 +123,9 @@
     .app-body{
         padding-bottom: 30px;
     }
+    .app-name{
+        display: none;
+    }   
 }
 
 @media (max-width: 1370px) {
@@ -147,6 +150,7 @@
         margin-top: 30px;
         box-shadow: 0.1px 0.5px 0.9px 0.5px rgb(188, 188, 188);
     }
+ 
 }
 
 @media (max-width: 882px) {
@@ -170,6 +174,7 @@
     .user-name{
         display: none;
     }
+   
 }
 
 .topbar-right-content {

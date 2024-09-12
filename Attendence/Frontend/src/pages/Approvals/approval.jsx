@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
-import AppLayout from "../../components/applayout/AppLayout";
-import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import moment from "moment";
 import {
   Table,
@@ -21,6 +17,7 @@ import InputBox from "../../components/TextBox/textbox";
 import Popup from "../../components/popup/popup";
 import LeaveDetails from "./leave_approval";
 import "./approval.css";
+import { getDecryptedCookie } from "../../components/utils/encrypt";
 
 function calculateTimeLeft(dueDate) {
   const now = moment();
@@ -63,9 +60,7 @@ function Body() {
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const id = Cookies.get("id");
-  const secretKey = "secretKey123";
-  const deid = CryptoJS.AES.decrypt(id, secretKey).toString(CryptoJS.enc.Utf8);
+  const id = getDecryptedCookie("id");
   const [searchTerm, setSearchTerm] = useState("");
   const [openApprovePopup, setOpenApprovePopup] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
@@ -77,7 +72,7 @@ function Body() {
 
   useEffect(() => {
     fetchStudents();
-  }, [deid]);
+  }, [id]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -97,7 +92,7 @@ function Body() {
   }, []);
 
   const fetchStudents = () => {
-    requestApi("GET", `/mentor-students?mentor=${deid}`)
+    requestApi("GET", `/mentor-students?mentor=${id}`)
       .then((response) => {
         if (Array.isArray(response.data)) {
           setStudents(response.data);

@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AppLayout from "../../components/applayout/AppLayout";
-import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import "./mdashboard.css";
 import AttendanceChart from "../Chart/attendance";
 import Groups2TwoToneIcon from "@mui/icons-material/Groups2TwoTone";
@@ -14,6 +10,7 @@ import RStudentTable from "./regular";
 import AbsentTable from "./absent";
 import AttendanceTable from "./attendees";
 import Type2Table from "./type2";
+import { getDecryptedCookie } from "../../components/utils/encrypt";
 
 function Mdashboard() {
   return (
@@ -21,9 +18,8 @@ function Mdashboard() {
 );
 }
 function Body() {
-  const deid = Cookies.get("id");
-  const secretKey = "secretKey123";
-  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
+  
+  const id = getDecryptedCookie('id')
   const [scount, setSCount] = useState(0);
   const [tcount, setTCount] = useState(0);
   const [subCount, SetsubCount] = useState(0);

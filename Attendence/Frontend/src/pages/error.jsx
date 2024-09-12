@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import './auth/Login/Login.css';
-import { Link } from "react-router-dom";
 import error from "../assets/404-light.gif";
 import error1 from "../assets/404-dark.gif";
 import TopBar from "../components/applayout/TopBar";
+
 
 function Error() {
   const [theme, setTheme] = useState("light");
@@ -15,7 +15,6 @@ function Error() {
     setTheme(preferredTheme);
   }, []);
 
-  // Function to handle navigation when user clicks on the "BACK TO LOGIN" text
   const handleNavigation = () => {
     navigate('/attendance/login');
   };
@@ -23,7 +22,7 @@ function Error() {
   return (
     <div>
       <div style={{ display: 'none' }}><TopBar /></div>
-      <div className="error-page">
+      <div className="error-page" style={{ backgroundColor: !theme ? "#f4f6fa" : "var(--error)" }}>
         <div className="error-card">
           {theme === 'dark' ? (
             <img src={error1} alt="404" className="error-img" />

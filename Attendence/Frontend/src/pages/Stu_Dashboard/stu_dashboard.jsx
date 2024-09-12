@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import AppLayout from "../../components/applayout/AppLayout";
-import "../../components/applayout/styles.css";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import StudentDashboard from "../Students/students";
 import "./stu_dashboard.css";
+import { getDecryptedCookie } from "../../components/utils/encrypt";
+
 
 
 function StuDashboard() {
@@ -14,13 +12,8 @@ function StuDashboard() {
 }
 
 function Body() {
-  const deroll = Cookies.get("roll");
-  const deid = Cookies.get("id");
-  const secretKey = "secretKey123";
-  const roll = CryptoJS.AES.decrypt(deroll, secretKey).toString(
-    CryptoJS.enc.Utf8
-  );
-  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
+  const roll =getDecryptedCookie('roll')
+  const id = getDecryptedCookie('id')
 
   return(
     <div>

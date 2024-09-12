@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from "@mui/material";
 import requestApi from "../../components/utils/axios";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import InputBox from "../../components/TextBox/textbox";
 import './placement.css'
+import { getDecryptedCookie } from "../../components/utils/encrypt";
 
 function PlacementSub() {
     return <Body /> ;
@@ -15,9 +14,7 @@ function Body() {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const deid = Cookies.get("id");
-    const secretKey = "secretKey123";
-    const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
+    const id = getDecryptedCookie('id')
 
     useEffect(() => {
         fetchPlacementData();

@@ -9,13 +9,12 @@ import { TextField } from "@mui/material";
 import Button from "../../components/Button/Button";
 import Select from "react-select";
 import customStyles from "../../components/applayout/selectTheme";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import requestApi from "../../components/utils/axios";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
 import moment from "moment";
 import "./leave.css";
+import { getDecryptedCookie } from "../../components/utils/encrypt";
 
 function Leave() {
   return (
@@ -34,9 +33,7 @@ function Body() {
   const [toTime, setToTime] = useState(null);
   const [reason, setReason] = useState("");
   const [leaveDetails, setLeaveDetails] = useState([]);
-  const deid = Cookies.get("id");
-  const secretKey = "secretKey123";
-  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
+  const id = getDecryptedCookie('id')
 
   const fetchLeaveDetails = async () => {
     try {

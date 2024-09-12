@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import requestApi from "../utils/axios";
 import Menu from "@mui/material/Menu";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
@@ -10,6 +8,7 @@ import Box from "@mui/material/Box";
 import Popup from "../popup/popup";
 import CustomizedSwitches from './toggleTheme'
 import "./styles.css";
+import { getDecryptedCookie, removeEncryptedCookie } from "../utils/encrypt";
 
 function TopBar({ scrollElement, sidebar, selectedSidebarItem }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -19,22 +18,11 @@ function TopBar({ scrollElement, sidebar, selectedSidebarItem }) {
   const openMenu = Boolean(anchorEl);
 
   
-  const name = Cookies.get("name") || "";
-  const deprofile = Cookies.get("profile") || "";
-  const degmail = Cookies.get("gmail") || "";
-  const secretKey='secretKey123'
-  const decrypt = (data) => {
-    try {
-      return CryptoJS.AES.decrypt(data, secretKey).toString(CryptoJS.enc.Utf8);
-    } catch (e) {
-      console.error("Decryption failed", e);
-      return "";
-    }
-  };
+  
 
-  const dename = decrypt(name);
-  const profile = decrypt(deprofile);
-  const gmail = decrypt(degmail);
+  const name =  getDecryptedCookie("name");
+  const profile =  getDecryptedCookie("profile");
+  const gmail =  getDecryptedCookie("gmail");
 
   useEffect(() => {
     const scrollElementRef = scrollElement;
@@ -76,15 +64,8 @@ function TopBar({ scrollElement, sidebar, selectedSidebarItem }) {
   const logout = async () => {
     try {
       await requestApi("POST", "/auth/logout");
-      Cookies.remove("token");
-      Cookies.remove("name");
-      Cookies.remove("role");
-      Cookies.remove("id");
-      Cookies.remove("gmail");
-      Cookies.remove("roll");
-      Cookies.remove("profile");
-      Cookies.remove("allowedRoutes");
-
+      const cookiesToRemove = ["token", "name", "role", "id", "roll", "gmail", "profile", "allowedRoutes"];
+          cookiesToRemove.forEach((key) => removeEncryptedCookie(key));
       navigate("/attendance/login");
     } catch (error) {
       console.error("Logout failed", error);
@@ -118,7 +99,7 @@ function TopBar({ scrollElement, sidebar, selectedSidebarItem }) {
         <div className="user-info">
         <img src={profile} alt="User Profile" className="user-profile-pic" onClick={handleClick}/>
 
-          <p className="user-name">{dename}</p>
+          <p className="user-name">{name}</p>
          
         </div>
         <Menu
@@ -166,7 +147,7 @@ function TopBar({ scrollElement, sidebar, selectedSidebarItem }) {
                 fontWeight: "var(--f-weight)",
               }}
             >
-              {dename}
+              {name}
             </Typography>
             {profile ? (
               <img
@@ -198,7 +179,7 @@ function TopBar({ scrollElement, sidebar, selectedSidebarItem }) {
               variant="body2"
               sx={{ color: "var(--text)", fontWeight: "var(--f-weight)" }}
             >
-              {dename}
+              {name}
             </Typography>
             <Typography
               variant="caption"

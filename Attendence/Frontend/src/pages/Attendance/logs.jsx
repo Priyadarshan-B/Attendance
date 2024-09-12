@@ -7,12 +7,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
-import moment from "moment";  // Import moment
+import moment from "moment";  
 import requestApi from "../../components/utils/axios";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import InputBox from "../../components/TextBox/textbox";
 import "./attendance.css";
+import { getDecryptedCookie } from "../../components/utils/encrypt";
 
 function Logs() {
   return <Body />;
@@ -25,11 +24,8 @@ function Body() {
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const deid = Cookies.get("id");
-  const secretKey = "secretKey123";
-  const facultyId = CryptoJS.AES.decrypt(deid, secretKey).toString(
-    CryptoJS.enc.Utf8
-  );
+
+  const facultyId = getDecryptedCookie("id")
 
   const fetchStudents = async () => {
     try {

@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import AppLayout from "../../components/applayout/AppLayout";
-import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import InputBox from "../../components/TextBox/textbox";
 import toast from "react-hot-toast";
 import "./attendance.css";
+import { getDecryptedCookie } from "../../components/utils/encrypt";
 
 function RoleAttendance(){
   return (
@@ -23,12 +20,10 @@ function Body() {
   const [sessions, setSessions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const deid = Cookies.get("role");
-  const secretKey = "secretKey123";
-  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
+  const id = getDecryptedCookie("id")
 
-  const derole = Cookies.get("role");
-  const role = CryptoJS.AES.decrypt(derole, secretKey).toString(CryptoJS.enc.Utf8);
+
+  const role = getDecryptedCookie("role")
 
   useEffect(() => {
     const fetchData = async () => {

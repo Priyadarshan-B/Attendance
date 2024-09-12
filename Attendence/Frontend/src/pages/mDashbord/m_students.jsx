@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-import AppLayout from "../../components/applayout/AppLayout";
 import "../../components/applayout/styles.css";
 import Select from "react-select";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import requestApi from "../../components/utils/axios";
 import StudentDashboard from "../Students/students";
 import noresult from '../../assets/no-results.png'
 import customStyles from "../../components/applayout/selectTheme";
+import { getDecryptedCookie } from "../../components/utils/encrypt";
 
 function MStudent() {
   return (
@@ -17,9 +15,7 @@ function MStudent() {
 }
 
 function Body() {
-  const deid = Cookies.get("id");
-  const secretKey = "secretKey123";
-  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
+  const id = getDecryptedCookie("id")
 
   const [studentOptions, setStudentOptions] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);

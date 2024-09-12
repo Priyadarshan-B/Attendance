@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import requestApi from "../../components/utils/axios";
 import "./approval.css";
 import toast from "react-hot-toast";
-import AppLayout from "../../components/applayout/AppLayout";
-import "../../components/applayout/styles.css";
 import noResult from "../../assets/no-results.png";
 import Popup from "../../components/popup/popup";
 import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 import { TextField } from "@mui/material";
+import { getDecryptedCookie } from "../../components/utils/encrypt";
 
 
 function LeaveDetails() {
@@ -24,9 +21,7 @@ function LeaveDetails() {
 
 function Body() {
   const [leaveDetails, setLeaveDetails] = useState([]);
-  const deid = Cookies.get("id");
-  const secretKey = "secretKey123";
-  const id = CryptoJS.AES.decrypt(deid, secretKey).toString(CryptoJS.enc.Utf8);
+  const id = getDecryptedCookie("id")
   const [open, setOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState(null); 
   const [rejectionReason, setRejectionReason] = useState(""); 

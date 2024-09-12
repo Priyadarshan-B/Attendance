@@ -3,7 +3,6 @@ import "./Login.css";
 import google from "../../../assets/google.png";
 import LoginGif from "../../../assets/Calendar-light.gif";
 import LoginDark from "../../../assets/Calendar-dark.gif"
-import apiHost from "../../../components/utils/api";
 import TopBar from "../../../components/applayout/TopBar";
 
 function Login() {
@@ -15,7 +14,7 @@ function Login() {
   }, []);
 
   const handleGoogleLogin = () => {
-    window.location.href = `${apiHost}/auth/google`;
+    window.location.href = `${import.meta.env.VITE_API_HOST}/auth/google`;
   };
 
   return (

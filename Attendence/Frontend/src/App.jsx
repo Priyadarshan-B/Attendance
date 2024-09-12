@@ -15,7 +15,6 @@ import Attendence from "./pages/Attendance/attendance";
 import RoleAttendance from "./pages/Attendance/roleAttendance";
 import Approvals from "./pages/Approvals/approval";
 import StuDashboard from "./pages/Stu_Dashboard/stu_dashboard";
-import TimeUpload from "./pages/Time_Upload/time_upload";
 import Dashboard from "./pages/Forms/dashboard";
 import Leave from "./pages/Leave/leave";
 import MentorMapping from "./pages/Forms/mentor/mentor";
@@ -27,7 +26,6 @@ import Student from "./pages/Students/student";
 import AdminDashboard from "./pages/Admin_Dashboard/admin_dashboard";
 import LeaveDetails from "./pages/Approvals/leave_approval";
 import Placement from "./pages/Placement/placement";
-import CryptoJS from "crypto-js";
 import Mdashboard from "./pages/mDashbord/mdashboard";
 import MStudent from "./pages/mDashbord/m_students";
 import AbReport from "./pages/Reports/report";
@@ -35,37 +33,24 @@ import Error from "./pages/error";
 import Loader from "./components/Loader/loader";
 import { ThemeProviderComponent } from "./components/applayout/dateTheme";
 import { Toaster } from "react-hot-toast";
+import { getDecryptedCookie , removeEncryptedCookie} from "./components/utils/encrypt"; // Import the utility function
 
 const ProtectedRoute = ({ children }) => {
-  const secretKey = "secretKey123";
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const checkAuth = () => {
-      const detoken = Cookies.get("token");
-      const allowedRoutes = Cookies.get("allowedRoutes");
+      const token = getDecryptedCookie("token");
+      const allowedRoutes = getDecryptedCookie("allowedRoutes");
 
-      if (detoken && allowedRoutes) {
-        try {
-          const token = CryptoJS.AES.decrypt(detoken, secretKey).toString(
-            CryptoJS.enc.Utf8
-          );
-          const routes = JSON.parse(
-            CryptoJS.AES.decrypt(allowedRoutes, secretKey).toString(
-              CryptoJS.enc.Utf8
-            )
-          );
-          const currentPath = window.location.pathname;
+      if (token && allowedRoutes) {
+        const currentPath = window.location.pathname;
 
-          if (token && routes.includes(currentPath)) {
-            setIsAuthenticated(true);
-          } else {
-            setIsAuthenticated(false);
-          }
-        } catch (error) {
-          console.error("Token or route decryption error:", error);
+        if (allowedRoutes.includes(currentPath)) {
+          setIsAuthenticated(true);
+        } else {
           setIsAuthenticated(false);
         }
       } else {
@@ -75,21 +60,12 @@ const ProtectedRoute = ({ children }) => {
     };
 
     checkAuth();
-  }, [secretKey]);
+  }, []);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      const cookiesToRemove = [
-        "token",
-        "name",
-        "role",
-        "id",
-        "roll",
-        "gmail",
-        "profile",
-        "allowedRoutes",
-      ];
-      cookiesToRemove.forEach((key) => Cookies.remove(key));
+      const cookiesToRemove = ["token", "name", "role", "id", "roll", "gmail", "profile", "allowedRoutes"];
+          cookiesToRemove.forEach((key) => removeEncryptedCookie(key));
       navigate("/attendance/error");
     }
   }, [isLoading, isAuthenticated, navigate]);
@@ -100,7 +76,6 @@ const ProtectedRoute = ({ children }) => {
 
   return isAuthenticated ? children : null;
 };
-
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -133,10 +108,7 @@ function App() {
                   body={
                     <Routes>
                       <Route path="attendance" element={<Attendence />} />
-                      <Route
-                        path="role_attendance"
-                        element={<RoleAttendance />}
-                      />
+                      <Route path="role_attendance" element={<RoleAttendance />} />
                       <Route path="admin" element={<AdminDashboard />} />
                       <Route path="mdashboard" element={<Mdashboard />} />
                       <Route path="placement" element={<Placement />} />
@@ -144,7 +116,6 @@ function App() {
                       <Route path="approval" element={<Approvals />} />
                       <Route path="add" element={<Dashboard />} />
                       <Route path="dashboard" element={<StuDashboard />} />
-                      <Route path="timetable" element={<TimeUpload />} />
                       <Route path="mentor_map" element={<MentorMapping />} />
                       <Route path="holidays" element={<Holidays />} />
                       <Route path="sem-dates" element={<SemDates />} />

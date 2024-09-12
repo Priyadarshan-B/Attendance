@@ -11,10 +11,9 @@ import WorkOffIcon from "@mui/icons-material/WorkOff";
 import SchoolIcon from "@mui/icons-material/School";
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import SummarizeTwoToneIcon from '@mui/icons-material/SummarizeTwoTone';
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import requestApi from "../utils/axios";
 import "./styles.css";
+import { getDecryptedCookie } from "../utils/encrypt";
 
 function getIconComponent(iconPath) {
   switch (iconPath) {
@@ -54,22 +53,13 @@ function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
   useEffect(() => {
     const fetchSidebarItems = async () => {
       try {
-        const encryptedRole = Cookies.get("role");
+        const role = getDecryptedCookie("role");
 
-        if (!encryptedRole) {
+        if (!role) {
           navigate('/attendance/login');
           return;
         }
-
-        const bytes = CryptoJS.AES.decrypt(encryptedRole, "secretKey123");
-        const decryptedRole = bytes.toString(CryptoJS.enc.Utf8);
-
-        if (!decryptedRole) {
-          navigate('/attendance/login');
-          return;
-        }
-
-        const response = await requestApi("GET", `/auth/resources?role=${decryptedRole}`);
+        const response = await requestApi("GET", `/auth/resources?role=${role}`);
 
         if (response.status === 400) {
           navigate("/attendance/login");

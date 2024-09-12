@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AppLayout from "../../components/applayout/AppLayout";
-import "../../components/applayout/styles.css";
 import requestApi from "../../components/utils/axios";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js";
 import InputBox from "../../components/TextBox/textbox";
 import Select from "react-select";
 import "./attendance.css";
@@ -22,6 +18,7 @@ import Paper from "@mui/material/Paper";
 import noresult from "../../assets/no-results.png";
 import Logs from "./logs";
 import customStyles from "../../components/applayout/selectTheme";
+import { getDecryptedCookie } from "../../components/utils/encrypt";
 
 function Attendance() {
   return <Body />;
@@ -39,11 +36,8 @@ function Body() {
   const [searchQuery, setSearchQuery] = useState("");
   const [logs, setLogs] = useState(false);
 
-  const deid = Cookies.get("id");
-  const secretKey = "secretKey123";
-  const facultyId = CryptoJS.AES.decrypt(deid, secretKey).toString(
-    CryptoJS.enc.Utf8
-  );
+
+  const facultyId = getDecryptedCookie("id")
 
   const yearOptions = [
     { value: "I", label: "I" },

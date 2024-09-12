@@ -1,26 +1,19 @@
 import axios from "axios";
-import apiHost from "./api";
-import Cookies from "js-cookie";
-import CryptoJS from "crypto-js"; 
+import { getDecryptedCookie } from "./encrypt";
+import toast from "react-hot-toast";
+
+const apiHost = import.meta.env.VITE_API_HOST;
 
 const requestApi = async (method, url, data) => {
-  const secretKey = "secretKey123"; 
-  
+
   try {
-    const encryptedToken = Cookies.get("token");
-    let token = null;
-    
-    if (encryptedToken) {
-      token = CryptoJS.AES.decrypt(encryptedToken, secretKey).toString(CryptoJS.enc.Utf8);
-    }
-    
+    // Get decrypted token from cookies
+    const token = getDecryptedCookie("token");
+
     const headers = {
       "Content-Type": "application/json",
+      ...(token && { "Authorization": `Bearer ${token}` })
     };
-
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
 
     let response;
     switch (method) {
@@ -39,14 +32,14 @@ const requestApi = async (method, url, data) => {
       default:
         throw new Error(`Unsupported request method: ${method}`);
     }
+
     if (!response) {
       throw new Error("No response from the server");
     }
 
     return { success: true, data: response.data };
-    
   } catch (error) {
-    // Log error details for debugging
+    toast.error("Invalid Request..");
     console.error("Error in requestApi:", error);
     return { success: false, error: error.response ? error.response.data : error.message };
   }
