@@ -4,6 +4,7 @@ import InputBox from "../../components/TextBox/textbox";
 import Select from "react-select";
 import "./attendance.css";
 import toast from "react-hot-toast";
+import moment from 'moment';
 import Checkbox from "@mui/material/Checkbox";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
@@ -17,6 +18,10 @@ import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 import noresult from "../../assets/no-results.png";
 import Logs from "./logs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import TextField from "@mui/material/TextField";
 import customStyles from "../../components/applayout/selectTheme";
 import { getDecryptedCookie } from "../../components/utils/encrypt";
 
@@ -35,6 +40,7 @@ function Body() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
   const [logs, setLogs] = useState(false);
+  const [attDate, setAttDate] = useState(moment())
 
 
   const facultyId = getDecryptedCookie("id")
@@ -145,12 +151,17 @@ function Body() {
     if (selectedStudents.length === 0) {
       return toast.error("Please select at least one student.");
     }
+    const formattedDate = attDate ? moment(attDate).format('YYYY-MM-DD') : null;
+    const currentTime = moment().format('HH:mm:ss');
+    const combinedDateTime = formattedDate ? `${formattedDate} ${currentTime}` : null;
 
     try {
       const payload = {
         faculty: facultyId,
         timeslots: selectedTimeSlots,
         students: selectedStudents,
+        att_date: combinedDateTime, 
+
       };
       await requestApi("POST", "/arr-attendence", payload);
       toast.success("Attendance submitted successfully");
@@ -254,13 +265,25 @@ function Body() {
                 {showFavourites ? "Show All Students" : "Favourites"}
               </button>
             </div>
-            <InputBox
-              type="text"
-              placeholder="Search students"
-              value={searchQuery}
-              onChange={handleSearch}
-              style={{ width: "50%" }}
-            />
+            <div style={{display:'flex',alignItems:'center', justifyContent:"space-between"}}>
+              <InputBox
+                type="text"
+                placeholder="Search students"
+                value={searchQuery}
+                onChange={handleSearch}
+                style={{ width: "50%" }}
+              />
+              <div>
+                {/* date */}
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      value={attDate.toDate()}
+                      onChange={(newValue) => setAttDate(moment(newValue))}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
+              </div>
+            </div>
             <div className="table-container">
               <Paper>
                 <TableContainer>
