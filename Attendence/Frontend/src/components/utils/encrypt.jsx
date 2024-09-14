@@ -25,7 +25,7 @@ export const decryptData = (encryptedData) => {
 export const setEncryptedCookie = (key, value) => {
   const hashedKey = hashName(key);   
   const encryptedValue = encryptData(value); 
-  Cookies.set(hashedKey, encryptedValue);
+  Cookies.set(hashedKey, encryptedValue, { expires: 1 / 12 });
 };
 
 export const getDecryptedCookie = (key) => {

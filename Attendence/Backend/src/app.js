@@ -173,9 +173,9 @@ const runAttendanceUpdate = async () => {
 
 cron.schedule('30 12 * * *', runAttendanceUpdate); 
 cron.schedule('30 16 * * *', runAttendanceUpdate); 
-cron.schedule('21 23 * * *', runAttendanceUpdate); 
+cron.schedule('00 20 * * *', runAttendanceUpdate); 
 
-console.log("Cron jobs scheduled for 12:30 PM, 4:30 PM, and 8:00 PM.");
+console.log("Attendance updation  scheduled for 12:30 PM, 4:30 PM, and 8:00 PM.");
 
 // listen port
 app.listen(port, () => {

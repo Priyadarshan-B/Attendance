@@ -9,7 +9,7 @@ const updateAttendanceForStudentArrear = async (studentId, year) => {
       JOIN time_slots t ON r.slot = t.id
       JOIN students s ON r.student = s.id
       WHERE t.start_time >= '08:45:00' 
-        AND t.end_time <= '12:00:00'
+        AND t.end_time <= '13:00:00'
         AND DATE(r.att_session) = CURDATE() 
         AND s.id = ?
         AND r.status = '1'
@@ -17,7 +17,7 @@ const updateAttendanceForStudentArrear = async (studentId, year) => {
       HAVING COUNT(DISTINCT r.slot) = 
           (SELECT COUNT(*) FROM time_slots 
            WHERE year=? AND start_time >= '08:45:00' 
-           AND end_time <= '12:00:00' AND status = '1');
+           AND end_time <= '13:00:00' AND status = '1');
     `;
 
     const afternoonQuery = `
@@ -25,7 +25,7 @@ const updateAttendanceForStudentArrear = async (studentId, year) => {
       FROM re_appear r
       JOIN time_slots t ON r.slot = t.id
       JOIN students s ON r.student = s.id
-      WHERE t.start_time >= '12:00:00' 
+      WHERE t.start_time >= '13:00:00' 
         AND t.end_time <= '17:00:00'
         AND DATE(r.att_session) = CURDATE() 
         AND s.id = ?
@@ -33,7 +33,7 @@ const updateAttendanceForStudentArrear = async (studentId, year) => {
       GROUP BY r.student
       HAVING COUNT(DISTINCT r.slot) = 
           (SELECT COUNT(*) FROM time_slots 
-           WHERE year=? AND start_time >= '12:00:00' 
+           WHERE year=? AND start_time >= '13:00:00' 
            AND end_time <= '17:00:00' AND status = '1');
     `;
 

@@ -26,6 +26,7 @@
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.30.1",
