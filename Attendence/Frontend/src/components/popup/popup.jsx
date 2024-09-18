@@ -12,7 +12,7 @@ const Popup = ({ open, onClose, onConfirm,title, text }) => {
   return (
     <Dialog fullWidth open={open} onClose={onClose} PaperProps={{
       style: {
-        backgroundColor: 'var(--background-2)', // Background color for the popup
+        backgroundColor: 'var(--background-2)',
       }
     }}>
       <DialogTitle style={{ color: 'var(--text)' }}>{title}</DialogTitle>

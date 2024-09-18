@@ -1,0 +1,19 @@
+.container1 table {
+    /* width: 100%; */
+    border-collapse: collapse;
+    border: 2px solid black;
+  }
+  
+  .container1 th, .container1 td {
+    border: 2px solid black;
+    text-align: center;
+    padding: 5px;
+    font-size: 16px;
+  }
+  
+  
+  .container1 .header {
+    font-weight: bold;
+    background-color: #f0f0f0;
+  }
+  

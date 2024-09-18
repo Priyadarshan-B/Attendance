@@ -28,6 +28,7 @@ const reportPresent = require('../Controllers/Reports/present')
 const reportStudent = require('../Controllers/Reports/student')
 const consolidate = require('../Controllers/Reports/consolidate')
 const Log = require('../Controllers/attendance_log/logs')
+const attProgress = require('../Controllers/attProgress/attProgress')
 const router = express.Router()
 
 router.get("/mentor-students",mentor.get_students)
@@ -150,5 +151,8 @@ router.get('/student-report', reportStudent.get_student_report)
 router.get('/consolidate', consolidate.get_attendance_status)
 // logs
 router.get('/logs', Log.get_att_logs)
+
+// att progress
+router.get('/att-progress', attProgress.get_att_progress)
 
 module.exports = router

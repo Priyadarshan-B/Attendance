@@ -9,6 +9,7 @@ import MentorStudentsTable from "./students";
 import RStudentTable from "./regular";
 import AbsentTable from "./absent";
 import AttendanceTable from "./attendees";
+import Approvals from "../Approvals/approval";
 import Type2Table from "./type2";
 import { getDecryptedCookie } from "../../components/utils/encrypt";
 
@@ -233,9 +234,12 @@ function Body() {
         {/* <div className="att-chart">
           <AttendanceChart mentorId={id} />
         </div> */}
+        <br />
         <div className="s-table">
           {selectedComponent === "mentees" && (
-            <MentorStudentsTable mentor={id} />
+            // <MentorStudentsTable mentor={id} />
+            
+            <Approvals />
           )}
           {selectedComponent === "attendees" && (
             <AttendanceTable mentorId={id} />

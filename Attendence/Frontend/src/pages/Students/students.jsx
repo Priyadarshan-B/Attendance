@@ -425,7 +425,7 @@ function Body({ id, roll }) {
                     <h5 style={{ color: "#00bb00" }}>Approved..</h5>
                   </span>
                 ) : (
-                  <h5 className="n_approve">Pending Approval..</h5>
+                  <h5 className="n_approve" >Pending Approval..</h5>
                 )}
               </div>
             </div>

@@ -11,12 +11,9 @@ exports.mentor_att_approve = async (req, res) => {
 
     try {
         const appDate = moment().format('YYYY-MM-DD HH:mm:ss');
-        
-        // Get the next Wednesday
         let nextWednesday = moment().day(3).startOf('day');
-
-        // If today is Wednesday, move to the next Wednesday (1 week later)
         if (moment().day() === 3) {
+            console.log("dfibdfsh")
             nextWednesday.add(1, 'week');
         }
 

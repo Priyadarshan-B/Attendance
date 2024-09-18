@@ -17,9 +17,10 @@ import InputBox from "../../components/TextBox/textbox";
 import Popup from "../../components/popup/popup";
 import LeaveDetails from "./leave_approval";
 import "./approval.css";
-import approve from '../../assets/approve.png'
-import reject from '../../assets/decline.png'
+import approve from "../../assets/approve.png";
+import reject from "../../assets/decline.png";
 import { getDecryptedCookie } from "../../components/utils/encrypt";
+import TableLayout from "../../components/attProgress/attProgress";
 
 function calculateTimeLeft(dueDate) {
   const now = moment();
@@ -58,7 +59,7 @@ function Body() {
   const [showLeave, setShowLeave] = useState(false);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const id = getDecryptedCookie("id");
   const [searchTerm, setSearchTerm] = useState("");
   const [openApprovePopup, setOpenApprovePopup] = useState(false);
@@ -68,6 +69,8 @@ function Body() {
   const [timeLeft, setTimeLeft] = useState({});
   const [loading, setLoading] = useState({});
   const [openExtend, setOpenExtend] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [openDetailPopup, setOpenDetailPopup] = useState(false);
 
   useEffect(() => {
     fetchStudents();
@@ -121,7 +124,10 @@ function Body() {
     setSelectedStudentId(studentId);
     setOpenExtend(true);
   };
-
+  const handleRowClick = (student) => {
+    setSelectedStudent(student);
+    setOpenDetailPopup(true);
+  };
   const handleConfirmApprove = () => {
     if (performanceChecked && appearanceChecked) {
       const studentId = selectedStudentId;
@@ -183,7 +189,7 @@ function Body() {
         student.register_number.toLowerCase().includes(value)
     );
     setFilteredStudents(filtered);
-    updateTimeLeft(filtered); // Recalculate time left for filtered students
+    updateTimeLeft(filtered);
   };
 
   const handleExpand = () => {
@@ -225,15 +231,6 @@ function Body() {
   return (
     <div>
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <h2>Students Attendance Approvals</h2>
-        </div>
         <div>
           <InputBox
             value={searchTerm}
@@ -279,7 +276,11 @@ function Body() {
                   {filteredStudents
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((student, index) => (
-                      <TableRow key={student.id}>
+                      <TableRow
+                        key={student.id}
+                        onClick={() => handleRowClick(student)}
+                        style={{ cursor: "pointer" }}
+                      >
                         <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                         <TableCell>{student.year}</TableCell>
                         <TableCell>{student.name}</TableCell>
@@ -384,12 +385,11 @@ function Body() {
                 ".MuiTablePagination-toolbar": {
                   backgroundColor: "var(--background-1)",
                 },
-                // Customizing the arrow icon color
                 ".MuiTablePagination-actions svg": {
-                  color: "var(--text)", // Replace this with the desired color
+                  color: "var(--text)",
                 },
                 ".MuiSelect-icon": {
-                  color: "var(--text)", // This changes the color of the select dropdown icon
+                  color: "var(--text)",
                 },
               }}
             />
@@ -431,6 +431,28 @@ function Body() {
           <p>
             Are you sure you want to extend this student's due date by 7 days?
           </p>
+        }
+      />
+      <Popup
+        open={openDetailPopup}
+        onClose={() => setOpenDetailPopup(false)}
+        title="Student Details"
+        text={
+          selectedStudent ? (
+            <div>
+              <p>Name: {selectedStudent.name}</p>
+              <p>Register Number: {selectedStudent.register_number}</p>
+              <p>Attendance Percentage: {selectedStudent.att_percent}%</p>
+
+              <TableLayout
+                studentId={selectedStudent.id}
+                date="2024-09-18"
+                year={selectedStudent.year}
+              />
+            </div>
+          ) : (
+            "Loading..."
+          )
         }
       />
     </div>
