@@ -67,9 +67,12 @@ const MentorStudentsTable = ({ mentor }) => {
                                     <TableCell >Name</TableCell>
                                     <TableCell>Year</TableCell>
                                     <TableCell>Register Number</TableCell>
-                                    <TableCell> Status</TableCell>
-                                    <TableCell>Approval Date</TableCell>
-                                    <TableCell>Due Date</TableCell>
+                                    <TableCell>Status</TableCell>
+                                    <TableCell>Attendance Percentage</TableCell>
+                                    <TableCell>Type</TableCell>
+
+
+                                    
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -85,9 +88,11 @@ const MentorStudentsTable = ({ mentor }) => {
                                                 alt={student.att_status === "1" ? "Approved" : "Over Due"}
                                                 style={{ width: 20, height: 20 }}
                                             />
-                                        </TableCell>                                   
-                                         <TableCell>{moment(student.app_date).format('YYYY-MM-DD ')}</TableCell>
-                                        <TableCell>{moment(student.due_date).format('YYYY-MM-DD ')}</TableCell>
+                                        </TableCell>  
+                                        <TableCell>{student.att_percent} %</TableCell>
+                                        <TableCell>{student.type}</TableCell>
+
+                                        
                                     </TableRow>
                                 ))}
                             </TableBody>

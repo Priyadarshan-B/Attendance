@@ -230,9 +230,9 @@ function Body() {
         </div>
       </div>
       <div className="ch-table">
-        <div className="att-chart">
+        {/* <div className="att-chart">
           <AttendanceChart mentorId={id} />
-        </div>
+        </div> */}
         <div className="s-table">
           {selectedComponent === "mentees" && (
             <MentorStudentsTable mentor={id} />

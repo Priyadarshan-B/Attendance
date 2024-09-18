@@ -17,6 +17,8 @@ import InputBox from "../../components/TextBox/textbox";
 import Popup from "../../components/popup/popup";
 import LeaveDetails from "./leave_approval";
 import "./approval.css";
+import approve from '../../assets/approve.png'
+import reject from '../../assets/decline.png'
 import { getDecryptedCookie } from "../../components/utils/encrypt";
 
 function calculateTimeLeft(dueDate) {
@@ -48,11 +50,8 @@ function formatTimeLeft(timeLeft) {
 }
 
 function Approvals() {
-  return (
-       <Body />
-);
+  return <Body />;
 }
-
 
 function Body() {
   const [students, setStudents] = useState([]);
@@ -240,7 +239,7 @@ function Body() {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="Search.."
-            style={{width:'300px'}}
+            style={{ width: "300px" }}
           />
         </div>
         <div className="table-container">
@@ -255,16 +254,23 @@ function Body() {
                     <TableCell sx={{ width: "10px" }}>
                       <b>Year</b>
                     </TableCell>
-                    <TableCell sx={{ width: "10px", whiteSpace:'nowrap'  }}>
+                    <TableCell sx={{ width: "10px", whiteSpace: "nowrap" }}>
                       <b>Name</b>
                     </TableCell>
                     <TableCell sx={{ width: "0px" }}>
                       <b>Register Number</b>
                     </TableCell>
+                    <TableCell sx={{ width: "0px" }}>
+                      Attendance Percentage
+                    </TableCell>
+                    <TableCell sx={{ width: "0px" }}>Type</TableCell>
+                    <TableCell sx={{ width: "0px" }}>
+                      <b>Status</b>
+                    </TableCell>
                     <TableCell sx={{ width: "10px", textAlign: "center" }}>
                       <b>Actions</b>
                     </TableCell>
-                    <TableCell sx={{ width: "10px" , whiteSpace:'nowrap'}}>
+                    <TableCell sx={{ width: "10px", whiteSpace: "nowrap" }}>
                       <b>Time Left</b>
                     </TableCell>
                   </TableRow>
@@ -274,17 +280,22 @@ function Body() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((student, index) => (
                       <TableRow key={student.id}>
+                        <TableCell>{page * rowsPerPage + index + 1}</TableCell>
+                        <TableCell>{student.year}</TableCell>
+                        <TableCell>{student.name}</TableCell>
+                        <TableCell>{student.register_number}</TableCell>
+                        <TableCell>{student.att_percent} %</TableCell>
+                        <TableCell>{student.type}</TableCell>
                         <TableCell>
-                          {page * rowsPerPage + index + 1}
-                        </TableCell>
-                        <TableCell>
-                          {student.year}
-                        </TableCell>
-                        <TableCell>
-                          {student.name}
-                        </TableCell>
-                        <TableCell>
-                          {student.register_number}
+                          <img
+                            src={student.att_status === "1" ? approve : reject}
+                            alt={
+                              student.att_status === "1"
+                                ? "Approved"
+                                : "Over Due"
+                            }
+                            style={{ width: 20, height: 20 }}
+                          />
                         </TableCell>
                         <TableCell sx={{ textAlign: "center" }}>
                           <div style={{ display: "flex", gap: "10px" }}>
@@ -329,7 +340,7 @@ function Body() {
                                   : timeLeft[student.id]?.days > 2
                                   ? "green"
                                   : "black",
-                                  border: timeLeft[student.id]?.isNegative
+                                border: timeLeft[student.id]?.isNegative
                                   ? "1px solid red"
                                   : timeLeft[student.id]?.days > 2
                                   ? "1px solid green"
@@ -337,14 +348,15 @@ function Body() {
                                 borderRadius: "20px",
                                 padding: "2px",
                                 textAlign: "center",
-                                backgroundColor: timeLeft[student.id]?.isNegative
+                                backgroundColor: timeLeft[student.id]
+                                  ?.isNegative
                                   ? "#fde8e8"
                                   : timeLeft[student.id]?.days > 2
                                   ? "#d5f7da"
                                   : "#fff5e4",
                               }}
                             >
-                              <p style={{color:"black"}}>
+                              <p style={{ color: "black" }}>
                                 {timeLeft[student.id]
                                   ? formatTimeLeft(timeLeft[student.id])
                                   : "Calculating..."}
@@ -368,16 +380,16 @@ function Body() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               sx={{
-                backgroundColor: 'var(--text)',
-                '.MuiTablePagination-toolbar': {
-                  backgroundColor: 'var(--background-1)',
+                backgroundColor: "var(--text)",
+                ".MuiTablePagination-toolbar": {
+                  backgroundColor: "var(--background-1)",
                 },
                 // Customizing the arrow icon color
-                '.MuiTablePagination-actions svg': {
-                  color: 'var(--text)',  // Replace this with the desired color
+                ".MuiTablePagination-actions svg": {
+                  color: "var(--text)", // Replace this with the desired color
                 },
-                '.MuiSelect-icon': {
-                  color: 'var(--text)',  // This changes the color of the select dropdown icon
+                ".MuiSelect-icon": {
+                  color: "var(--text)", // This changes the color of the select dropdown icon
                 },
               }}
             />

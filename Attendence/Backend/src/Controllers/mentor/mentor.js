@@ -25,9 +25,12 @@ exports.get_students = async (req, res) => {
 
   try {
     let query = `
-      SELECT s.id, s.name, s.year, s.register_number, s.att_status, s.app_date, s.due_date
+      SELECT s.*,p.*, t.type
       FROM students s
       JOIN mentor_student ms ON s.id = ms.student
+      left join placement_data p
+      on s.id = p.student
+      LEFT JOIN type t ON s.type = t.id
       WHERE ms.mentor = ?
       AND ms.status = '1'
       AND s.status = '1'

@@ -4,7 +4,7 @@ import InputBox from "../../components/TextBox/textbox";
 import Select from "react-select";
 import "./attendance.css";
 import toast from "react-hot-toast";
-import moment from 'moment';
+import moment from "moment";
 import Checkbox from "@mui/material/Checkbox";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
@@ -18,10 +18,10 @@ import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 import noresult from "../../assets/no-results.png";
 import Logs from "./logs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import TextField from "@mui/material/TextField";
+// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+// import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+// import TextField from "@mui/material/TextField";
 import customStyles from "../../components/applayout/selectTheme";
 import { getDecryptedCookie } from "../../components/utils/encrypt";
 
@@ -40,10 +40,9 @@ function Body() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
   const [logs, setLogs] = useState(false);
-  const [attDate, setAttDate] = useState(moment())
+  const [attDate, setAttDate] = useState(moment());
 
-
-  const facultyId = getDecryptedCookie("id")
+  const facultyId = getDecryptedCookie("id");
 
   const yearOptions = [
     { value: "I", label: "I" },
@@ -151,17 +150,18 @@ function Body() {
     if (selectedStudents.length === 0) {
       return toast.error("Please select at least one student.");
     }
-    const formattedDate = attDate ? moment(attDate).format('YYYY-MM-DD') : null;
-    const currentTime = moment().format('HH:mm:ss');
-    const combinedDateTime = formattedDate ? `${formattedDate} ${currentTime}` : null;
+    // const formattedDate = attDate ? moment(attDate).format("YYYY-MM-DD") : null;
+    // const currentTime = moment().format("HH:mm:ss");
+    // const combinedDateTime = formattedDate
+    //   ? `${formattedDate} ${currentTime}`
+    //   : null;
 
     try {
       const payload = {
         faculty: facultyId,
         timeslots: selectedTimeSlots,
         students: selectedStudents,
-        att_date: combinedDateTime, 
-
+        // att_date: combinedDateTime,
       };
       await requestApi("POST", "/arr-attendence", payload);
       toast.success("Attendance submitted successfully");
@@ -187,227 +187,235 @@ function Body() {
       <button className="favourites" onClick={() => setLogs(!logs)}>
         {logs ? "Show All Students" : "Attendance Logs"}
       </button>
-      <br /><br />
+      <br />
+      <br />
 
-      {logs? 
-      <Logs/>:(
-      <div>
-        <div className="year-select">
-          <Select
-            options={yearOptions}
-            value={selectedYear}
-            onChange={handleYearChange}
-            placeholder="Select Year"
-            styles={customStyles}
-            isClearable
-          />
-        </div>
+      {logs ? (
+        <Logs />
+      ) : (
+        <div>
+          <div className="year-select">
+            <Select
+              options={yearOptions}
+              value={selectedYear}
+              onChange={handleYearChange}
+              placeholder="Select Year"
+              styles={customStyles}
+              isClearable
+            />
+          </div>
 
-        {selectedYear ? (
-          <div className="time-slots-container">
-            <h4>Select Time Slots</h4>
-            <div className="time-slots">
-              {timeSlots.length > 0 ? (
-                timeSlots.map((slot) => (
-                  <div key={slot.id} className="time-slot checkbox-wrapper-4">
-                    <input
-                      className="inp-cbx"
-                      id={`slot-${slot.id}`}
-                      type="checkbox"
-                      checked={selectedTimeSlots.includes(slot.id)}
-                      onChange={() => handleTimeSlotChange(slot.id)}
-                    />
-                    <label className="cbx" htmlFor={`slot-${slot.id}`}>
-                      <span>
-                        <svg width="12px" height="10px">
-                          <use xlinkHref="#check-4"></use>
-                        </svg>
-                      </span>
-                      <span>{slot.label}</span>
-                    </label>
-                    <svg className="inline-svg">
-                      <symbol id="check-4" viewBox="0 0 12 10">
-                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                      </symbol>
-                    </svg>
-                  </div>
-                ))
-              ) : (
-                <p>No Slots Available...</p>
-              )}
+          {selectedYear ? (
+            <div className="time-slots-container">
+              <h4>Select Time Slots</h4>
+              <div className="time-slots">
+                {timeSlots.length > 0 ? (
+                  timeSlots.map((slot) => (
+                    <div key={slot.id} className="time-slot checkbox-wrapper-4">
+                      <input
+                        className="inp-cbx"
+                        id={`slot-${slot.id}`}
+                        type="checkbox"
+                        checked={selectedTimeSlots.includes(slot.id)}
+                        onChange={() => handleTimeSlotChange(slot.id)}
+                      />
+                      <label className="cbx" htmlFor={`slot-${slot.id}`}>
+                        <span>
+                          <svg width="12px" height="10px">
+                            <use xlinkHref="#check-4"></use>
+                          </svg>
+                        </span>
+                        <span>{slot.label}</span>
+                      </label>
+                      <svg className="inline-svg">
+                        <symbol id="check-4" viewBox="0 0 12 10">
+                          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                        </symbol>
+                      </svg>
+                    </div>
+                  ))
+                ) : (
+                  <p>No Slots Available...</p>
+                )}
+              </div>
             </div>
-          </div>
-        ) : (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column-reverse",
-              alignItems: "center",
-            }}
-          >
-            <p>Please select a year..</p>
-            <img src={noresult} alt="" height="200px" width="200px" />
-          </div>
-        )}
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column-reverse",
+                alignItems: "center",
+              }}
+            >
+              <p>Please select a year..</p>
+              <img src={noresult} alt="" height="200px" width="200px" />
+            </div>
+          )}
 
-        {selectedYear && selectedTimeSlots.length > 0 && (
-          <div className="students-table">
-            <div className="table-header">
-              <h4>
-                {showFavourites
-                  ? "Favourite Students"
-                  : `Students List - ${selectedYear.value} Year`}
-              </h4>
-              <button
-                className="favourites"
-                onClick={() => setShowFavourites(!showFavourites)}
+          {selectedYear && selectedTimeSlots.length > 0 && (
+            <div className="students-table">
+              <div className="table-header">
+                <h4>
+                  {showFavourites
+                    ? "Favourite Students"
+                    : `Students List - ${selectedYear.value} Year`}
+                </h4>
+                <button
+                  className="favourites"
+                  onClick={() => setShowFavourites(!showFavourites)}
+                >
+                  {showFavourites ? "Show All Students" : "Favourites"}
+                </button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
               >
-                {showFavourites ? "Show All Students" : "Favourites"}
-              </button>
-            </div>
-            <div style={{display:'flex',alignItems:'center', justifyContent:"space-between"}}>
-              <InputBox
-                type="text"
-                placeholder="Search students"
-                value={searchQuery}
-                onChange={handleSearch}
-                style={{ width: "50%" }}
-              />
-              <div>
-                {/* date */}
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <InputBox
+                  type="text"
+                  placeholder="Search students"
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  style={{ width: "50%" }}
+                />
+                {/* <div>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                       value={attDate.toDate()}
                       onChange={(newValue) => setAttDate(moment(newValue))}
                       renderInput={(params) => <TextField {...params} />}
                     />
                   </LocalizationProvider>
+                </div> */}
               </div>
-            </div>
-            <div className="table-container">
-              <Paper>
-                <TableContainer>
-                  <Table aria-label="students table" className="custom-table">
-                    <TableHead>
-                      <TableRow>
-                        {!showFavourites && <TableCell>Favourite</TableCell>}
-                        <TableCell>S.No</TableCell>
-                        <TableCell>Year</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Register Number</TableCell>
-                        <TableCell>Attendance</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {!shouldShowTable ? (
+              <div className="table-container">
+                <Paper>
+                  <TableContainer>
+                    <Table aria-label="students table" className="custom-table">
+                      <TableHead>
                         <TableRow>
-                          <TableCell colSpan={6} className="no-results">
-                            Search name or register number to view data...
-                          </TableCell>
+                          {!showFavourites && <TableCell>Favourite</TableCell>}
+                          <TableCell>S.No</TableCell>
+                          <TableCell>Year</TableCell>
+                          <TableCell>Name</TableCell>
+                          <TableCell>Register Number</TableCell>
+                          <TableCell>Attendance</TableCell>
                         </TableRow>
-                      ) : (showFavourites
-                          ? filteredFavStudents
-                          : filteredStudents
-                        ).length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={6} className="no-results">
-                            No results found
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        (showFavourites
-                          ? filteredFavStudents
-                          : filteredStudents
-                        )
-                          .slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
+                      </TableHead>
+                      <TableBody>
+                        {!shouldShowTable ? (
+                          <TableRow>
+                            <TableCell colSpan={6} className="no-results">
+                              Search name or register number to view data...
+                            </TableCell>
+                          </TableRow>
+                        ) : (showFavourites
+                            ? filteredFavStudents
+                            : filteredStudents
+                          ).length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={6} className="no-results">
+                              No results found
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          (showFavourites
+                            ? filteredFavStudents
+                            : filteredStudents
                           )
-                          .map((student, index) => (
-                            <TableRow key={student.id}>
-                              {!showFavourites && (
+                            .slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
+                            .map((student, index) => (
+                              <TableRow key={student.id}>
+                                {!showFavourites && (
+                                  <TableCell>
+                                    <Checkbox
+                                      icon={<FavoriteBorder />}
+                                      checkedIcon={
+                                        <Favorite
+                                          sx={{
+                                            color: "#ff7f95",
+                                          }}
+                                        />
+                                      }
+                                      onChange={() =>
+                                        handleFavouriteChange(student.id)
+                                      }
+                                      aria-label="Favourite"
+                                    />
+                                  </TableCell>
+                                )}
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{selectedYear.value}</TableCell>
+                                <TableCell>{student.name}</TableCell>
+                                <TableCell>{student.register_number}</TableCell>
                                 <TableCell>
                                   <Checkbox
-                                    icon={<FavoriteBorder />}
-                                    checkedIcon={
-                                      <Favorite
-                                        sx={{
-                                          color: "#ff7f95",
-                                        }}
-                                      />
-                                    }
+                                    checked={selectedStudents.includes(
+                                      student.id
+                                    )}
                                     onChange={() =>
-                                      handleFavouriteChange(student.id)
+                                      handleStudentCheckboxChange(student.id)
                                     }
-                                    aria-label="Favourite"
+                                    sx={{
+                                      color: "#35dc61",
+                                      "&.Mui-checked": {
+                                        color: "#35dc61",
+                                      },
+                                    }}
                                   />
                                 </TableCell>
-                              )}
-                              <TableCell>{index + 1}</TableCell>
-                              <TableCell>{selectedYear.value}</TableCell>
-                              <TableCell>{student.name}</TableCell>
-                              <TableCell>{student.register_number}</TableCell>
-                              <TableCell>
-                                <Checkbox
-                                  checked={selectedStudents.includes(
-                                    student.id
-                                  )}
-                                  onChange={() =>
-                                    handleStudentCheckboxChange(student.id)
-                                  }
-                                  sx={{
-                                    color: "#35dc61",
-                                    "&.Mui-checked": {
-                                      color: "#35dc61",
-                                    },
-                                  }}
-                                />
-                              </TableCell>
-                            </TableRow>
-                          ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                {shouldShowTable && (
-                  <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={
-                      showFavourites
-                        ? filteredFavStudents.length
-                        : filteredStudents.length
-                    }
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    sx={{
-                      backgroundColor: "var(--text)",
-                      ".MuiTablePagination-toolbar": {
-                        backgroundColor: "var(--background-1)",
-                      },
-                    }}
-                  />
-                )}
-              </Paper>
+                              </TableRow>
+                            ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  {shouldShowTable && (
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25]}
+                      component="div"
+                      count={
+                        showFavourites
+                          ? filteredFavStudents.length
+                          : filteredStudents.length
+                      }
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      sx={{
+                        backgroundColor: "var(--text)",
+                        ".MuiTablePagination-toolbar": {
+                          backgroundColor: "var(--background-1)",
+                        },
+                      }}
+                    />
+                  )}
+                </Paper>
+              </div>
             </div>
-          </div>
-        )}
-        <br />
-        {selectedYear && selectedTimeSlots.length > 0 && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <button className="submit-attendance" onClick={handleSubmit}>
-              Submit Attendance
-            </button>
-          </div>
-        )}
-      </div>)}
+          )}
+          <br />
+          {selectedYear && selectedTimeSlots.length > 0 && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <button className="submit-attendance" onClick={handleSubmit}>
+                Submit Attendance
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

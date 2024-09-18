@@ -11,21 +11,24 @@ exports.mentor_att_approve = async (req, res) => {
 
     try {
         const appDate = moment().format('YYYY-MM-DD HH:mm:ss');
-
+        
+        // Get the next Wednesday
         let nextWednesday = moment().day(3).startOf('day');
 
+        // If today is Wednesday, move to the next Wednesday (1 week later)
         if (moment().day() === 3) {
             nextWednesday.add(1, 'week');
         }
 
         const dueDate = nextWednesday.format('YYYY-MM-DD HH:mm:ss');
+        
         const query = `
             UPDATE students 
             SET att_status = '1', 
                 app_date = ?, 
                 due_date = ?, 
                 status = '1' 
-            WHERE id = ?;
+            WHERE id = ?
         `;
         const mentorApprove = await post_database(query, [appDate, dueDate, student]);
 
@@ -35,6 +38,7 @@ exports.mentor_att_approve = async (req, res) => {
         res.status(500).json({ error: "Error Updating Mentor-Student Attendance" });
     }
 };
+
 
 exports.update_next_wed = async (req, res) => {
     const id = req.query.id;
