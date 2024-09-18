@@ -1,7 +1,7 @@
 const { get_database, post_database } = require("../../config/db_utils");
 
 exports.get_att_progress = async(req, res)=>{
-    const {student, date, year} = req.body
+    const {student, date, year} = req.query
     if(!student || !date || !year){
         return res.status(400).json({error:"Student id, date and year are required.."
         })

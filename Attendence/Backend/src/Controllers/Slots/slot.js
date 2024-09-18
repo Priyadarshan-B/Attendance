@@ -22,7 +22,7 @@ exports.get_slots = async (req, res) => {
 };
 
 exports.get_slotsYear = async (req, res) => {
-    const { year } = req.query; 
+    const  year  = req.query.year; 
     try {
         const query = `
             SELECT * FROM time_slots 

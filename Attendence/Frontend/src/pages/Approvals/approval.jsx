@@ -13,6 +13,10 @@ import {
   TablePagination,
   Checkbox,
 } from "@mui/material";
+import { DatePicker,LocalizationProvider } from '@mui/x-date-pickers';
+import { TextField, Grid } from '@mui/material';
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import InputBox from "../../components/TextBox/textbox";
 import Popup from "../../components/popup/popup";
 import LeaveDetails from "./leave_approval";
@@ -71,6 +75,7 @@ function Body() {
   const [openExtend, setOpenExtend] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [openDetailPopup, setOpenDetailPopup] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
 
   useEffect(() => {
     fetchStudents();
@@ -434,27 +439,41 @@ function Body() {
         }
       />
       <Popup
-        open={openDetailPopup}
-        onClose={() => setOpenDetailPopup(false)}
-        title="Student Details"
-        text={
-          selectedStudent ? (
+      open={openDetailPopup}
+      onClose={() => setOpenDetailPopup(false)}
+      title="Student Details"
+      text={
+        selectedStudent ? (
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div>
               <p>Name: {selectedStudent.name}</p>
               <p>Register Number: {selectedStudent.register_number}</p>
               <p>Attendance Percentage: {selectedStudent.att_percent}%</p>
+              
+              <Grid container spacing={2} alignItems="center" sx={{ marginBottom: '20px' }}>
+                <Grid item>
+                  <DatePicker
+                    value={selectedDate}
+                    onChange={(newValue) => setSelectedDate(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                    format="YYYY-MM-DD" 
+                  />
+                </Grid>
+              </Grid>
 
               <TableLayout
                 studentId={selectedStudent.id}
-                date="2024-09-18"
+                date={selectedDate.format('YYYY-MM-DD')} 
                 year={selectedStudent.year}
+                register_number={selectedStudent.register_number}
               />
             </div>
-          ) : (
-            "Loading..."
-          )
-        }
-      />
+          </LocalizationProvider>
+        ) : (
+          "Loading..."
+        )
+      }
+    />
     </div>
   );
 }
