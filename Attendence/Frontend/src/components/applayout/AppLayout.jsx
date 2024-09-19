@@ -18,7 +18,7 @@ function AppLayout(props) {
   
     return (
       <div style={{
-        backgroundColor: "white",
+        backgroundColor: "white", 
         height: '100vh',
         width: '100vw',
         position: 'fixed',

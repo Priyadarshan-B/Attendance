@@ -107,10 +107,10 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
     <div className="container1">
       <table>
         <thead>
-          <tr>
+          {/* <tr>
             <th colSpan={fnSlots.length} className="header">FN</th>
             <th colSpan={anSlots.length} className="header">AN</th>
-          </tr>
+          </tr> */}
         </thead>
         <tbody>
           <tr>
@@ -126,25 +126,20 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
               <td key={slot.id}>{renderAttendanceStatus(slot.id)}</td>
             ))}
           </tr>
-        </tbody>
-      </table>
-
-      <Grid container spacing={2} sx={{ marginTop: '20px' }}>
-        <Grid item xs={6}>
-          <Tooltip title={`Attendance Time: ${tooltipTime1 || 'No Data'}`}>
+          <tr>
+            <td colSpan={fnSlots.length} className="header"><Tooltip title={`Attendance Time: ${tooltipTime1 || 'No Data'}`}>
             <Box>
               <BorderLinearProgress variant="determinate" value={progressValue1 * 100} />
             </Box>
-          </Tooltip>
-        </Grid>
-        <Grid item xs={6}>
-          <Tooltip title={`Attendance Time: ${tooltipTime2 || 'No Data'}`}>
+          </Tooltip></td>
+            <td colSpan={anSlots.length} className="header"><Tooltip title={`Attendance Time: ${tooltipTime2 || 'No Data'}`}>
             <Box>
               <BorderLinearProgress variant="determinate" value={progressValue2 * 100} />
             </Box>
-          </Tooltip>
-        </Grid>
-      </Grid>
+          </Tooltip></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 };

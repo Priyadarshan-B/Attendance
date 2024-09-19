@@ -56,7 +56,7 @@ exports.get_placement = async (req, res) => {
       }));
 
     if (placementData.length === 0) {
-      return res.status(404).json({ error: "No placement data found for the students." });
+      return res.json({ error: "No placement data found for the students." });
     }
 
     return res.status(200).json({ data: placementData });
@@ -117,9 +117,9 @@ exports.get_placement_subMentor = async (req, res) => {
         personalized_skill: formatSkills(data.personalized_skill),
       }));
 
-    if (placementData.length === 0) {
-      return res.status(404).json({ error: "No placement data found for the students." });
-    }
+    // if (placementData.length === 0) {
+    //   return res.json({ error: "No placement data found for the students." });
+    // }
 
     return res.status(200).json({ data: placementData });
 

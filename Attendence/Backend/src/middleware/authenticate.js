@@ -7,18 +7,19 @@ const authenticateGoogleJWT = (req, res, next) => {
 
   if (authHeader) {
     const token = authHeader.split(' ')[1];
-
     const JWT_SECRET = process.env.JWT_SECRET;
+    const CLIENT_URL = process.env.CLIENT_URL;
+
     jwt.verify(token, JWT_SECRET, (err, user) => {
       if (err) {
-        return res.status(403).json({ message: 'Invalid or expired token. Access forbidden.' });
+        return res.redirect(302, `${CLIENT_URL}/login`);
       }
 
       req.user = user;
       next();
     });
   } else {
-    return res.status(401).json({ message: 'Authorization token missing. Unauthorized.' });
+    return res.redirect(302, `${CLIENT_URL}/login`);
   }
 };
 

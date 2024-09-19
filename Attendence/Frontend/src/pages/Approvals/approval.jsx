@@ -337,7 +337,7 @@ function Body() {
                             )}
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ whiteSpace: "nowrap" }}>
                           {student.att_status === "1" ? (
                             <div
                               style={{

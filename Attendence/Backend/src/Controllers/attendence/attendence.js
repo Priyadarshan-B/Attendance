@@ -1,7 +1,7 @@
 const { get_database, post_database } = require("../../config/db_utils");
 
 exports.get_attendence_n_arrear = async (req, res) => {
-  const student = req.query.student;
+  const {student, date} = req.query;
   if (!student) {
       return res.status(400).json({ error: "Student register number is required" });
   }
@@ -59,9 +59,6 @@ exports.get_attendence_n_arrear = async (req, res) => {
 
 // correct att_count
 const moment = require("moment");
-
-
-
 exports.get_AttendanceCount = async (req, res) => {
   const studentId = req.query.studentId;
 
