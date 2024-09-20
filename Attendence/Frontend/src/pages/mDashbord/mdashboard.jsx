@@ -12,6 +12,7 @@ import AttendanceTable from "./attendees";
 import Approvals from "../Approvals/approval";
 import Type2Table from "./type2";
 import { getDecryptedCookie } from "../../components/utils/encrypt";
+import Cookies from "js-cookie";
 
 function Mdashboard() {
   return (

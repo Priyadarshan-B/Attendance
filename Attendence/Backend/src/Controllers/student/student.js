@@ -29,24 +29,28 @@ exports.get_student_details = async (req, res) => {
   }
 };
 
+// all- students
 exports.get_all_students = async (req, res) => {
   const year = req.query.year;
-  if (!year) {
-    res.status(400).json({ error: "Year required.." });
-  }
-  try {
-    const query = `
-  SELECT * FROM students
-  WHERE year = ? AND
-   status = '1';
+    let query = `
+    SELECT * FROM students
+    WHERE status = '1'
   `;
-    const students = await get_database(query, [year]);
+  const queryParams = [];
+  if (year) {
+    query += ` AND year = ?`;
+    queryParams.push(year);
+  }
+
+  try {
+    const students = await get_database(query, queryParams);
     res.json(students);
   } catch (err) {
     console.error("Error Fetching Students", err);
     res.status(500).json({ error: "Error Fetching Students" });
   }
 };
+
 
 //leave apply
 const { format } = require("date-fns");

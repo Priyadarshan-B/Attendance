@@ -60,7 +60,7 @@ const AppRoutes = () => {
                 </Routes>
               }
             />
-          </ProtectedRoute>
+           </ProtectedRoute>
         }
       />
     </Routes>

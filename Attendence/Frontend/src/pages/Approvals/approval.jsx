@@ -13,12 +13,13 @@ import {
   TablePagination,
   Checkbox,
 } from "@mui/material";
-import { DatePicker,LocalizationProvider } from '@mui/x-date-pickers';
-import { TextField, Grid } from '@mui/material';
-import dayjs from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { TextField, Grid } from "@mui/material";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import InputBox from "../../components/TextBox/textbox";
 import Popup from "../../components/popup/popup";
+import InfoPopup from "../../components/popup/InfoPopup";
 import LeaveDetails from "./leave_approval";
 import "./approval.css";
 import approve from "../../assets/approve.png";
@@ -313,7 +314,10 @@ function Body() {
                                   color: "red",
                                   cursor: "pointer",
                                 }}
-                                onClick={() => handleApprove(student.id)}
+                                onClick={(event) => {
+                                  event.stopPropagation(); // Stop row click event
+                                  handleApprove(student.id);
+                                }}
                               >
                                 Over Due
                               </button>
@@ -329,7 +333,10 @@ function Body() {
                                     ? "not-allowed"
                                     : "pointer",
                                 }}
-                                onClick={() => handleExtend(student.id)}
+                                onClick={(event) => {
+                                  event.stopPropagation(); // Stop row click event
+                                  handleExtend(student.id);
+                                }}
                                 disabled={loading[student.id]}
                               >
                                 Extend
@@ -438,42 +445,52 @@ function Body() {
           </p>
         }
       />
-      <Popup
-      open={openDetailPopup}
-      onClose={() => setOpenDetailPopup(false)}
-      title="Student Details"
-      text={
-        selectedStudent ? (
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <div>
-              <p>Name: {selectedStudent.name}</p>
-              <p>Register Number: {selectedStudent.register_number}</p>
-              <p>Attendance Percentage: {selectedStudent.att_percent}%</p>
-              
-              <Grid container spacing={2} alignItems="center" sx={{ marginBottom: '20px' }}>
-                <Grid item>
+      <InfoPopup
+        open={openDetailPopup}
+        onClose={() => setOpenDetailPopup(false)}
+        // title="Student Details"
+        text={
+          selectedStudent ? (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <div>
+                    <b>
+                      {selectedStudent.name} - {selectedStudent.register_number}
+                    </b>
+                    <p>
+                      <b>Attendance Percentage: </b>{" "}
+                      {selectedStudent.att_percent}%
+                    </p>
+                  </div>
+
                   <DatePicker
                     value={selectedDate}
                     onChange={(newValue) => setSelectedDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
-                    format="YYYY-MM-DD" 
+                    format="YYYY-MM-DD"
                   />
-                </Grid>
-              </Grid>
+                </div>
 
-              <TableLayout
-                studentId={selectedStudent.id}
-                date={selectedDate.format('YYYY-MM-DD')} 
-                year={selectedStudent.year}
-                register_number={selectedStudent.register_number}
-              />
-            </div>
-          </LocalizationProvider>
-        ) : (
-          "Loading..."
-        )
-      }
-    />
+                <TableLayout
+                  studentId={selectedStudent.id}
+                  date={selectedDate.format("YYYY-MM-DD")}
+                  year={selectedStudent.year}
+                  register_number={selectedStudent.register_number}
+                />
+              </div>
+            </LocalizationProvider>
+          ) : (
+            "Loading..."
+          )
+        }
+      />
     </div>
   );
 }
