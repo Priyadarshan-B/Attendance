@@ -1,16 +1,47 @@
 const { get_database } = require("../../config/db_utils");
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
+const { decryptData } = require("../../config/encrpyt"); 
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key"; // Store in env file
+const JWT_SECRET = process.env.JWT_SECRET;
+const CLIENT_ID = process.env.CLIENT_ID;
+
+async function getGoogleUserInfo(accessToken) {
+    try {
+        const response = await axios.get(
+            `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`
+        );
+        return response.data; 
+    } catch (error) {
+        throw new Error('Failed to fetch user info from Google API');
+    }
+}
 
 exports.get_auth = async (req, res) => {
-    const { email } = req.body;
-    
-    if (!email) {
-        return res.status(400).json({ error: "Email is required." });
+    const { accessToken } = req.body;
+
+    if (!accessToken) {
+        return res.status(400).json({ error: "Access token is required." });
     }
 
     try {
+      
+        const decryptedAccessToken = decryptData(accessToken);
+        
+        if (!decryptedAccessToken) {
+            return res.status(400).json({ error: "Failed to decrypt access token." });
+        }
+
+        let userInfo;
+        try {
+      
+            userInfo = await getGoogleUserInfo(decryptedAccessToken); 
+        } catch (error) {
+            return res.status(400).json({ error: "Invalid Google access token." });
+        }
+
+        const email = userInfo.email;
+
         const mentorQuery = "SELECT id, name, gmail, role_id FROM mentor WHERE gmail = ?";
         let results = await get_database(mentorQuery, [email]);
 
@@ -45,7 +76,7 @@ exports.get_auth = async (req, res) => {
                 gmail: student.gmail,
                 role_id: student.role_id,
                 register_number: student.register_number
-            }, JWT_SECRET, { expiresIn: '24h' });
+            }, JWT_SECRET, { expiresIn: '1h' });
 
             return res.status(200).json({
                 token,
@@ -59,7 +90,6 @@ exports.get_auth = async (req, res) => {
             });
         }
 
-        // If no user is found
         return res.status(404).json({ error: "Email not found." });
 
     } catch (error) {

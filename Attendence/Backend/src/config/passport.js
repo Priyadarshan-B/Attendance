@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const connection = require('./database');
 const {get_database} = require('./db_utils')
 const path = require("path");
+const {encryptData} = require('./encrpyt')
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
 passport.use(
@@ -16,6 +17,8 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        // const encryptedAccessToken = encryptData(accessToken);
+        // console.log("Encrypted Access Token:", encryptedAccessToken);
         const email = profile.emails[0].value;
         const profilePhoto = profile.photos[0]?.value;
 
