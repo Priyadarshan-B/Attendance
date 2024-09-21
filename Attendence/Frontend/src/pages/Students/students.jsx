@@ -16,6 +16,11 @@ import { LuCalendarRange } from "react-icons/lu";
 import InfoTwoToneIcon from "@mui/icons-material/InfoTwoTone";
 import CountUp from "react-countup";
 import Loader from "../../components/Loader/loader";
+import TableLayout from "../../components/attProgress/attProgress";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+
 import {
   Table,
   TableBody,
@@ -41,6 +46,7 @@ function Body({ id, roll }) {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const [attendanceRecords, setAttendanceRecords] = useState([]);
   const [roleatt, setRoleAtt] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -129,7 +135,6 @@ function Body({ id, roll }) {
         });
 
         setPercent(parseFloat(attendance_percentage));
-
       } catch (error) {
         console.error("Error fetching attendance percent details:", error);
       }
@@ -206,7 +211,7 @@ function Body({ id, roll }) {
   }, [roll, id]);
 
   if (!studentDetails) {
-    return <Loader/>;
+    return <Loader />;
   }
 
   const todayDate = new Date()
@@ -347,7 +352,7 @@ function Body({ id, roll }) {
                 Ensure Attendance in
               </div>
               Biometrics,&nbsp;
-              {studentDetails.type === 2 ? "Hour Attendance," : ""}              
+              {studentDetails.type === 2 ? "Hour Attendance," : ""}
               {studentDetails.roles}
             </div>
           </div>
@@ -376,31 +381,32 @@ function Body({ id, roll }) {
                 waveAmplitude={5}
                 waveAnimation={true}
                 textStyle={{
-                  fill: 'var(--text)',
-                  
+                  fill: "var(--text)",
                 }}
                 waveTextStyle={{
-                  fill: 'var(--text)', // Change this to your desired color
+                  fill: "var(--text)", // Change this to your desired color
                 }}
                 waveCount={10}
                 textRenderer={(props) => {
-                  const value =(props.value);
+                  const value = props.value;
                   const radius = Math.min(props.height / 2, props.width / 2);
-                  const textPixels = (props.textSize * radius / 2);
+                  const textPixels = (props.textSize * radius) / 2;
                   const valueStyle = {
-                      fontSize: textPixels
+                    fontSize: textPixels,
                   };
                   const percentStyle = {
-                      fontSize: textPixels * 0.6
+                    fontSize: textPixels * 0.6,
                   };
 
                   return (
-                      <tspan>
-                          <tspan className="value" style={valueStyle}>{value}</tspan>
-                          <tspan style={percentStyle}>{props.percent}</tspan>
+                    <tspan>
+                      <tspan className="value" style={valueStyle}>
+                        {value}
                       </tspan>
+                      <tspan style={percentStyle}>{props.percent}</tspan>
+                    </tspan>
                   );
-              }}
+                }}
                 circleStyle={{
                   fill: percent < 80 ? "#ff6968" : "#55e77a",
                 }}
@@ -425,7 +431,7 @@ function Body({ id, roll }) {
                     <h5 style={{ color: "#00bb00" }}>Approved..</h5>
                   </span>
                 ) : (
-                  <h5 className="n_approve" >Pending Approval..</h5>
+                  <h5 className="n_approve">Pending Approval..</h5>
                 )}
               </div>
             </div>
@@ -435,7 +441,7 @@ function Body({ id, roll }) {
                 <div
                   className="time"
                   style={{
-                    color:timeLeft.isNegative?"#ff6968":"#4dcd6e",
+                    color: timeLeft.isNegative ? "#ff6968" : "#4dcd6e",
                     fontSize: "17px",
                     fontWeight: "600",
                   }}
@@ -521,8 +527,12 @@ function Body({ id, roll }) {
                     marginTop: "10px",
                   }}
                 >
-<b>{isNaN(attendancePercent.present_days) ? 0 : attendancePercent.present_days}</b>
-</div>
+                  <b>
+                    {isNaN(attendancePercent.present_days)
+                      ? 0
+                      : attendancePercent.present_days}
+                  </b>
+                </div>
               </div>
             </div>
             <div
@@ -850,92 +860,53 @@ function Body({ id, roll }) {
       </div>
 
       <div className="att_det">
-        <div className="leave-details">
-          <h3
+        <div className="att_det_others">
+        <h3
             style={{
-              backgroundColor: "#2a3645",
+              backgroundColor: "#1e2631",
               padding: "10px",
-              margin: "0px 0px 0px 0px",
+              margin: "0px 0px 10px 0px",
               borderRadius: "5px",
-              color: "#fff",
+              color: "#ffff",
               textAlign: "center",
-              position:'sticky',
-              top:'0'
             }}
           >
-            Leave Details
+            Period Wise Attendance
           </h3>
-          <div className="leave-data">
-            {leaveDetails.length > 0 ? (
-              leaveDetails.map((leave, index) => (
-                <div
-                  key={index}
-                  className="leave-row"
-                  style={{
-                    backgroundColor: "var(--background-1)",
-                  }}
-                >
-                  <div>
-                    <b>{leave.type}</b>
-                  </div>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+              }}
+            >
+              <div
+                className="att-progress"
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  justifyContent: "space-between",
+                }}
+              >
+                <DatePicker
+                  value={selectedDate}
+                  onChange={(newValue) => setSelectedDate(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
+                  format="YYYY-MM-DD"
+                  slotProps={{ textField: { size: "small" } }}
+                />
+              </div>
 
-                  <div>
-                    <div
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        gap: "15px",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <div className="space">
-                        <b>From date:</b> {formatLeaveDate(leave.from_date)}{" "}
-                        <br />
-                      </div>
-                      <div className="space">
-                        <b>From time:</b> {formatLeaveTime(leave.from_time)}{" "}
-                        <br />
-                      </div>
-
-                      <div className="space">
-                        <b>To date:</b> {formatLeaveDate(leave.to_date)}
-                      </div>
-                      <div className="space">
-                        <b>To time:</b> {formatLeaveTime(leave.to_time)}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space reason">
-                    <b>Reason:</b> {leave.reason} <br />
-                  </div>
-                  <div
-                    className="space status"
-                    style={{
-                      backgroundColor:
-                        leave.status === "2"
-                          ? "#e5c137"
-                          : leave.status === "3"
-                          ? "#ec0041"
-                          : leave.status === "1"
-                          ? "#00ac3b"
-                          : "transparent",
-                      color: "white",
-                    }}
-                  >
-                    {leave.status === "2" ? (
-                      <b>Approval Pending</b>
-                    ) : leave.status === "3" ? (
-                      <b>Rejected</b>
-                    ) : leave.status === "1" ? (
-                      <b>Approved!!</b>
-                    ) : null}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No leave applied.</p>
-            )}
-          </div>
+              <TableLayout
+                studentId={studentDetails.id}
+                date={selectedDate.format("YYYY-MM-DD")}
+                year={studentDetails.year}
+                type={studentDetails.type}
+                register_number={studentDetails.register_number}
+              />
+            </div>
+          </LocalizationProvider>
         </div>
         <div className="att_det_today">
           <div
@@ -977,65 +948,6 @@ function Body({ id, roll }) {
               height={300}
             />
           </div>
-        </div>
-
-        <div className="att_det_others">
-          <h3>
-            <center>Biometric History</center>
-          </h3>
-          <br />
-          {otherAttendance.length > 0 ? (
-            <div
-              style={{
-                width: "100%",
-              }}
-            >
-              <TableContainer component={Paper}>
-                <Table className="custom-table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>
-                        <b>Date</b>
-                      </TableCell>
-                      <TableCell>
-                        <b>Time</b>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {otherAttendance
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((detail, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{detail.date}</TableCell>
-                          <TableCell>{detail.time}</TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-                <TablePagination
-                  rowsPerPageOptions={[5]}
-                  component="div"
-                  count={otherAttendance.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  sx={{
-                    backgroundColor: "var(--text)", // Change this to the color you want
-                    ".MuiTablePagination-toolbar": {
-                      backgroundColor: "var(--background-1)", // If needed, apply to the toolbar as well
-                    },
-                  }}
-                />
-              </TableContainer>
-            </div>
-          ) : (
-            <p>No attendance recorded for today.</p>
-          )}
         </div>
       </div>
 
@@ -1169,6 +1081,96 @@ function Body({ id, roll }) {
             )}
           </div>
         </div>
+      </div>
+      <div style={{display:"flex", marginBottom:"10px"}}>
+        <div className="leave-details">
+          <h3
+            style={{
+              backgroundColor: "#2a3645",
+              padding: "10px",
+              margin: "0px 0px 0px 0px",
+              borderRadius: "5px",
+              color: "#fff",
+              textAlign: "center",
+              position: "sticky",
+              top: "0",
+            }}
+          >
+            Leave Details
+          </h3>
+          <div className="leave-data">
+            {leaveDetails.length > 0 ? (
+              leaveDetails.map((leave, index) => (
+                <div
+                  key={index}
+                  className="leave-row"
+                  style={{
+                    backgroundColor: "var(--background-1)",
+                  }}
+                >
+                  <div>
+                    <b>{leave.type}</b>
+                  </div>
+
+                  <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        gap: "15px",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <div className="space">
+                        <b>From date:</b> {formatLeaveDate(leave.from_date)}{" "}
+                        <br />
+                      </div>
+                      <div className="space">
+                        <b>From time:</b> {formatLeaveTime(leave.from_time)}{" "}
+                        <br />
+                      </div>
+
+                      <div className="space">
+                        <b>To date:</b> {formatLeaveDate(leave.to_date)}
+                      </div>
+                      <div className="space">
+                        <b>To time:</b> {formatLeaveTime(leave.to_time)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space reason">
+                    <b>Reason:</b> {leave.reason} <br />
+                  </div>
+                  <div
+                    className="space status"
+                    style={{
+                      backgroundColor:
+                        leave.status === "2"
+                          ? "#e5c137"
+                          : leave.status === "3"
+                          ? "#ec0041"
+                          : leave.status === "1"
+                          ? "#00ac3b"
+                          : "transparent",
+                      color: "white",
+                    }}
+                  >
+                    {leave.status === "2" ? (
+                      <b>Approval Pending</b>
+                    ) : leave.status === "3" ? (
+                      <b>Rejected</b>
+                    ) : leave.status === "1" ? (
+                      <b>Approved!!</b>
+                    ) : null}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No leave applied.</p>
+            )}
+          </div>
+        </div>
+        <div style={{flex:"1"}}></div>
       </div>
     </div>
   );
