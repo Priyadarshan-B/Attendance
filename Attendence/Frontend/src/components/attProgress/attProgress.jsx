@@ -107,18 +107,22 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
     <div className="container1">
       <table>
         <thead>
-          {/* <tr>
-            <th colSpan={fnSlots.length} className="header">FN</th>
+          <tr>
+            <th style={{width:'20px',}} className='table-head'>Session</th>
+            <th colSpan={fnSlots.length} className="header1">FN</th>
             <th colSpan={anSlots.length} className="header">AN</th>
-          </tr> */}
+          </tr>
         </thead>
         <tbody>
+          
           <tr>
+          <th  style={{width:'20px', }}>Period</th>
             {columnLabels.map((label, index) => (
               <td key={index}>{label}</td>
             ))}
           </tr>
           <tr>
+          <th style={{width:'20px', }}>Attendance</th>
             {fnSlots.map(slot => (
               <td key={slot.id}>{renderAttendanceStatus(slot.id)}</td>
             ))}
@@ -127,16 +131,17 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
             ))}
           </tr>
           <tr>
-            <td colSpan={fnSlots.length} className="header"><Tooltip title={`Attendance Time: ${tooltipTime1 || 'No Data'}`}>
+          <th style={{width:'20px', }}>Biometrics</th>
+            <th colSpan={fnSlots.length} className="header"><Tooltip title={`Attendance Time: ${tooltipTime1 || 'No Data'}`}>
             <Box>
               <BorderLinearProgress variant="determinate" value={progressValue1 * 100} />
             </Box>
-          </Tooltip></td>
-            <td colSpan={anSlots.length} className="header"><Tooltip title={`Attendance Time: ${tooltipTime2 || 'No Data'}`}>
+          </Tooltip></th>
+            <th colSpan={anSlots.length} className="header"><Tooltip title={`Attendance Time: ${tooltipTime2 || 'No Data'}`}>
             <Box>
               <BorderLinearProgress variant="determinate" value={progressValue2 * 100} />
             </Box>
-          </Tooltip></td>
+          </Tooltip></th>
           </tr>
         </tbody>
       </table>

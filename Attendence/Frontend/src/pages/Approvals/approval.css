@@ -131,6 +131,9 @@ display: flex;
   .leave-container{
     flex-direction: column;
   }
+  .att-progress{
+    flex-direction: column;
+  }
 }
 
 .noresult{

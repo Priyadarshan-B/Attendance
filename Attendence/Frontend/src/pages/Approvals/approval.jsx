@@ -452,14 +452,14 @@ function Body() {
         text={
           selectedStudent ? (
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <div
+              <div 
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   gap: "10px",
                 }}
               >
-                <div style={{ display: "flex", gap: "10px" }}>
+                <div className="att-progress" style={{ display: "flex", gap: "10px", justifyContent:'space-between' }} >
                   <div>
                     <b>
                       {selectedStudent.name} - {selectedStudent.register_number}
@@ -473,8 +473,9 @@ function Body() {
                   <DatePicker
                     value={selectedDate}
                     onChange={(newValue) => setSelectedDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => <TextField {...params}  />}
                     format="YYYY-MM-DD"
+                    slotProps={{ textField: { size: 'small' } }}
                   />
                 </div>
 

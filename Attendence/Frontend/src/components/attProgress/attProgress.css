@@ -1,50 +1,50 @@
-
-
+.container1{
+  border: 1px solid gray;
+  border-radius: 5px;
+}
 .container1 table {
   width: 100%;
-  /* border-collapse: collapse; */
-  border: 1px solid rgb(134, 132, 132);
-  border-radius: 5px;
-  
+  border-collapse: collapse;
+  border: 1px solid rgb(233, 233, 233);
+  border-radius: 5px; /* Add border-radius to the entire table */
+  overflow: hidden; /* Ensure rounded corners apply to the contents */
 }
 
 .container1 th, .container1 td {
   text-align: center;
-  padding: 10px;
+  padding: 8px;
   font-size: 16px;
 }
 
 .container1 th {
   font-weight: bold;
-  background-color: #cbcaca;
+  background-color: #e6e6e6;
+  border: 1px solid gray;
 }
 
-.container1 th:first-child {
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-
-}
-
-.container1 th:last-child {
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-
-}
-
-.container1 td {
-  /* border: 1px solid black; */
+/* Remove individual border-radius from the first and last child */
+.container1 th:first-child, 
+.container1 th:last-child,
+.container1 .footer:first-child,
+.container1 .footer:last-child {
+  border-radius: 0;
 }
 
 .container1 .footer {
   background-color: #524949;
   font-weight: bold;
-  /* border: 2px solid black; */
 }
 
-.container1 .footer:first-child {
-  border-bottom-left-radius: 8px;
+/* Class to remove borders for specific rows */
+.no-border td {
+  border: none;
 }
 
-.container1 .footer:last-child {
-  border-bottom-right-radius: 8px;
+@media(max-width:999px){
+ 
+  .container1 th, .container1 td{
+    padding: 2px;
+    font-size: 12px;
+  }
+ 
 }
