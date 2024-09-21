@@ -14,7 +14,7 @@ exports.get_type1 = async(req, res)=>{
         console.error("Error Fetching Student type1", err);
     res.status(500).json({ error: "Error Fetching Student type1" });
     }
-}
+} 
 
 
 exports.get_type2 = async(req, res)=>{

@@ -290,151 +290,152 @@ exports.get_AttendanceCount = async (req, res) => {
           }
         }
       
-        await processLeaves(studentId, from_date, to_date);
+        // await processLeaves(studentId, from_date, to_date);
       }
       
 
     // Handle type 2 (re-appear + OD leave + role_student_map validation)
     if (type === 2) {
-      const noArrearQuery = `
-        SELECT DISTINCT DATE(attendence) as date, HOUR(attendence) as hour, MINUTE(attendence) as minute
-        FROM no_arrear 
-        WHERE student = ?
-        AND DATE(attendence) = CURDATE()
-        AND attendence BETWEEN ? AND ?
-        AND (
-          (HOUR(attendence) = 8 AND MINUTE(attendence) BETWEEN 0 AND 45) 
-          OR 
-          (HOUR(attendence) = 12 OR (HOUR(attendence) = 13 AND MINUTE(attendence) <= 59))
-        );
+      const forenoonSlotQuery = `
+        SELECT id, start_time, end_time 
+        FROM time_slots 
+        WHERE year = ? 
+        AND status = '1' 
+        AND start_time BETWEEN '08:00:00' AND '12:30:00';
       `;
-      const attendanceRecords = await get_database(noArrearQuery, [
-        register_number,
-        from_date,
-        to_date,
-      ]);
-
-      let morningSession = false;
-      let afternoonSession = false;
-      let attendanceDates = [];
-
-      attendanceRecords.forEach((record) => {
-        if (record.hour === 8 && record.minute <= 45) {
-          morningSession = true;
-          attendanceDates.push(moment(record.date).format("YYYY-MM-DD"));
-        } else if (
-          record.hour === 12 ||
-          (record.hour === 13 && record.minute <= 59)
-        ) {
-          afternoonSession = true;
-          attendanceDates.push(moment(record.date).format("YYYY-MM-DD"));
-        }
-      });
-
-      if (morningSession && afternoonSession) {
-        for (let date of attendanceDates) {
-          const reAppearQuery = `
-            SELECT COUNT(DISTINCT slot) AS distinct_slot_count
-            FROM re_appear
-            WHERE student = ?
-            AND DATE(att_session) = CURRENT_DATE()
-            AND status = '1';
-          `;
-          const slotRecords = await get_database(reAppearQuery, [studentId]);
-        
-          const availableSlotQuery = `
-            SELECT COUNT(*) AS available_slot_count
-            FROM time_slots
-            WHERE year = ?
-            AND status = '1'; 
-          `;
-          const availableSlotRecords = await get_database(availableSlotQuery, [year]);
-        
-          const distinctSlotCount = slotRecords.length > 0 ? slotRecords[0].distinct_slot_count : 0;
-          const availableSlotCount = availableSlotRecords.length > 0 ? availableSlotRecords[0].available_slot_count : 0;
-        
-          if (distinctSlotCount !== availableSlotCount) {
-            forenoon = "0";
-            afternoon = "0";
-          } else {
-            forenoon = "1";
-            afternoon = "1";
-        
-            const roleMapQuery = `
-              SELECT id 
-              FROM role_student_map 
-              WHERE student = ? AND status = '1';
-            `;
-            const roleMapResults = await get_database(roleMapQuery, [studentId]);
-        
-            let allRolesHaveDistinctAttendance = true;
-        
-            for (const roleMapResult of roleMapResults) {
-              const roleStudentId = roleMapResult.id;
-              const roleStudentQuery = `
-                SELECT DATE(attendance) AS present_day
-                FROM roles_student
-                WHERE student_map = ?
-                AND DATE(attendance) = CURRENT_DATE()
-                AND status = '1'
-                GROUP BY DATE(attendance)
-                HAVING COUNT(DISTINCT session) = (SELECT COUNT(*) FROM session WHERE status = '1');
-              `;
-              const roleStudentRecords = await get_database(roleStudentQuery, [roleStudentId]);
-        
-              if (roleStudentRecords.length === 0) {
-                allRolesHaveDistinctAttendance = false;
-                break; // If any role doesn't have distinct attendance, break out of the loop
-              }
-            }
-        
-            if (allRolesHaveDistinctAttendance) {
-              forenoon = "1";
-              afternoon = "1";
-            } else {
-              forenoon = "0";
-              afternoon = "0";
-            }
-          }
-        
-          const existingRecordQuery = `
-            SELECT * FROM attendance 
-            WHERE student = ? AND date = ?;
-          `;
-          const existingRecord = await get_database(existingRecordQuery, [
-            studentId,
-            date,
-          ]);
-        
-          if (existingRecord.length > 0) {
-            const updateAttendanceQuery = `
-              UPDATE attendance 
-              SET forenoon = ?, afternoon = ?
-              WHERE student = ? AND date = ?;
-            `;
-            await post_database(updateAttendanceQuery, [
-              forenoon,
-              afternoon,
-              studentId,
-              date,
-            ]);
-          } else {
-            const insertAttendanceQuery = `
-              INSERT INTO attendance (student, date, forenoon, afternoon) 
-              VALUES (?, ?, ?, ?);
-            `;
-            await post_database(insertAttendanceQuery, [
-              studentId,
-              date,
-              forenoon,
-              afternoon,
-            ]);
-          }
-        }
-        
-        await processLeaves(studentId, from_date, to_date);
+      const forenoonSlots = await get_database(forenoonSlotQuery, [year]);
+    
+      const afternoonSlotQuery = `
+        SELECT id, start_time, end_time 
+        FROM time_slots 
+        WHERE year = ? 
+        AND status = '1' 
+        AND start_time BETWEEN '13:00:00' AND '16:00:00';
+      `;
+      const afternoonSlots = await get_database(afternoonSlotQuery, [year]);
+    
+      let forenoon = "0";
+      let afternoon = "0";
+    
+      
+      const forenoonSlotIds = forenoonSlots.map(slot => slot.id);
+      console.log(forenoonSlotIds.join(','))
+      const forenoonAttendanceQuery = `
+        SELECT COUNT(DISTINCT slot) as attended_slots
+        FROM re_appear 
+        WHERE student = ? 
+        AND DATE(att_session) = CURRENT_DATE()
+        AND slot IN (${forenoonSlotIds.join(',')})
+        AND status = '1';
+      `;
+      const forenoonAttendance = await get_database(forenoonAttendanceQuery, [studentId]);
+    
+      if (forenoonAttendance[0].attended_slots === forenoonSlotIds.length) {
+        forenoon = "1";
       }
+    
+      const afternoonSlotIds = afternoonSlots.map(slot => slot.id);
+     console.log(afternoonSlotIds.join(','))
+      const afternoonAttendanceQuery = `
+        SELECT COUNT(DISTINCT slot) as attended_slots
+        FROM re_appear 
+        WHERE student = ? 
+        AND DATE(att_session) = CURRENT_DATE()
+        AND slot IN (${afternoonSlotIds.join(',')})
+        AND status = '1';
+      `;
+      const afternoonAttendance = await get_database(afternoonAttendanceQuery, [studentId]);
+    
+      if (afternoonAttendance[0].attended_slots === afternoonSlotIds.length) {
+        afternoon = "1";
+      }
+      console.log(afternoonAttendance[0].attended_slots === afternoonSlotIds.length)
+    
+      // Role attendance validation logic
+      let roleMapResults
+      if (forenoon === "1" && afternoon === "1") {
+        const roleMapQuery = `
+          SELECT id 
+          FROM role_student_map 
+          WHERE student = ? AND status = '1';
+        `;
+         roleMapResults = await get_database(roleMapQuery, [studentId]);
+         console.log(roleMapResults)
+        let allRolesHaveDistinctAttendance = true;
+    
+    if(roleMapResults.length != 0){ 
+     
+         for (const roleMapResult of roleMapResults) {
+          const roleStudentId = roleMapResult.id;
+          const roleStudentQuery = `
+            SELECT DATE(attendance) AS present_day
+            FROM roles_student
+            WHERE student_map = ?
+            AND DATE(attendance) = CURRENT_DATE()
+            AND status = '1'
+            GROUP BY DATE(attendance)
+            HAVING COUNT(DISTINCT session) = (
+              SELECT COUNT(*) FROM session WHERE status = '1'
+            );
+          `;
+          const roleStudentRecords = await get_database(roleStudentQuery, [roleStudentId]);
+          console.log(roleStudentRecords)
+          if (roleStudentRecords.length === 0) {
+            allRolesHaveDistinctAttendance = false;
+            break; // If any role doesn't have distinct attendance, break out of the loop
+          }
+        }}
+    
+        if (!allRolesHaveDistinctAttendance) {
+          forenoon = "1";
+          afternoon = "0";
+        }
+      }
+    
+      // If student is present in re_appear but not in role attendance, set afternoon to 0
+      if (afternoon === "1" && roleMapResults.length !=0) {
+        console.log("sfbvuyfvbuayifabvuiyofvgyuasvdb")
+        const roleStudentQuery = `
+          SELECT COUNT(*) as count 
+          FROM roles_student 
+          WHERE student_map IN (
+            SELECT id FROM role_student_map WHERE student = ? AND status = '1'
+          )
+          AND DATE(attendance) = CURRENT_DATE() 
+          AND status = '1';
+        `;
+        const roleAttendanceCount = await get_database(roleStudentQuery, [studentId]);
+        if (roleAttendanceCount[0].count === 0) {
+          afternoon = "0"; 
+        }
+      }
+    
+      // Update or insert attendance records
+      const existingRecordQuery = `
+        SELECT * FROM attendance 
+        WHERE student = ? AND date = CURRENT_DATE();
+      `;
+      const existingRecord = await get_database(existingRecordQuery, [studentId]);
+    
+      if (existingRecord.length > 0) {
+        const updateAttendanceQuery = `
+          UPDATE attendance 
+          SET forenoon = ?, afternoon = ? 
+          WHERE student = ? AND date = CURRENT_DATE();
+        `;
+        await post_database(updateAttendanceQuery, [forenoon, afternoon, studentId]);
+      } else {
+        const insertAttendanceQuery = `
+          INSERT INTO attendance (student, date, forenoon, afternoon) 
+          VALUES (?, CURRENT_DATE(), ?, ?);
+        `;
+        await post_database(insertAttendanceQuery, [studentId, forenoon, afternoon]);
+      }
+    
+      // Process leaves if any
+      // await processLeaves(studentId, from_date, to_date);
     }
+    
 
     res.status(200).json({ message: "Attendance processed successfully" });
   } catch (error) {

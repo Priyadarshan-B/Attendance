@@ -8,11 +8,14 @@ exports.get_student_details = async (req, res) => {
   try {
     const query = `
       SELECT s.*, 
-             IFNULL(GROUP_CONCAT(r.name ORDER BY r.name ASC SEPARATOR ', '), NULL) AS roles
+             CASE 
+               WHEN COUNT(CASE WHEN rsm.status = '1' THEN r.id END) = 0 THEN NULL
+               ELSE GROUP_CONCAT(CASE WHEN rsm.status = '1' THEN r.name END ORDER BY r.name ASC SEPARATOR ', ')
+             END AS roles
       FROM students s
       LEFT JOIN role_student_map rsm ON s.id = rsm.student
       LEFT JOIN roles r ON rsm.role = r.id
-      WHERE s.id = ? AND (rsm.status = '1' OR rsm.status IS NULL)
+      WHERE s.id = ?
       GROUP BY s.id;
     `;
 

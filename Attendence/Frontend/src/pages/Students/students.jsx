@@ -126,7 +126,7 @@ function Body({ id, roll }) {
         } = response.data;
 
         setAttendancePercent({
-          present_days: parseInt(present_days),
+          present_days: present_days,
           absent_days,
           total_days,
           current_days,

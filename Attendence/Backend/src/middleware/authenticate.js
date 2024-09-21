@@ -21,6 +21,6 @@ const authenticateGoogleJWT = (req, res, next) => {
   } else {
     return res.redirect(302, `${CLIENT_URL}/login`);
   }
-};
+}; 
 
 module.exports = authenticateGoogleJWT;
