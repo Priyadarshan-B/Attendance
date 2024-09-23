@@ -13,6 +13,7 @@ import Approvals from "../Approvals/approval";
 import Type2Table from "./type2";
 import { getDecryptedCookie } from "../../components/utils/encrypt";
 import Cookies from "js-cookie";
+import Attendance from "../Attendance/attendance";
 
 function Mdashboard() {
   return (
@@ -232,22 +233,27 @@ function Body() {
         </div>
       </div>
       <div className="ch-table">
-        {/* <div className="att-chart">
-          <AttendanceChart mentorId={id} />
-        </div> */}
-        <br />
-        <div className="s-table">
-          {selectedComponent === "mentees" && (
-            // <MentorStudentsTable mentor={id} />
-            
-            <Approvals />
-          )}
-          {selectedComponent === "attendees" && (
-            <AttendanceTable mentorId={id} />
-          )}
-          {selectedComponent === "absent" && <AbsentTable mentorId={id} />}
-          {selectedComponent === "regular" && <RStudentTable mentor={id} />}
-          {selectedComponent === "nip" && <Type2Table mentor={id} />}
+        <div className="attendance">
+          <center>Attendance</center>
+          <br />
+          <Attendance/>
+        </div>
+        <div className="student-table">
+          <div className="s-table">
+            {selectedComponent === "mentees" && (
+              // <MentorStudentsTable mentor={id} />            
+              <Approvals />
+            )}
+            {selectedComponent === "attendees" && (
+              <AttendanceTable mentorId={id} />
+            )}
+            {selectedComponent === "absent" && <AbsentTable mentorId={id} />}
+            {selectedComponent === "regular" && <RStudentTable mentor={id} />}
+            {selectedComponent === "nip" && <Type2Table mentor={id} />}
+          </div>
+          <div className="att-chart">
+            <AttendanceChart mentorId={id} />
+          </div>
         </div>
       </div>
     </div>

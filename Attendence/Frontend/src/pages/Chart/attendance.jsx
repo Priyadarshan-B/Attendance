@@ -130,7 +130,7 @@ const AttendanceChart = ({ mentorId }) => {
           <h4>No Data Available</h4>
         </div>
       ) : (
-        <ReactApexChart options={chartData.options} series={chartData.series} type="line" />
+        <ReactApexChart options={chartData.options} height={400} series={chartData.series} type="line" />
       )}
     </div>
   );

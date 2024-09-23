@@ -13,13 +13,14 @@
     margin: 0;
     color: var(--text);
   }
-  h4, h2, h3, b, label, strong{
+  h4, h2, h3, b, label, strong, center{
     color: var(--text);
   }
 
   .custom-table b{
     color: white;
   }
+ 
   
   a {
     font-weight: 500;
