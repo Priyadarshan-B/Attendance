@@ -41,6 +41,19 @@
 .no-border td {
   border: none;
 }
+.hold-mobile{
+  display: none;
+
+}
+.hover-desk{
+  color: rgb(94, 188, 243);
+  display: inline-block;
+}
+.message{
+  font-size: 14px;
+  margin-left: 10px;
+  color: rgb(94, 188, 243);
+}
 
 @media(max-width:999px){
  
@@ -48,5 +61,17 @@
     padding: 2px;
     font-size: 12px;
   }
- 
+  
+}
+
+@media(max-width:1300px){
+  .hold-mobile{
+    color: rgb(94, 188, 243);
+    display: inline-block;
+  
+    }
+    .hover-desk{
+      display: none;
+    }
+   
 }

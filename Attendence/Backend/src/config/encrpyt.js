@@ -19,7 +19,7 @@ const decryptData = (encryptedData) => {
     console.error("Decryption failed", error);
     return null; 
   }
-};
+}; 
 
 const setEncryptedCookie = (res, key, value) => {
   const hashedKey = hashName(key);
