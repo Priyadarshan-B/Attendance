@@ -17,7 +17,7 @@ const decryptData = (encryptedData) => {
     return JSON.parse(decryptedData);
   } catch (error) {
     console.error("Decryption failed", error);
-    return null;
+    return null; 
   }
 };
 

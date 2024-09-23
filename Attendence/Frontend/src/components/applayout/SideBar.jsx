@@ -49,7 +49,7 @@ function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
   const [sidebarItems, setSidebarItems] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
-
+  const basePath = import.meta.env.VITE_BASE_PATH
   useEffect(() => {
     const fetchSidebarItems = async () => {
       try {
@@ -111,7 +111,7 @@ function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
               handleSideBar();
             }}
           >
-            <Link className="link" to={item.path}>
+            <Link className="link" to={`${basePath}`+item.path}>
               {getIconComponent(item.icon_path)}
               {item.name}
             </Link>

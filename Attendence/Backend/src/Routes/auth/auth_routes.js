@@ -49,6 +49,7 @@ router.get(
         `${process.env.API_URL}/auth/resources?role=${role}`
       );
       const allowedRoutes = response.data;
+      console.log(allowedRoutes)
 
       if (allowedRoutes.length > 0) {
         const routes = allowedRoutes.map((route) => route.path);
@@ -79,20 +80,20 @@ const generateToken = (user) => {
       profile: user.profilePhoto,
     },
     JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "1m" }
   );
 };
 
 // Logout
 router.post("/logout", (req, res) => {
   removeEncryptedCookie(res, "userData");
-  req.logout((err) => {
+  req.logout((err) => { 
     if (err) {
       return res.status(500).json({ message: "Error during logout" });
     }
     return res.status(200).json({ message: "Logout successful" });
   });
-});
+}); 
 
 router.get("/auth-app", AuthApp.get_auth);
 
