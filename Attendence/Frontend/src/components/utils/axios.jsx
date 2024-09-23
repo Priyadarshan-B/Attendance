@@ -34,7 +34,7 @@ const requestApi = async (method, url, data) => {
     // Check for a specific error status indicating an expired token (e.g., 401)
     if (response.status === 401) {
       removeEncryptedCookie("token");
-      navigate("/attendance/login");
+      // navigate("/attendance/login");
       toast.error("Session expired. Please log in again.");
       return { success: false, error: "Session expired" };
     }
