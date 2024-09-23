@@ -3,6 +3,7 @@
   border-radius: 8px;
   overflow: hidden;
   padding: 10px;
+  height: 85vh;
  
 }
 .favattendance-container {
@@ -63,8 +64,8 @@ color: #5775e441;
 }
 
 .time-slot {
-  margin-right: 10px;
-  margin-bottom: 10px;
+  /* margin-right: 10px;
+  margin-bottom: 10px; */
   display: flex;
   align-items: center;
 }
@@ -206,6 +207,13 @@ color: #5775e441;
   .checkbox-wrapper-4 .cbx {
     width: 100%;
     display: inline-block;
+  }
+  .attendance-container{
+    padding: 0px;
+  }
+  .no-result{
+    height: 100px;
+    width: 100px;
   }
 }
 @-moz-keyframes wave-4 {

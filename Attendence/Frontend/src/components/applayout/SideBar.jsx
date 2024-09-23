@@ -83,7 +83,7 @@ function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
 
   useEffect(() => {
     const pathname = location.pathname;
-    const activeItem = sidebarItems.find((item) => item.path === pathname);
+    const activeItem = sidebarItems.find((item) => `${basePath}`+item.path === pathname);
     if (activeItem) {
       setActiveItem(activeItem.name);
       if (onSidebarItemSelect) {

@@ -182,7 +182,7 @@ function Body() {
 
   return (
     <div className="attendance-container">
-      <h2>Students Attendance (Hour)</h2>
+      {/* <h2>Students Attendance (Hour)</h2> */}
 
       <button className="favourites" onClick={() => setLogs(!logs)}>
         {logs ? "Show All Students" : "Attendance Logs"}
@@ -248,7 +248,7 @@ function Body() {
               }}
             >
               <p>Please select a year..</p>
-              <img src={noresult} alt="" height="200px" width="200px" />
+              <img className="no-result" src={noresult} alt="" width="20%" />
             </div>
           )}
 
@@ -295,7 +295,7 @@ function Body() {
                 <Paper>
                   <TableContainer>
                     <Table aria-label="students table" className="custom-table">
-                      <TableHead>
+                      <TableHead sx={{whiteSpace:'nowrap'}}>
                         <TableRow>
                           {!showFavourites && <TableCell>Favourite</TableCell>}
                           <TableCell>S.No</TableCell>
@@ -305,7 +305,7 @@ function Body() {
                           <TableCell>Attendance</TableCell>
                         </TableRow>
                       </TableHead>
-                      <TableBody>
+                      <TableBody sx={{whiteSpace:'nowrap', textAlign:'center'}}>
                         {!shouldShowTable ? (
                           <TableRow>
                             <TableCell colSpan={6} className="no-results">
@@ -393,6 +393,7 @@ function Body() {
                         backgroundColor: "var(--text)",
                         ".MuiTablePagination-toolbar": {
                           backgroundColor: "var(--background-1)",
+                          padding:"0px"
                         },
                       }}
                     />

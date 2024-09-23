@@ -237,6 +237,8 @@ function Body() {
   return (
     <div>
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+       
+        <div className="table-container">
         <div>
           <InputBox
             value={searchTerm}
@@ -245,11 +247,11 @@ function Body() {
             style={{ width: "300px" }}
           />
         </div>
-        <div className="table-container">
+        <br />
           <Paper>
             <TableContainer>
               <Table className="custom-table">
-                <TableHead>
+                <TableHead sx={{whiteSpace:'nowrap'}}>
                   <TableRow>
                     <TableCell sx={{ width: "10px" }}>
                       <b>S.No</b>
@@ -264,7 +266,7 @@ function Body() {
                       <b>Register Number</b>
                     </TableCell>
                     <TableCell sx={{ width: "0px" }}>
-                      Attendance Percentage
+                      Attendance(%)
                     </TableCell>
                     <TableCell sx={{ width: "0px" }}>Type</TableCell>
                     <TableCell sx={{ width: "0px" }}>
@@ -278,7 +280,7 @@ function Body() {
                     </TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody sx={{whiteSpace:'nowrap', textAlign:'center'}}>
                   {filteredStudents
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((student, index) => (
@@ -291,7 +293,7 @@ function Body() {
                         <TableCell>{student.year}</TableCell>
                         <TableCell>{student.name}</TableCell>
                         <TableCell>{student.register_number}</TableCell>
-                        <TableCell>{student.att_percent} %</TableCell>
+                        <TableCell sx={{textAlign:'center'}}>{student.att_percent} %</TableCell>
                         <TableCell>{student.type}</TableCell>
                         <TableCell>
                           <img
@@ -396,6 +398,7 @@ function Body() {
                 backgroundColor: "var(--text)",
                 ".MuiTablePagination-toolbar": {
                   backgroundColor: "var(--background-1)",
+                  padding:"0px"
                 },
                 ".MuiTablePagination-actions svg": {
                   color: "var(--text)",
