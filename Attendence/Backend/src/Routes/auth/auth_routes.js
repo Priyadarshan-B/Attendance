@@ -80,7 +80,7 @@ const generateToken = (user) => {
       profile: user.profilePhoto,
     },
     JWT_SECRET,
-    { expiresIn: "1m" }
+    { expiresIn: "24h" }
   );
 };
 

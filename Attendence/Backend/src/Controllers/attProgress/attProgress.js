@@ -8,9 +8,10 @@ exports.get_att_progress = async(req, res)=>{
     }
     try{
         const query = `
-        SELECT 
+         SELECT 
     ts.id AS slot_id,
     ts.label AS slot_time,
+    m.name AS faculty,
     COALESCE(
         MAX(CASE WHEN ra.student = s.id AND DATE(ra.att_session) = ? THEN 1 ELSE 0 END), 0
     ) AS is_present
@@ -18,12 +19,14 @@ FROM
     time_slots ts
 LEFT JOIN students s ON ts.year = s.year
 LEFT JOIN re_appear ra ON ra.slot = ts.id AND ra.student = s.id
+LEFT JOIN mentor m ON m.id = ra.faculty
+
 WHERE 
     s.id = ?
     AND ts.year = ?
     AND ts.status = '1' 
 GROUP BY 
-    ts.id, ts.label
+    ts.id, ts.label, m.name
 ORDER BY 
     ts.id;
         `

@@ -70,11 +70,11 @@ function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
           setSidebarItems(response.data);
         } else {
           console.error("Error fetching sidebar items:", response.error);
-          navigate("/attendance/login"); 
+          // navigate("/attendance/login"); 
         }
       } catch (error) {
         console.error("Error fetching sidebar items:", error);
-        navigate("/attendance/login"); 
+        // navigate("/attendance/login"); 
       }
     };
 
