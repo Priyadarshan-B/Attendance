@@ -229,7 +229,7 @@ function Body() {
       console.error("No student ID found");
     }
   };
-
+// console.log(selectedStudent.type)
   if (showLeave) {
     return <LeaveDetails />;
   }
@@ -253,17 +253,18 @@ function Body() {
               <Table className="custom-table">
                 <TableHead sx={{whiteSpace:'nowrap'}}>
                   <TableRow>
-                    <TableCell sx={{ width: "10px" }}>
+                    {/* <TableCell sx={{ width: "10px" }}>
                       <b>S.No</b>
-                    </TableCell>
-                    <TableCell sx={{ width: "10px" }}>
-                      <b>Year</b>
-                    </TableCell>
+                    </TableCell> */}
+                    
                     <TableCell sx={{ width: "10px", whiteSpace: "nowrap" }}>
                       <b>Name</b>
                     </TableCell>
                     <TableCell sx={{ width: "0px" }}>
                       <b>Register Number</b>
+                    </TableCell>
+                    <TableCell sx={{ width: "10px" }}>
+                      <b>Year</b>
                     </TableCell>
                     <TableCell sx={{ width: "0px" }}>
                       Attendance(%)
@@ -289,12 +290,12 @@ function Body() {
                         onClick={() => handleRowClick(student)}
                         style={{ cursor: "pointer" }}
                       >
-                        <TableCell>{page * rowsPerPage + index + 1}</TableCell>
-                        <TableCell>{student.year}</TableCell>
+                        {/* <TableCell>{page * rowsPerPage + index + 1}</TableCell> */}
                         <TableCell>{student.name}</TableCell>
                         <TableCell>{student.register_number}</TableCell>
+                        <TableCell>{student.year}</TableCell>
                         <TableCell sx={{textAlign:'center'}}>{student.att_percent} %</TableCell>
-                        <TableCell>{student.type}</TableCell>
+                        <TableCell>{student.type_name}</TableCell>
                         <TableCell>
                           <img
                             src={student.att_status === "1" ? approve : reject}
@@ -486,6 +487,7 @@ function Body() {
                   studentId={selectedStudent.id}
                   date={selectedDate.format("YYYY-MM-DD")}
                   year={selectedStudent.year}
+                  type={selectedStudent.type}
                   register_number={selectedStudent.register_number}
                 />
               </div>
@@ -500,3 +502,4 @@ function Body() {
 }
 
 export default Approvals;
+

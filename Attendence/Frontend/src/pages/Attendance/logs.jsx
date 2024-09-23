@@ -78,21 +78,21 @@ function Body() {
         <Paper>
           <TableContainer>
             <Table className="custom-table">
-              <TableHead>
+              <TableHead sx={{ whiteSpace: "nowrap" }}>
                 <TableRow>
-                  <TableCell>S.No</TableCell>
+                  {/* <TableCell>S.No</TableCell> */}
                   <TableCell>Name</TableCell>
                   <TableCell>Register Number</TableCell>
                   <TableCell>Session</TableCell>
                   <TableCell>Logged Time</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody sx={{ whiteSpace: "nowrap" }}>
                 {filteredStudents
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((student, index) => (
                     <TableRow key={student.id}>
-                      <TableCell>{index + 1}</TableCell>
+                      {/* <TableCell>{index + 1}</TableCell> */}
                       <TableCell>{student.name}</TableCell>
                       <TableCell>{student.register_number}</TableCell>
                       <TableCell>{student.label}</TableCell>

@@ -3,7 +3,8 @@
   border-radius: 8px;
   overflow: hidden;
   padding: 10px;
-  height: 85vh;
+  /* height: 85vh; */
+  min-height: 60vh;
  
 }
 .favattendance-container {
@@ -135,7 +136,7 @@ color: #5775e441;
   -webkit-user-select: none;
   user-select: none;
   cursor: pointer;
-  padding: 6px 8px;
+  /* padding: 6px 8px; */
   border-radius: 6px;
   overflow: hidden;
   transition: all 0.2s ease;

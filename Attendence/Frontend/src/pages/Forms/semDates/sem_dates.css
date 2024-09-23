@@ -25,3 +25,8 @@
 .submit-btn {
     align-self: flex-end;
 }
+
+.sem-dates{
+    display: flex;
+    
+}

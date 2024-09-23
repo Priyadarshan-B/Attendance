@@ -863,7 +863,7 @@ function Body({ id, roll }) {
         <div className="att_det_others">
         <h3
             style={{
-              backgroundColor: "#1e2631",
+              backgroundColor: "var(--head-1)",
               padding: "10px",
               margin: "0px 0px 10px 0px",
               borderRadius: "5px",
@@ -1048,7 +1048,7 @@ function Body({ id, roll }) {
                   </TableHead>
                   <TableBody>
                     {roleatt
-                      .slice(pageNip * rowPage, pageNip * rowPage + rowPage)
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((record, index) => (
                         <TableRow key={index}>
                           <TableCell>{index + 1}</TableCell>
@@ -1064,10 +1064,10 @@ function Body({ id, roll }) {
                   rowsPerPageOptions={[5]}
                   component="div"
                   count={attendanceRecords.length}
-                  rowsPerPage={rowPage}
-                  page={pageNip}
-                  onPageChange={handlePage}
-                  onRowsPerPageChange={handleChangeRowsPage}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
                   sx={{
                     backgroundColor: "var(--text)",
                     ".MuiTablePagination-toolbar": {
