@@ -1,6 +1,6 @@
 .map-student-container{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
 }
 
@@ -8,10 +8,12 @@
     background-color: var(--background-2);
     padding: 15px;
     border-radius: 10px;
+    flex: 1;
 }
 
 .map-table{
     background-color: var(--background-2);
     padding: 10px;
     border-radius: 10px;
+    flex: 1;
 }

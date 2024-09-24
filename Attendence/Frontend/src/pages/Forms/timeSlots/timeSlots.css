@@ -1,6 +1,7 @@
 .time-slot-form-container{
     background-color: var(--background-2);
     border-radius: 10px;
+    flex: 1;
 }
 .time-form{
     width: 100%;
@@ -13,4 +14,8 @@
 
 .react-select{
     z-index: 2;
+}
+
+.time-slots{
+    display: flex;
 }

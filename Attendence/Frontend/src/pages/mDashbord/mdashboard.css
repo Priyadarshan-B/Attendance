@@ -36,6 +36,7 @@ h3{
     background-color: var(--background-2);
     border-radius: 5px;
    flex: 1;
+   min-width: 30%;
    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
    max-height: 450px;
     }
@@ -65,8 +66,14 @@ h3{
     display: flex;
     gap: 10px;
     flex-direction: row-reverse;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
 }
+@media (max-width: 1650px) {
+  .ch-table{
+    flex-direction: column-reverse;
+  }
+}
+
 @media (max-width: 1600px) {
   .count-box {
     grid-template-columns: repeat(5, 1fr); 
@@ -80,6 +87,9 @@ h3{
     .attendance{
       max-width: 100%;
       /* overflow: scroll; */
+    }
+    .ch-table{
+      flex-direction: column-reverse;
     }
   }
   

@@ -25,7 +25,7 @@ const customStyles = {
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isSelected ? '#35424d' : 'var(--background-2)',
+      backgroundColor: state.isSelected ? 'var(--background-1)' : 'var(--background-2)',
       color: 'var(--text)',
       '&:hover': {
         backgroundColor: 'var(--background-1)',

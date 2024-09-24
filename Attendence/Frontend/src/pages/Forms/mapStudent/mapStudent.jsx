@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TablePagination } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  TablePagination,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import requestApi from "../../../components/utils/axios";
-import Select from "react-select"; 
+import Select from "react-select";
 import customStyles from "../../../components/applayout/selectTheme";
 import Button from "../../../components/Button/Button";
 import toast from "react-hot-toast";
 import InputBox from "../../../components/TextBox/textbox";
-import './mapStudent.css'
+import "./mapStudent.css";
 
 function MapStudent() {
   return <Body />;
@@ -45,7 +55,10 @@ function Body() {
 
   const fetchStudents = (inputValue) => {
     if (inputValue.length >= 3 && selectedYear) {
-      requestApi("GET", `/all-students?year=${selectedYear.value}&search=${inputValue}`)
+      requestApi(
+        "GET",
+        `/all-students?year=${selectedYear.value}&search=${inputValue}`
+      )
         .then((response) => {
           const formattedStudents = response.data.map((student) => ({
             value: student.id,
@@ -65,7 +78,6 @@ function Body() {
     requestApi("GET", "/role-student")
       .then((response) => {
         setRoleStudentData(response.data);
-
       })
       .catch((error) => {
         console.error("Error fetching role-student data:", error);
@@ -118,12 +130,12 @@ function Body() {
     setPage(0);
   };
 
-  const filteredData = roleStudentData.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery) ||
-    item.register_number.toLowerCase().includes(searchQuery) ||
-    item.role.toLowerCase().includes(searchQuery)
+  const filteredData = roleStudentData.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchQuery) ||
+      item.register_number.toLowerCase().includes(searchQuery) ||
+      item.role.toLowerCase().includes(searchQuery)
   );
- 
 
   const yearOptions = [
     { value: "I", label: "I" },
@@ -134,8 +146,9 @@ function Body() {
 
   return (
     <div className="map-student-container">
-      <h3>Map Students to Other Role</h3>
       <div className="map-student">
+        <h3>Map Students to Other Role</h3>
+        <br />
         <div className="form-group">
           <label htmlFor="role-select">Select Role</label>
           <Select
@@ -143,7 +156,7 @@ function Body() {
             options={roles}
             value={selectedRole}
             onChange={setSelectedRole}
-            styles={customStyles} 
+            styles={customStyles}
             placeholder="Select Role"
             isClearable
           />
@@ -154,7 +167,7 @@ function Body() {
             id="role-select"
             options={yearOptions}
             value={selectedYear}
-            styles={customStyles} 
+            styles={customStyles}
             onChange={setSelectedYear}
             placeholder="Select Year"
             isClearable
@@ -165,20 +178,21 @@ function Body() {
           <Select
             id="students-select"
             options={studentOptions}
-            styles={customStyles} 
+            styles={customStyles}
             value={selectedStudents}
             onChange={setSelectedStudents}
             placeholder="Select students"
             isMulti
             onInputChange={fetchStudents}
-            noOptionsMessage={({ inputValue }) => 
+            noOptionsMessage={({ inputValue }) =>
               !selectedYear
                 ? "Please select a year first"
-                : inputValue.length > 0 
-                  ? inputValue.length < 3 
-                    ? "Type at least 3 characters to search" 
-                    : "No students found" 
-                  : "Type to search..."}
+                : inputValue.length > 0
+                ? inputValue.length < 3
+                  ? "Type at least 3 characters to search"
+                  : "No students found"
+                : "Type to search..."
+            }
           />
         </div>
         <Button onClick={handleSubmit} label="Submit" />
@@ -199,29 +213,42 @@ function Body() {
               <Table className="custom-table">
                 <TableHead>
                   <TableRow>
-                    <TableCell><b>Role</b></TableCell>
-                    <TableCell><b>Student Name</b></TableCell>
-                    <TableCell><b>Register Number</b></TableCell>
-                    <TableCell><b>Actions</b></TableCell>
+                    <TableCell>
+                      <b>Role</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Student Name</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Register Number</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Actions</b>
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredData.length > 0 ? (
-                    filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                      <TableRow key={row.id}>
-                        <TableCell>{row.role}</TableCell>
-                        <TableCell>{row.name}</TableCell>
-                        <TableCell>{row.register_number}</TableCell>
-                        <TableCell>
-                          <IconButton
-                            onClick={() => handleDelete(row.id)}
-                            color="error"
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))
+                    filteredData
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row) => (
+                        <TableRow key={row.id}>
+                          <TableCell>{row.role}</TableCell>
+                          <TableCell>{row.name}</TableCell>
+                          <TableCell>{row.register_number}</TableCell>
+                          <TableCell>
+                            <IconButton
+                              onClick={() => handleDelete(row.id)}
+                              color="error"
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))
                   ) : (
                     <TableRow>
                       <TableCell colSpan={4} align="center">
@@ -241,9 +268,9 @@ function Body() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               sx={{
-                backgroundColor: 'var(--text)', 
-                '.MuiTablePagination-toolbar': {
-                  backgroundColor: 'var(--background-1)', 
+                backgroundColor: "var(--text)",
+                ".MuiTablePagination-toolbar": {
+                  backgroundColor: "var(--background-1)",
                 },
               }}
             />

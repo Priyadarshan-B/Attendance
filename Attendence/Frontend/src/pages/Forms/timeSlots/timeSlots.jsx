@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import requestApi from "../../../components/utils/axios";
 import Button from "../../../components/Button/Button";
-import TextField from '@mui/material/TextField';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import format from 'date-fns/format';
-import Select from 'react-select';
+import TextField from "@mui/material/TextField";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import format from "date-fns/format";
+import Select from "react-select";
 import customStyles from "../../../components/applayout/selectTheme";
 import InputBox from "../../../components/TextBox/textbox";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,7 +21,7 @@ import {
   TablePagination,
   Paper,
 } from "@mui/material";
-import './timeSlots.css';
+import "./timeSlots.css";
 
 const TimeSlotForm = ({ onClose }) => {
   const [label, setLabel] = useState("");
@@ -56,11 +56,15 @@ const TimeSlotForm = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formattedStartTime = startTime ? format(startTime, 'HH:mm:ss') : '';
-    const formattedEndTime = endTime ? format(endTime, 'HH:mm:ss') : '';
+    const formattedStartTime = startTime ? format(startTime, "HH:mm:ss") : "";
+    const formattedEndTime = endTime ? format(endTime, "HH:mm:ss") : "";
 
     try {
-      await requestApi("POST", "/slots", { label, start_time: formattedStartTime, end_time: formattedEndTime });
+      await requestApi("POST", "/slots", {
+        label,
+        start_time: formattedStartTime,
+        end_time: formattedEndTime,
+      });
       console.log("Posted Successfully");
       setLabel("");
       setStartTime(null);
@@ -93,19 +97,20 @@ const TimeSlotForm = ({ onClose }) => {
     try {
       await requestApi("PUT", `/time-slots?id=${slotId}`);
       // Update the timeSlots state after deletion
-      setTimeSlots(timeSlots.filter(slot => slot.id !== slotId));
+      setTimeSlots(timeSlots.filter((slot) => slot.id !== slotId));
     } catch (error) {
       console.error("Error deleting time slot:", error);
     }
   };
 
-  const filteredTimeSlots = timeSlots.filter((slot) =>
-    slot.label.toLowerCase().includes(search.toLowerCase()) ||
-    slot.year.toLowerCase().includes(search.toLowerCase())
+  const filteredTimeSlots = timeSlots.filter(
+    (slot) =>
+      slot.label.toLowerCase().includes(search.toLowerCase()) ||
+      slot.year.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div>
+    <div className="time-slots">
       <div className="time-slot-form-container">
         <form onSubmit={handleSubmit} className="time-form">
           <h2>Add Time Slot</h2>
@@ -117,8 +122,7 @@ const TimeSlotForm = ({ onClose }) => {
                 onChange={handleYearChange}
                 placeholder="Select Year"
                 className="year-dropdown"
-                styles={customStyles} 
-
+                styles={customStyles}
                 isClearable
               />
             </div>
@@ -158,7 +162,7 @@ const TimeSlotForm = ({ onClose }) => {
           <Button type="submit" label="Add Time Slots" />
         </form>
       </div>
-<br />
+      <br />
       <div className="table-container">
         <InputBox
           placeholder="Search..."
@@ -168,7 +172,11 @@ const TimeSlotForm = ({ onClose }) => {
         <br /> <br />
         <Paper>
           <TableContainer>
-            <Table stickyHeader aria-label="time slot table" className="custom-table">
+            <Table
+              stickyHeader
+              aria-label="time slot table"
+              className="custom-table"
+            >
               <TableHead>
                 <TableRow>
                   <TableCell>S.No</TableCell>
@@ -190,7 +198,10 @@ const TimeSlotForm = ({ onClose }) => {
                       <TableCell>{slot.start_time}</TableCell>
                       <TableCell>{slot.end_time}</TableCell>
                       <TableCell>
-                        <DeleteIcon style={{color:'#ff5858'}} onClick={() => handleDelete(slot.id)}/>
+                        <DeleteIcon
+                          style={{ color: "#ff5858" }}
+                          onClick={() => handleDelete(slot.id)}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -206,9 +217,9 @@ const TimeSlotForm = ({ onClose }) => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             sx={{
-              backgroundColor: 'var(--text)', 
-              '.MuiTablePagination-toolbar': {
-                backgroundColor: 'var(--background-1)', 
+              backgroundColor: "var(--text)",
+              ".MuiTablePagination-toolbar": {
+                backgroundColor: "var(--background-1)",
               },
             }}
           />

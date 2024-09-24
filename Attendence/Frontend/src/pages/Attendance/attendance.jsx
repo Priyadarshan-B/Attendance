@@ -18,10 +18,6 @@ import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 import noresult from "../../assets/no-results.png";
 import Logs from "./logs";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import TextField from "@mui/material/TextField";
 import customStyles from "../../components/applayout/selectTheme";
 import { getDecryptedCookie } from "../../components/utils/encrypt";
 
@@ -225,7 +221,7 @@ function Body() {
                             <use xlinkHref="#check-4"></use>
                           </svg>
                         </span>
-                        <span>{slot.label}</span>
+                        <span style={{fontSize:'16px'}}>{slot.label}</span>
                       </label>
                       <svg className="inline-svg">
                         <symbol id="check-4" viewBox="0 0 12 10">
@@ -245,10 +241,11 @@ function Body() {
                 display: "flex",
                 flexDirection: "column-reverse",
                 alignItems: "center",
+                height:'40vh'
               }}
             >
               <p>Please select a year..</p>
-              <img className="no-result" src={noresult} alt="" width="20%" />
+              <img className="no-result" src={noresult} alt="" width="10%" />
             </div>
           )}
 
@@ -298,7 +295,6 @@ function Body() {
                       <TableHead sx={{whiteSpace:'nowrap'}}>
                         <TableRow>
                           {!showFavourites && <TableCell>Favourite</TableCell>}
-                          <TableCell>S.No</TableCell>
                           <TableCell>Year</TableCell>
                           <TableCell>Name</TableCell>
                           <TableCell>Register Number</TableCell>
@@ -350,7 +346,6 @@ function Body() {
                                     />
                                   </TableCell>
                                 )}
-                                <TableCell>{index + 1}</TableCell>
                                 <TableCell>{selectedYear.value}</TableCell>
                                 <TableCell>{student.name}</TableCell>
                                 <TableCell>{student.register_number}</TableCell>

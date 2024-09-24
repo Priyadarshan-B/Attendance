@@ -25,7 +25,7 @@ exports.get_students = async (req, res) => {
 
   try {
     let query = `
-SELECT s.*, p.placement_rank, p.placement_group, p.placement_score, p.personalized_skill, p.reward_points, p.att_percent,t.type
+SELECT s.*, p.placement_rank, p.placement_group, p.placement_score, p.personalized_skill, p.reward_points, p.att_percent,t.type AS type_name
 FROM students s
 JOIN mentor_student ms ON s.id = ms.student
 LEFT JOIN placement_data p ON s.id = p.student

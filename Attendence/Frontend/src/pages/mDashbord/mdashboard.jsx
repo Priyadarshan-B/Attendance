@@ -16,20 +16,17 @@ import Cookies from "js-cookie";
 import Attendance from "../Attendance/attendance";
 
 function Mdashboard() {
-  return (
-  <Body />
-);
+  return <Body />;
 }
 function Body() {
-  
-  const id = getDecryptedCookie('id')
+  const id = getDecryptedCookie("id");
   const [scount, setSCount] = useState(0);
   const [tcount, setTCount] = useState(0);
   const [subCount, SetsubCount] = useState(0);
   const [regcount, setRegCount] = useState(0);
   const [type2count, setType2Count] = useState(0);
   const [tabCount, setTAbCount] = useState(0);
-  const [selectedComponent, setSelectedComponent] = useState('mentees');
+  const [selectedComponent, setSelectedComponent] = useState("mentees");
 
   const fetchStudentDetails = async () => {
     try {
@@ -60,7 +57,7 @@ function Body() {
           className="count"
           style={{
             cursor: "pointer",
-            backgroundColor:'var(--background-2)'
+            backgroundColor: "var(--background-2)",
           }}
           onClick={() => handleClick("mentees")}
         >
@@ -118,7 +115,7 @@ function Body() {
           className="count"
           style={{
             backgroundColor: "var(--background-2)",
-            cursor:'pointer'
+            cursor: "pointer",
           }}
           onClick={() => handleClick("attendees")}
         >
@@ -233,15 +230,12 @@ function Body() {
         </div>
       </div>
       <div className="ch-table">
-        <div className="attendance">
-          <center>Attendance</center>
-          <br />
-          <Attendance/>
+        <div className="att-chart">
+          <AttendanceChart mentorId={id} />
         </div>
         <div className="student-table">
           <div className="s-table">
             {selectedComponent === "mentees" && (
-              // <MentorStudentsTable mentor={id} />            
               <Approvals />
             )}
             {selectedComponent === "attendees" && (
@@ -251,11 +245,16 @@ function Body() {
             {selectedComponent === "regular" && <RStudentTable mentor={id} />}
             {selectedComponent === "nip" && <Type2Table mentor={id} />}
           </div>
-          <div className="att-chart">
-            <AttendanceChart mentorId={id} />
-          </div>
+
+         
         </div>
       </div>
+      <br />
+      <div className="attendance">
+            <center>Attendance</center>
+            <br />
+            <Attendance />
+          </div>
     </div>
   );
 }
