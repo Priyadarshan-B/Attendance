@@ -1170,7 +1170,7 @@ function Body({ id, roll }) {
             )}
           </div>
         </div>
-        <div style={{flex:"1"}}></div>
+        <div className="leave-details-s"></div>
       </div>
     </div>
   );

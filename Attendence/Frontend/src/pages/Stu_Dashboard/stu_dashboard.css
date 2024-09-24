@@ -9,10 +9,15 @@
     gap: 10px;
     flex-wrap: wrap;
 }
-
+.leave-details-s{
+    flex: 1;
+}
 @media (max-width:900px){
     .attendance-percentage-and-status{
         flex-direction: column;
+    }
+    .leave-details-s{
+        display: none;
     }
     
 }
