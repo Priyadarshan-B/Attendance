@@ -140,7 +140,7 @@ function Body() {
                 percentage_present: "0.00",
               };
             }
-            // Store forenoon and afternoon status for each date
+            
             studentsMap[entry.student_id].attendance[detail.date] = {
               forenoon_status: entry.forenoon_status,
               afternoon_status: entry.afternoon_status,
