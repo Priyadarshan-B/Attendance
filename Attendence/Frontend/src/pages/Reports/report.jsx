@@ -78,31 +78,60 @@ function Body() {
           slot,
         ]);
         worksheet = XLSX.utils.aoa_to_sheet([totalAbsentRow, [], [], studentHeader, ...studentRows]);
-      } else if (type === "present-slot") {
+      } else if(type === "present"){
         const totalPresentRow = [`Total Present Students: ${data.total_present_students}`];
-        const studentHeader = ["student_name", "register_number", "mail", "mentor_name", "attendance_taken", "slot"];
-        const studentRows = data.students.map(({ student_name, register_number, mail, mentor_name, attendance_taken, slot }) => [
-          student_name,
+        const studentHeader = ["register_number", "student_name", "year","gmail", "department", "slot"];
+        const studentRows = data.students.map(({ register_number, name,year, gmail, department, present }) => [
           register_number,
+          name,
+          year,
+          gmail,
+          department,
+          present,
+        ]);
+        worksheet = XLSX.utils.aoa_to_sheet([totalPresentRow, [], [], studentHeader, ...studentRows]);
+      }
+      else if(type === "absent"){
+        const totalPresentRow = [`Total Absent Students: ${data.total_absent_students}`];
+        const studentHeader = ["register_number", "student_name", "year","gmail", "department"];
+        const studentRows = data.students.map(({ register_number, name,year, gmail, department }) => [
+          register_number,
+          name,
+          year,
+          gmail,
+          department,
+          // present,
+        ]);
+        worksheet = XLSX.utils.aoa_to_sheet([totalPresentRow, [], [], studentHeader, ...studentRows]);
+      }
+      else if (type === "present-slot") {
+        const totalPresentRow = [`Total Present Students(Slot-wise): ${data.total_present_students}`];
+        const studentHeader = ["register_number","student_name" , "mail", "mentor_name", "attendance_taken", "slot"];
+        const studentRows = data.students.map(({  register_number,student_name, mail, mentor_name, attendance_taken, slot }) => [
+          register_number,
+          student_name,
           mail,
           mentor_name,
           attendance_taken,
           slot,
         ]);
         worksheet = XLSX.utils.aoa_to_sheet([totalPresentRow, [], [], studentHeader, ...studentRows]);
-      } else if (type === "consolidate") {
+      } 
+      else if (type === "consolidate") {
         if (!data.attendance_details || !data.student_summary) {
           throw new Error("Invalid data format: Missing 'attendance_details' or 'student_summary'");
         }
-  
+      
         const dates = [...new Set(data.attendance_details.map((detail) => detail.date))];
         const studentsMap = {};
+      
+        // Collect attendance data
         data.attendance_details.forEach((detail) => {
           detail.attendance.forEach((entry) => {
             if (!studentsMap[entry.student_id]) {
               studentsMap[entry.student_id] = {
-                student_name: entry.student_name,
                 register_number: entry.register_number,
+                student_name: entry.student_name,
                 gmail: entry.gmail,
                 attendance: {},
                 total_present: 0,
@@ -111,10 +140,14 @@ function Body() {
                 percentage_present: "0.00",
               };
             }
-            studentsMap[entry.student_id].attendance[detail.date] = entry.STATUS;
+            // Store forenoon and afternoon status for each date
+            studentsMap[entry.student_id].attendance[detail.date] = {
+              forenoon_status: entry.forenoon_status,
+              afternoon_status: entry.afternoon_status,
+            };
           });
         });
-  
+      
         data.student_summary.forEach((summary) => {
           if (studentsMap[summary.student_id]) {
             studentsMap[summary.student_id].total_present = summary.total_present;
@@ -123,21 +156,47 @@ function Body() {
             studentsMap[summary.student_id].percentage_present = summary.percentage_present;
           }
         });
-  
-        const headers = ["Name", "Register Number", "Email", ...dates, "Present", "Absent", "Total Days", "Percentage"];
+      
+        const headerRow1 = ["Register Number","Name", "Email"];
+        const headerRow2 = ["", "", ""]; 
+      
+        dates.forEach((date) => {
+          headerRow1.push(date, "");
+          headerRow2.push("FN", "AN"); 
+        });
+      
+        headerRow1.push("Present Days", "Absent Days", "Total Days", "Attendance Percentage");
+        headerRow2.push("", "", "", ""); 
+      
         const rows = Object.values(studentsMap).map((student) => [
-          student.student_name,
           student.register_number,
+          student.student_name,
           student.gmail,
-          ...dates.map((date) => student.attendance[date] || "NA"),
+          ...dates.map((date) => {
+            const attendance = student.attendance[date] || {};
+            return [
+              attendance.forenoon_status || "NA", 
+              attendance.afternoon_status || "NA"  
+            ];
+          }).flat(),
           student.total_present,
           student.total_absent,
           student.total_days,
           student.percentage_present,
         ]);
-        worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
-      }
-  
+      
+        worksheet = XLSX.utils.aoa_to_sheet([headerRow1, headerRow2, ...rows]);
+      
+        dates.forEach((_, index) => {
+          const colStart = 3 + index * 2; 
+          worksheet["!merges"] = worksheet["!merges"] || [];
+          worksheet["!merges"].push({
+            s: { r: 0, c: colStart }, 
+            e: { r: 0, c: colStart + 1 }, 
+          });
+        });
+            }
+      
       XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
       XLSX.writeFile(workbook, fileName);
     } catch (error) {
@@ -187,7 +246,7 @@ function Body() {
   };
 
   const yearOptions = [
-    { value: "All", label: "All" },
+    // { value: "All", label: "All" },
     { value: "I", label: "I" },
     { value: "II", label: "II" },
     { value: "III", label: "III" },
@@ -200,7 +259,7 @@ function Body() {
       <h2>Summary</h2>
       <div className="report-flex">
         <div className="absentReport" style={{ flex: "1" }}>
-          <h3>Absentee Report</h3>
+          <h3>Absent Report</h3>
           <br />
           <div>
             <div className="select-date">
@@ -220,6 +279,8 @@ function Body() {
                     value={absentDate}
                     onChange={(newValue) => setAbsentDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
+                    slotProps={{ textField: { size: 'small' } }}
+
                   />
                 </LocalizationProvider>
               </div>
@@ -235,7 +296,7 @@ function Body() {
           <br />
           <div>
             <div className="select-date">
-              <div style={{ flex: "1", width: "300px" }}>
+              <div style={{ flex: "1", width: "300px", zIndex:'300' }}>
                 <Select
                   value={presentYear}
                   onChange={setPresentYear}
@@ -251,6 +312,8 @@ function Body() {
                     value={presentDate}
                     onChange={(newValue) => setPresentDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
+                    slotProps={{ textField: { size: 'small' } }}
+
                   />
                 </LocalizationProvider>
               </div>
@@ -275,6 +338,7 @@ function Body() {
                 isClearable
               />
             </div>
+            <br />
             <Button
               onClick={() => handleDownload("student")}
               label="Download Student Report"
@@ -293,7 +357,7 @@ function Body() {
                 gap: "10px",
               }}
             >
-              <div style={{ flex: "1" }}>
+              <div style={{ flex: "1",zIndex:"200" }}>
                 <Select
                   value={slotYear}
                   onChange={setSlotYear}
@@ -303,7 +367,7 @@ function Body() {
                   isClearable
                 />
               </div>
-              <div style={{ flex: "1" }}>
+              <div style={{ flex: "1", zIndex:"100" }}>
                 <Select
                   value={slot}
                   onChange={setSlot}
@@ -318,7 +382,9 @@ function Body() {
                   <DatePicker
                     value={absentSlotDate}
                     onChange={(newValue) => setAbsentSlotDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => <TextField {...params } />}
+                    slotProps={{ textField: { size: 'small' } }}
+
                   />
                 </LocalizationProvider>
               </div>
@@ -362,6 +428,8 @@ function Body() {
                     value={presentSlotDate}
                     onChange={(newValue) => setPresentSlotDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
+                    slotProps={{ textField: { size: 'small' } }}
+
                   />
                 </LocalizationProvider>
               </div>
@@ -394,6 +462,8 @@ function Body() {
                   value={consolidateFDate}
                   onChange={(newValue) => setConsolidateFDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
+                  slotProps={{ textField: { size: 'small' } }}
+
                 />
               </LocalizationProvider>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -402,6 +472,8 @@ function Body() {
                   value={consolidateTDate}
                   onChange={(newValue) => setConsolidateTDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
+                  slotProps={{ textField: { size: 'small' } }}
+
                 />
               </LocalizationProvider>
               <Button

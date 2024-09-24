@@ -400,24 +400,28 @@ input[type="checkbox"]:disabled + .cbx {
 
 .submit-attendance{
   padding: 10px;
-  border-radius: 20px;
-  background-color: #c2d7ff;
-  border: 1px solid rgb(100, 100, 255);
-  color: black;
-  font-weight: 700;
+  border-radius: 10px;
+  background-color: #c1e6ff;
+  color: #2738fd;
+  font-weight: 600;
   font-size: 16px;
+  border: none;
 }
 .submit-attendance:hover{
-  background-color: #79a8ff ;
+  background-color: #8cd1ff ;
+  /* color: rgb(0, 0, 0); */
+  box-shadow: 0px 0px 2px  #8cd1ff;
+
 }
 .favourites{
   padding: 10px;
-  border-radius: 20px;
-  background-color: pink;
-  color: black;
-  /* float: right; */
+  border-radius: 10px;
+  background-color: #ffe3e3;
+  color: #d33a2c;
+  border: none;
 }
 
 .favourites:hover{
-background-color: #9be3d2;
+  background-color: #ffe3e3;
+box-shadow: 0px 0px 2px  #ff1818;
 }

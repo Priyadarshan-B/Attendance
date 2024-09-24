@@ -13,22 +13,30 @@ exports.get_present_reports = async (req, res) => {
     if (year === "All") {
       query = `
                 SELECT 
-                    s.id AS student_id, 
-                    s.name,
-                    s.register_number, 
-                    s.year, 
-                    s.department,
-                    s.gmail
-                FROM 
-                    students s
-                LEFT JOIN 
-                    attendance a 
-                    ON s.id = a.student 
-                    AND a.date = ?
-                WHERE 
-                    a.id IS NOT NULL  
-                    OR a.forenoon = '1' 
-                    OR a.afternoon = '1';
+    s.id AS student_id, 
+    s.name,
+    s.register_number, 
+    s.year, 
+    s.department,
+    s.gmail,
+    CASE
+        WHEN a.forenoon = '1' AND a.afternoon = '1' THEN 'FN & AN'
+        WHEN a.forenoon = '1' THEN 'FN'
+        WHEN a.afternoon = '1' THEN 'AN'
+        ELSE NULL
+    END AS present
+FROM 
+    students s
+LEFT JOIN 
+    attendance a 
+    ON s.id = a.student 
+    AND a.date = ?
+WHERE 
+    (a.id IS NOT NULL  
+    OR a.forenoon = '1' 
+    OR a.afternoon = '1');
+    
+
             `;
     } else if (
       year === "I" ||
@@ -37,24 +45,31 @@ exports.get_present_reports = async (req, res) => {
       year === "IV"
     ) {
       query = `
-                SELECT 
-                    s.id AS student_id, 
-                    s.name,
-                    s.register_number, 
-                    s.year, 
-                    s.department,
-                    s.gmail
-                FROM 
-                    students s
-                LEFT JOIN 
-                    attendance a 
-                    ON s.id = a.student 
-                    AND a.date = ?
-                WHERE 
-                    (a.id IS NOT NULL  
-                    OR a.forenoon = '1' 
-                    OR a.afternoon = '1')
-                    AND s.year = ?;
+               SELECT 
+    s.id AS student_id, 
+    s.name,
+    s.register_number, 
+    s.year, 
+    s.department,
+    s.gmail,
+    CASE
+        WHEN a.forenoon = '1' AND a.afternoon = '1' THEN 'FN & AN'
+        WHEN a.forenoon = '1' THEN 'FN'
+        WHEN a.afternoon = '1' THEN 'AN'
+        ELSE NULL
+    END AS present
+FROM 
+    students s
+LEFT JOIN 
+    attendance a 
+    ON s.id = a.student 
+    AND a.date = ?
+WHERE 
+    (a.id IS NOT NULL  
+    OR a.forenoon = '1' 
+    OR a.afternoon = '1')
+    AND s.year = ?;
+
             `;
       params.push(year);
     } else {
@@ -62,7 +77,9 @@ exports.get_present_reports = async (req, res) => {
     }
 
     const get_report_pre = await get_database(query, params);
-    res.json(get_report_pre);
+    const total_present_students = get_report_pre.length; 
+    res.json({ total_present_students, students: get_report_pre });
+    // res.json(get_report_pre);
   } catch (err) {
     console.error("Error Fetching Pre Report List", err);
     res.status(500).json({ error: "Error fetching Pre Report List" });
@@ -83,45 +100,55 @@ exports.get_present_slot = async (req, res) => {
 
     if (slot === "All") {
       detailsQuery = `
-        SELECT 
-          s.id AS student_id,
-          s.name AS student_name,
-          s.register_number,
-          s.gmail AS mail,
-          m.name AS mentor_name,
-          mf.name AS attendance_taken,
-          ts.label AS slot
-        FROM students s
-        LEFT JOIN (
-          SELECT r.student
-          FROM re_appear r
-          JOIN time_slots ts ON ts.id = r.slot 
-          WHERE DATE(r.att_session) = ?
-          AND ts.year = ?
-          AND ts.status = '1'
-          GROUP BY r.student
-          HAVING COUNT(DISTINCT r.slot) = (
-            SELECT COUNT(DISTINCT id) 
-            FROM time_slots 
-            WHERE year = ?
-            AND status = '1'
-          )
-        ) AS present_students ON s.id = present_students.student
-        LEFT JOIN mentor_student ms
-          ON s.id = ms.student 
-          AND ms.status = '1'
-        LEFT JOIN re_appear r
-          ON s.id = r.student
-          AND DATE(r.att_session) = ?
-        LEFT JOIN time_slots ts
-          ON r.slot = ts.id
-        LEFT JOIN mentor m
-          ON ms.mentor = m.id
-        LEFT JOIN mentor mf  
-          ON r.faculty = mf.id
-        WHERE present_students.student IS NOT NULL 
-        AND s.type = '2'
-        AND s.year = ?;
+       SELECT 
+    s.id AS student_id,
+    s.name AS student_name,
+    s.register_number,
+    s.gmail AS mail,
+    MAX(m.name) AS mentor_name,  
+    MAX(mf.name) AS attendance_taken,  
+    CASE
+        WHEN SUM(CASE WHEN ts.session = 'FN' THEN 1 ELSE 0 END) > 0 
+             AND SUM(CASE WHEN ts.session = 'AN' THEN 1 ELSE 0 END) > 0 
+        THEN 'FN & AN'
+        WHEN SUM(CASE WHEN ts.session = 'FN' THEN 1 ELSE 0 END) > 0 
+        THEN 'FN'
+        WHEN SUM(CASE WHEN ts.session = 'AN' THEN 1 ELSE 0 END) > 0 
+        THEN 'AN'
+        ELSE NULL
+    END AS slot
+FROM 
+    students s
+LEFT JOIN (
+    SELECT r.student
+    FROM re_appear r
+    JOIN time_slots ts ON ts.id = r.slot 
+    WHERE DATE(r.att_session) = ?
+      AND ts.year = ?
+      AND ts.status = '1'
+    GROUP BY r.student
+) AS present_students ON s.id = present_students.student
+LEFT JOIN mentor_student ms
+    ON s.id = ms.student 
+    AND ms.status = '1'
+LEFT JOIN re_appear r
+    ON s.id = r.student
+    AND DATE(r.att_session) = ?
+LEFT JOIN time_slots ts
+    ON r.slot = ts.id
+LEFT JOIN mentor m
+    ON ms.mentor = m.id
+LEFT JOIN mentor mf  
+    ON r.faculty = mf.id
+WHERE 
+    present_students.student IS NOT NULL 
+    AND s.type = '2'
+    AND s.year = ?
+GROUP BY 
+    s.id, s.name, s.register_number, s.gmail
+ORDER BY 
+    s.name;
+
       `;
 
       countQuery = `
@@ -146,7 +173,7 @@ exports.get_present_slot = async (req, res) => {
         AND s.year = ?;
       `;
 
-      detailsParams = [date, year, year, date, year]; 
+      detailsParams = [date, year, date, year]; 
       countParams = [date, year, year, year];  
 
     } else if (slot === 'AllSlots') {

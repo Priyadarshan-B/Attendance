@@ -29,6 +29,7 @@ const reportStudent = require('../Controllers/Reports/student')
 const consolidate = require('../Controllers/Reports/consolidate')
 const Log = require('../Controllers/attendance_log/logs')
 const attProgress = require('../Controllers/attProgress/attProgress')
+const type = require('../Controllers/type/type')
 const router = express.Router()
 
 router.get("/mentor-students",mentor.get_students)
@@ -155,4 +156,6 @@ router.get('/logs', Log.get_att_logs)
 // att progress
 router.get('/att-progress', attProgress.get_att_progress)
 
+// type
+router.get('/stu-type', type.get_stu_type)
 module.exports = router

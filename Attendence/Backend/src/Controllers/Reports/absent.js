@@ -57,7 +57,9 @@ exports.get_absent_reports = async(req, res) => {
         }
 
         const get_report_ab = await get_database(query, params);
-        res.json(get_report_ab);
+        const total_absent_students = get_report_ab.length; 
+    res.json({ total_absent_students, students: get_report_ab });
+        // res.json(get_report_ab);
     } catch(err) {
         console.error("Error Fetching Ab Report List", err);
         res.status(500).json({ error: "Error fetching Ab Report List" }); 

@@ -21,6 +21,7 @@ import MapStudent from "../pages/Forms/mapStudent/mapStudent";
 import Leave from "../pages/Leave/leave";
 import MStudent from "../pages/mDashbord/m_students";
 import AbReport from "../pages/Reports/report";
+import ReportPage from "../pages/Reports/ReportPage";
 import Login from "../pages/auth/Login/Login";
 import Welcome from "../pages/welcome/welcome";
 import Error from "../pages/error";

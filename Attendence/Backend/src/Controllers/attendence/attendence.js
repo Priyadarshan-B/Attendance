@@ -301,7 +301,7 @@ exports.get_AttendanceCount = async (req, res) => {
         FROM time_slots 
         WHERE year = ? 
         AND status = '1' 
-        AND start_time BETWEEN '08:00:00' AND '12:30:00';
+        AND session = 'FN';
       `;
       const forenoonSlots = await get_database(forenoonSlotQuery, [year]);
     
@@ -310,7 +310,7 @@ exports.get_AttendanceCount = async (req, res) => {
         FROM time_slots 
         WHERE year = ? 
         AND status = '1' 
-        AND start_time BETWEEN '13:00:00' AND '16:00:00';
+        AND session = 'AN';
       `;
       const afternoonSlots = await get_database(afternoonSlotQuery, [year]);
     

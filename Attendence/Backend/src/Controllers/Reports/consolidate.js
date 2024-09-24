@@ -41,7 +41,7 @@ exports.get_attendance_status = async (req, res) => {
     let current_date = new Date(from_date);
     const end_date = new Date(to_date);
 
-    // Calculate total days excluding Sundays
+    // Calculate total days excluding Sundays (each day has 2 sessions: FN + AN)
     const total_days = calculateTotalDaysWithoutSundays(from_date, to_date);
 
     const all_results = [];
@@ -49,7 +49,7 @@ exports.get_attendance_status = async (req, res) => {
 
     while (current_date <= end_date) {
       // Skip Sundays
-      if (current_date.getDay() === 0) { // 0 is Sunday
+      if (current_date.getDay() === 0) {
         current_date = addDays(current_date, 1);
         continue;
       }
@@ -59,35 +59,47 @@ exports.get_attendance_status = async (req, res) => {
 
       const query = `
         SELECT 
-            final.student_id,
-            final.student_name,
-            final.register_number,
-            final.gmail,
-            CASE
-                WHEN final.total_slots = final.attended_slots THEN 'PR'
-                ELSE 'AB'
-            END AS STATUS
+          final.student_id,
+          final.student_name,
+          final.register_number,
+          final.gmail,
+          MAX(final.attended_fn) AS attended_fn,
+          MAX(final.attended_an) AS attended_an,
+          CASE
+            WHEN MAX(final.attended_fn) = 0 THEN 'AB' ELSE 'PR'
+          END AS forenoon_status,
+          CASE
+            WHEN MAX(final.attended_an) = 0 THEN 'AB' ELSE 'PR'
+          END AS afternoon_status
         FROM (
-            SELECT
-                s.id AS student_id,
-                s.name AS student_name,
-                s.register_number,
-                s.gmail,
-                COUNT(DISTINCT sr.slot_id) AS total_slots,
-                SUM(CASE WHEN COALESCE(r.status, '0') = '1' THEN 1 ELSE 0 END) AS attended_slots
-            FROM students s
-            JOIN (
-                SELECT DISTINCT ts.year AS student_year, ts.id AS slot_id
-                FROM time_slots ts
-            ) sr ON s.year = sr.student_year
-            LEFT JOIN re_appear r
-                ON s.id = r.student
-                AND sr.slot_id = r.slot
-                AND DATE(r.att_session) = '${formatted_date}'
-            WHERE s.type = 2
+          SELECT
+            s.id AS student_id,
+            s.name AS student_name,
+            s.register_number,
+            s.gmail,
+            CASE 
+              WHEN ts.session = 'FN' THEN 
+                (CASE WHEN COALESCE(r.status, '0') = '1' THEN 1 ELSE 0 END)
+              ELSE 0
+            END AS attended_fn,
+            CASE 
+              WHEN ts.session = 'AN' THEN 
+                (CASE WHEN COALESCE(r.status, '0') = '1' THEN 1 ELSE 0 END)
+              ELSE 0
+            END AS attended_an
+          FROM students s
+          JOIN (
+            SELECT DISTINCT ts.year AS student_year, ts.id AS slot_id, ts.session
+            FROM time_slots ts
+          ) ts ON s.year = ts.student_year
+          LEFT JOIN re_appear r
+            ON s.id = r.student
+            AND ts.slot_id = r.slot
+            AND DATE(r.att_session) = '${formatted_date}'
+          WHERE s.type = 2
             AND s.year = ${yearCondition}
-            GROUP BY s.id, s.name, s.register_number, s.gmail
         ) AS final
+        GROUP BY final.student_id, final.student_name, final.register_number, final.gmail
         ORDER BY final.student_id;
       `;
 
@@ -107,13 +119,26 @@ exports.get_attendance_status = async (req, res) => {
             gmail: student.gmail,
             total_present: 0,
             total_absent: 0,
-            total_days: total_days // Total number of days excluding Sundays
+            total_days: total_days * 1 
           };
         }
-        if (student.STATUS === 'PR') {
-          studentAttendanceMap[student.student_id].total_present++;
-        } else {
-          studentAttendanceMap[student.student_id].total_absent++;
+
+        // Forenoon and Afternoon session logic
+        const attended_fn = student.attended_fn;
+        const attended_an = student.attended_an;
+
+        if (attended_fn > 0 && attended_an > 0) {
+          studentAttendanceMap[student.student_id].total_present += 1; 
+        } 
+        // else if (attended_fn > 0 || attended_an > 0) {
+        //   studentAttendanceMap[student.student_id].total_present += 0.5; // One of the sessions is attended, add 0.5 day
+        // }
+        else if(attended_fn != attended_an){
+          studentAttendanceMap[student.student_id].total_absent += 0.5;
+          studentAttendanceMap[student.student_id].total_present += 0.5;
+        }
+        else {
+          studentAttendanceMap[student.student_id].total_absent += 1; // Both FN and AN absent, count as full day absent
         }
       });
 
