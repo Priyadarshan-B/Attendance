@@ -65,9 +65,7 @@ LEFT JOIN
     ON s.id = a.student 
     AND a.date = ?
 WHERE 
-    (a.id IS NOT NULL  
-    OR a.forenoon = '1' 
-    OR a.afternoon = '1')
+     (a.forenoon = '1' OR a.afternoon = '1')
     AND s.year = ?;
 
             `;

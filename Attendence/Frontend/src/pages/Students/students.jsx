@@ -991,7 +991,7 @@ function Body({ id, roll }) {
                           <TableCell>{record.name}</TableCell>
                           <TableCell>{record.label}</TableCell>
                           <TableCell>
-                            {new Date(record.att_session).toLocaleString()}
+                          {moment(record.att_session).format('DD/MM/YYYY, h:mm:ss a')}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -1054,7 +1054,7 @@ function Body({ id, roll }) {
                           <TableCell>{index + 1}</TableCell>
                           <TableCell>{record.name}</TableCell>
                           <TableCell>
-                            {new Date(record.attendance).toLocaleString()}
+                          {moment(record.attendance).format('DD/MM/YYYY, h:mm:ss a')}
                           </TableCell>
                         </TableRow>
                       ))}

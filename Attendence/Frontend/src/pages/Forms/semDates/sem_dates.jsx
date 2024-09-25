@@ -18,7 +18,6 @@ import './sem_dates.css';
 import Popup from "../../../components/popup/popup";
 import Select from 'react-select';
 import customStyles from "../../../components/applayout/selectTheme";
-import { ThemeProviderComponent } from "../../../components/applayout/dateTheme";
 
 function SemDates() {
     return <Body />
@@ -142,14 +141,18 @@ function Body() {
                 <div className="sem-dates-container">
                     <form onSubmit={handleSubmit} className="sem-dates-form">
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <Select
-                                options={years}
-                                value={selectedYear}
-                                onChange={setSelectedYear}
-                                styles={customStyles}
-                                placeholder="Select Year"
-                                className="sem-select"
-                            />
+                            <div style={{
+                                zIndex:"100"
+                            }}>
+                                <Select
+                                    options={years}
+                                    value={selectedYear}
+                                    onChange={setSelectedYear}
+                                    styles={customStyles}
+                                    placeholder="Select Year"
+                                    className="sem-select"
+                                />
+                            </div>
                             <DatePicker
                                 label="Start Date"
                                 value={startDate}

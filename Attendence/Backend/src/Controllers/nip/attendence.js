@@ -16,7 +16,7 @@ exports.get_att_slots = async (req, res) => {
         WHERE student = ?
          AND time_slots.status = '1'
         AND re_appear.status = '1'
-        ORDER BY re_appear.att_session DESC
+        ORDER BY DATE(re_appear.att_session) DESC
         ;
         `;
     const get_att = await get_database(query, [student]);

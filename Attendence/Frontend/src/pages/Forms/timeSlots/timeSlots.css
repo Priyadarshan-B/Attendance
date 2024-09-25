@@ -9,7 +9,10 @@
 .time-flex{
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 30px;
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 5px;
 }
 
 .react-select{

@@ -14,14 +14,28 @@ function formatDate(date) {
   return `${year}-${month}-${day}`;
 }
 
-// Function to calculate total non-Sunday days
-function calculateTotalDaysWithoutSundays(fromDate, toDate) {
+// Fetch holidays for the year
+async function getHolidays(year) {
+  const query = `
+    SELECT dates 
+    FROM holidays 
+    WHERE year = '${year}' 
+    AND status = '1'
+  `;
+  const holidays = await get_database(query);
+  console.log(holidays)
+  return holidays.map(row => new Date(row.dates));
+}
+
+// Function to calculate total non-Sunday and non-holiday days
+async function calculateTotalDaysWithoutSundaysAndHolidays(fromDate, toDate, holidays) {
   let current_date = new Date(fromDate);
   const end_date = new Date(toDate);
   let total_days = 0;
 
   while (current_date <= end_date) {
-    if (current_date.getDay() !== 0) { // Skip Sundays
+    // Skip Sundays and holidays
+    if (current_date.getDay() !== 0 && !holidays.some(holiday => holiday.getTime() === current_date.getTime())) {
       total_days++;
     }
     current_date = addDays(current_date, 1);
@@ -41,15 +55,18 @@ exports.get_attendance_status = async (req, res) => {
     let current_date = new Date(from_date);
     const end_date = new Date(to_date);
 
-    // Calculate total days excluding Sundays (each day has 2 sessions: FN + AN)
-    const total_days = calculateTotalDaysWithoutSundays(from_date, to_date);
+    // Fetch holidays for the given year
+    const holidays = await getHolidays(year);
+
+    // Calculate total days excluding Sundays and holidays (each day has 2 sessions: FN + AN)
+    const total_days = await calculateTotalDaysWithoutSundaysAndHolidays(from_date, to_date, holidays);
 
     const all_results = [];
     const studentAttendanceMap = {};
 
     while (current_date <= end_date) {
-      // Skip Sundays
-      if (current_date.getDay() === 0) {
+      // Skip Sundays and holidays
+      if (current_date.getDay() === 0 || holidays.some(holiday => holiday.getTime() === current_date.getTime())) {
         current_date = addDays(current_date, 1);
         continue;
       }
@@ -130,13 +147,10 @@ exports.get_attendance_status = async (req, res) => {
         if (attended_fn > 0 && attended_an > 0) {
           studentAttendanceMap[student.student_id].total_present += 1; 
         } 
-        // else if (attended_fn > 0 || attended_an > 0) {
-        //   studentAttendanceMap[student.student_id].total_present += 0.5; // One of the sessions is attended, add 0.5 day
-        // }
-        else if(attended_fn != attended_an){
+        else if (attended_fn != attended_an) {
           studentAttendanceMap[student.student_id].total_absent += 0.5;
           studentAttendanceMap[student.student_id].total_present += 0.5;
-        }
+        } 
         else {
           studentAttendanceMap[student.student_id].total_absent += 1; // Both FN and AN absent, count as full day absent
         }

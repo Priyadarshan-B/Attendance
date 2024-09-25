@@ -78,16 +78,16 @@ exports.delete_slots = async(req, res)=>{
 }
 
 exports.post_slots = async(req, res) =>{
-    const {label,start_time, end_time} = req.body
-    if( !label || !start_time || !end_time){
+    const {year, label,start_time, end_time} = req.body
+    if( !year ||!label || !start_time || !end_time){
         return res.status(400).json({Error: "Feilds are required.."})
     }
     try{
         const query = `
-        INSERT INTO time_slots (label, start_time,end_time)
-        VALUES (?,?,?);
+        INSERT INTO time_slots (year, label, start_time,end_time)
+        VALUES (?,?,?,?);
         `
-        const postSlots = await post_database(query,[label, start_time, end_time])
+        const postSlots = await post_database(query,[year, label, start_time, end_time])
         res.json(postSlots)
     }
     catch(err){

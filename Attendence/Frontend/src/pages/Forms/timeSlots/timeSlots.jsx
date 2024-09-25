@@ -61,6 +61,7 @@ const TimeSlotForm = ({ onClose }) => {
 
     try {
       await requestApi("POST", "/slots", {
+        year:selectedYear.value,
         label,
         start_time: formattedStartTime,
         end_time: formattedEndTime,
@@ -144,6 +145,8 @@ const TimeSlotForm = ({ onClose }) => {
                   value={startTime}
                   onChange={(newValue) => setStartTime(newValue)}
                   renderInput={(params) => <TextField {...params} />}
+                  slotProps={{ textField: { size: 'small' } }}
+
                 />
               </LocalizationProvider>
             </div>
@@ -155,6 +158,8 @@ const TimeSlotForm = ({ onClose }) => {
                   value={endTime}
                   onChange={(newValue) => setEndTime(newValue)}
                   renderInput={(params) => <TextField {...params} />}
+                  slotProps={{ textField: { size: 'small' } }}
+
                 />
               </LocalizationProvider>
             </div>

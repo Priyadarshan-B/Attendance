@@ -17,21 +17,21 @@ function ReportPage() {
 
 function Body() {
   const [absentYear, setAbsentYear] = useState();
-  const [presentYear, setPresentYear] = useState();
-  const [absentDate, setAbsentDate] = useState(null);
-  const [presentDate, setPresentDate] = useState(null);
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [slotYear, setSlotYear] = useState();
-  const [slot, setSlot] = useState([]);
-  const [slotOptions, setSlotOptions] = useState([]);
-  const [absentSlotDate, setAbsentSlotDate] = useState(null);
-  const [presentSlot, setPresentSlot] = useState([]);
-  const [presentSlotYear, setPresentSlotYear] = useState(null);
-  const [presentSlotDate, setPresentSlotDate] = useState(null);
-  const [presentSlotOptions, setPresentSlotOptions] = useState([]);
-  const [consolidateFDate, setConsolidateFDate] = useState(null);
-  const [consolidateTDate, setConsolidateTDate] = useState(null);
-  const [conYear, setConYear] = useState();
+const [presentYear, setPresentYear] = useState();
+const [absentDate, setAbsentDate] = useState(new Date());
+const [presentDate, setPresentDate] = useState(new Date());
+const [selectedYear, setSelectedYear] = useState(null);
+const [slotYear, setSlotYear] = useState();
+const [slot, setSlot] = useState([]);
+const [slotOptions, setSlotOptions] = useState([]);
+const [absentSlotDate, setAbsentSlotDate] = useState(new Date());
+const [presentSlot, setPresentSlot] = useState([]);
+const [presentSlotYear, setPresentSlotYear] = useState(null);
+const [presentSlotDate, setPresentSlotDate] = useState(new Date());
+const [presentSlotOptions, setPresentSlotOptions] = useState([]);
+const [consolidateFDate, setConsolidateFDate] = useState();
+const [consolidateTDate, setConsolidateTDate] = useState(new Date());
+const [conYear, setConYear] = useState();
 
   const handleDownload = async (type) => {
     try {
@@ -276,11 +276,12 @@ function Body() {
               <div style={{ flex: "1", textAlign: "center" }}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    value={absentDate}
+                    value={absentDate || new Date()}
                     onChange={(newValue) => setAbsentDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
                     slotProps={{ textField: { size: 'small' } }}
-
+                  format="dd/MM/yyyy"
+                    maxDate={new Date()}
                   />
                 </LocalizationProvider>
               </div>
@@ -309,10 +310,12 @@ function Body() {
               <div style={{ flex: "1", textAlign: "center" }}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    value={presentDate}
+                    value={presentDate || new Date()}
                     onChange={(newValue) => setPresentDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
                     slotProps={{ textField: { size: 'small' } }}
+                  format="dd/MM/yyyy"
+                    maxDate={new Date()}
 
                   />
                 </LocalizationProvider>
@@ -380,11 +383,12 @@ function Body() {
               <div style={{ flex: "1", textAlign: "center" }}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    value={absentSlotDate}
+                    value={absentSlotDate || new Date()}
                     onChange={(newValue) => setAbsentSlotDate(newValue)}
                     renderInput={(params) => <TextField {...params } />}
                     slotProps={{ textField: { size: 'small' } }}
-
+                  format="dd/MM/yyyy"
+                    maxDate={new Date()}
                   />
                 </LocalizationProvider>
               </div>
@@ -425,11 +429,12 @@ function Body() {
               <div style={{ flex: "1", textAlign: "center" }}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    value={presentSlotDate}
+                    value={presentSlotDate || new Date()}
                     onChange={(newValue) => setPresentSlotDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
                     slotProps={{ textField: { size: 'small' } }}
-
+                  format="dd/MM/yyyy"
+                    maxDate={new Date()}
                   />
                 </LocalizationProvider>
               </div>
@@ -459,21 +464,24 @@ function Body() {
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   label="From Date"
-                  value={consolidateFDate}
+                  value={consolidateFDate }
                   onChange={(newValue) => setConsolidateFDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
                   slotProps={{ textField: { size: 'small' } }}
+                  format="dd/MM/yyyy"
+                  maxDate={new Date()}
 
                 />
               </LocalizationProvider>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   label="To Date"
-                  value={consolidateTDate}
+                  value={consolidateTDate || new Date()}
                   onChange={(newValue) => setConsolidateTDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
                   slotProps={{ textField: { size: 'small' } }}
-
+                  maxDate={new Date()}
+                  format="dd/MM/yyyy"
                 />
               </LocalizationProvider>
               <Button

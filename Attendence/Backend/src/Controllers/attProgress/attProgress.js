@@ -1,4 +1,4 @@
-const { get_database, post_database } = require("../../config/db_utils");
+const { get_database } = require("../../config/db_utils");
 
 exports.get_att_progress = async(req, res)=>{
     const {student, date, year} = req.query
@@ -9,28 +9,24 @@ exports.get_att_progress = async(req, res)=>{
     try{
         const query = `
          SELECT 
-    ts.id AS slot_id,
-    ts.label AS slot_time,
-    m.name AS faculty,
-    COALESCE(
-        MAX(CASE WHEN ra.student = s.id AND DATE(ra.att_session) = ? THEN 1 ELSE 0 END), 0
-    ) AS is_present
-FROM 
-    time_slots ts
-LEFT JOIN students s ON ts.year = s.year
-LEFT JOIN re_appear ra ON ra.slot = ts.id AND ra.student = s.id
-LEFT JOIN mentor m ON m.id = ra.faculty
-
-WHERE 
-    s.id = ?
-    AND ts.year = ?
-    AND ts.status = '1' 
-GROUP BY 
-    ts.id, ts.label, m.name
-ORDER BY 
-    ts.id;
+    t.id AS slot_id, 
+    t.label AS slot_time, 
+    GROUP_CONCAT(m.name SEPARATOR ', ') AS faculty,
+    CASE 
+        WHEN COUNT(r.id) > 0 THEN 1 
+        ELSE 0 
+    END AS is_present
+FROM time_slots t
+LEFT JOIN re_appear r ON r.slot = t.id 
+AND r.student = ?
+ AND DATE(r.att_session) = ? 
+ AND r.status = '1'
+LEFT JOIN mentor m ON r.faculty = m.id
+WHERE t.year = ?
+GROUP BY t.id, t.label
+ORDER BY t.id;
         `
-        const attProgress = await get_database(query, [date, student, year])
+        const attProgress = await get_database(query, [student, date, year])
     res.json(attProgress)
 }catch(err){
     console.error("Error Fetching AttProgress", err);
