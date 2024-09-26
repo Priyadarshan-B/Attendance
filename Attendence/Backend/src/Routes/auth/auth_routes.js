@@ -6,6 +6,7 @@ const axios = require("axios");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 const {
   setEncryptedCookie,
+  getDecryptedCookie,
   removeEncryptedCookie,
 } = require("../../config/encrpyt");
 const AuthApp = require("../../Controllers/auth/auth_app");
@@ -42,6 +43,7 @@ router.get(
     setEncryptedCookie(res, "roll", userData.roll || "");
     setEncryptedCookie(res, "gmail", userData.gmail);
     setEncryptedCookie(res, "profile", userData.profile);
+
 
     try {
       const role = req.user.role_id;
