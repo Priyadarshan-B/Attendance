@@ -4,6 +4,7 @@ const { update_7_days, update_biometrics } = require('../Controllers/attendence/
 const { get_AttendanceCount } = require('../Controllers/attendence/attendence');
 const { get_attendance_details } = require('../Controllers/Percentage/percentage');
 const { updateAttendanceForStudentArrear } = require('../Controllers/attendance_arrear/attendance_arrear');
+const {checkAndInsertAttendance} = require('../Controllers/attendence/attendace_count')
 
 const processAttendanceForAllStudents = async () => {
   try {
@@ -18,6 +19,10 @@ const processAttendanceForAllStudents = async () => {
     for (const stud of students) {
       const studentId = stud.id;
       const student = stud.id;
+      await checkAndInsertAttendance(
+        { query: { studentId } }, 
+        { status: () => ({ json: () => {} }) }
+      );
       await get_AttendanceCount(
         { query: { studentId } }, 
         { status: () => ({ json: () => {} }) }
@@ -75,7 +80,14 @@ const scheduleCronJobs = () => {
       console.error('Error during scheduled update_7_days:', error);
     }
   });
-
+  cron.schedule('00 18 * * *', async () => {
+    try {
+      console.log('Executing update_biometrics cron job...');
+      await processAttendanceForAllStudents();
+    } catch (error) {
+      console.error('Error during scheduled update_biometrics:', error);
+    }
+  });
   cron.schedule('43 00 * * *', async () => {
     try {
       console.log('Executing update_biometrics cron job...');
@@ -86,7 +98,7 @@ const scheduleCronJobs = () => {
     }
   });
 
-  cron.schedule('27 15 * * *', async () => {
+  cron.schedule('00 21 * * *', async () => {
     try {
       console.log('Executing update_biometrics cron job...');
       await update_biometrics();
