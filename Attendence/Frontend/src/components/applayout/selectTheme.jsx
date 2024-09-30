@@ -15,7 +15,7 @@ const customStyles = {
       color: 'var(--text)',
     }),
     input: (provided) => ({
-      ...provided,
+      ...provided, 
       color: 'var(--text)',
     }),
     menu: (provided) => ({

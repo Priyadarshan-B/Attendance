@@ -61,7 +61,7 @@ exports.get_attendance_status = async (req, res) => {
     // Calculate total days excluding Sundays and holidays (each day has 2 sessions: FN + AN)
     const total_days = await calculateTotalDaysWithoutSundaysAndHolidays(from_date, to_date, holidays);
 
-    const all_results = [];
+    const all_results = []; 
     const studentAttendanceMap = {};
 
     while (current_date <= end_date) {
