@@ -395,7 +395,7 @@ exports.checkAndInsertAttendance = async (req, res) => {
 
     const { from_date, to_date } = semDates[0];
 
-    const startDate = moment("2024-08-21"); 
+    const startDate = moment("2024-09-04"); 
     const currentDate = moment(); 
 
     for (let date = startDate; date.isSameOrBefore(currentDate); date.add(1, "days")) {

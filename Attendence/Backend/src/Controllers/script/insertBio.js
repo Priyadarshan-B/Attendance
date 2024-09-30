@@ -4,9 +4,9 @@ const path = require('path');
 
 const connectionConfig = {
   host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'attendance'
+  user: 'eferferwf',
+  password: 'seferwrge',
+  database: 'frwfesf'
 };
 
 async function insertDataIntoTable(data) {
