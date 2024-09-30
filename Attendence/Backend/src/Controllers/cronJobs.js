@@ -98,7 +98,7 @@ const scheduleCronJobs = () => {
     }
   });
 
-  cron.schedule('49 22 * * *', async () => {
+  cron.schedule('47 00 * * *', async () => {
     try {
       console.log('Executing update_biometrics cron job...');
       await update_biometrics();

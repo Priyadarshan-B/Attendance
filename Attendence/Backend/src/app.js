@@ -54,7 +54,6 @@ app.use(limiter);
 app.use(authenticateGoogleJWT);
 app.use("/attendance/api", routes);
 
-//cron jobs
 
 // listen port
 app.listen(port, () => {
