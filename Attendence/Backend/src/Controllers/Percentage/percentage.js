@@ -152,6 +152,6 @@ const placeholders = holidays.length > 0 ? holidays.map(() => '?').join(',') : 0
     // }
   } catch (err) {
     console.error("Error calculating attendance details", err);
-    res.status(500).json({ error: "Error calculating attendance details" });
+    return  res.status(500).json({ error: "Error calculating attendance details" });
   }
 };

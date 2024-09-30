@@ -395,14 +395,12 @@ exports.checkAndInsertAttendance = async (req, res) => {
 
     const { from_date, to_date } = semDates[0];
 
-    const startDate = moment("2024-08-21"); // Starting from the specified date
-    const currentDate = moment(); // Current date
+    const startDate = moment("2024-08-21"); 
+    const currentDate = moment(); 
 
-    // Loop over each date from the start date to the current date
     for (let date = startDate; date.isSameOrBefore(currentDate); date.add(1, "days")) {
       const formattedDate = date.format("YYYY-MM-DD");
 
-      // Check if the student has a record in no_arrear or re_appear for the current date
       const noArrearQuery = `
         SELECT * 
         FROM no_arrear 
@@ -425,7 +423,6 @@ exports.checkAndInsertAttendance = async (req, res) => {
         formattedDate,
       ]);
 
-      // If the student does not have records in no_arrear or re_appear, check the leave records
       if (noArrearResult.length === 0 && reAppearResult.length === 0) {
         const leaveQuery = `
           SELECT from_date, to_date 
@@ -442,7 +439,6 @@ exports.checkAndInsertAttendance = async (req, res) => {
           const forenoon = "1";
           const afternoon = "1";
 
-          // Check if an attendance record already exists for the current date
           const existingRecordQuery = `
             SELECT * FROM attendance 
             WHERE student = ? AND date = ?;
