@@ -19,10 +19,10 @@ const processAttendanceForAllStudents = async () => {
     for (const stud of students) {
       const studentId = stud.id;
       const student = stud.id;
-      // await checkAndInsertAttendance(
-      //   { query: { studentId } }, 
-      //   { status: () => ({ json: () => {} }) }
-      // );
+      await checkAndInsertAttendance(
+        { query: { studentId } }, 
+        { status: () => ({ json: () => {} }) }
+      );
       await get_AttendanceCount(
         { query: { studentId } }, 
         { status: () => ({ json: () => {} }) }
@@ -80,7 +80,7 @@ const scheduleCronJobs = () => {
       console.error('Error during scheduled update_7_days:', error);
     }
   });
-  cron.schedule('30 23 * * *', async () => {
+  cron.schedule('00 23 * * *', async () => {
     try {
       console.log('Executing update_biometrics cron job...');
       await processAttendanceForAllStudents();
