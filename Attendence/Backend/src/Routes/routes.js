@@ -30,6 +30,7 @@ const consolidate = require('../Controllers/Reports/consolidate')
 const Log = require('../Controllers/attendance_log/logs')
 const attProgress = require('../Controllers/attProgress/attProgress')
 const type = require('../Controllers/type/type')
+const sample = require('../Controllers/script/sampleData')
 const router = express.Router()
 
 router.get("/mentor-students",mentor.get_students)
@@ -158,4 +159,7 @@ router.get('/att-progress', attProgress.get_att_progress)
 
 // type
 router.get('/stu-type', type.get_stu_type)
+
+// sample
+router.post('/sample', sample.insertAttendanceRecords)
 module.exports = router

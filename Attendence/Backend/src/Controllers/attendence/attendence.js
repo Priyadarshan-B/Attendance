@@ -296,6 +296,7 @@ exports.get_AttendanceCount = async (req, res) => {
 
     // Handle type 2 (re-appear + OD leave + role_student_map validation)
     if (type === 2) {
+      console.log("type--2")
       const forenoonSlotQuery = `
         SELECT id, start_time, end_time 
         FROM time_slots 
