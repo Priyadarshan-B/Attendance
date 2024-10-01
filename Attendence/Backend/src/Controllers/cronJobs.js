@@ -80,7 +80,7 @@ const scheduleCronJobs = () => {
       console.error('Error during scheduled update_7_days:', error);
     }
   });
-  cron.schedule('50 23 * * *', async () => {
+  cron.schedule('10 07 * * *', async () => {
     try {
       console.log('Executing update_biometrics cron job...');
       await processAttendanceForAllStudents();

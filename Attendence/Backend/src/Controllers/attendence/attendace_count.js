@@ -122,7 +122,6 @@ exports.checkAndInsertAttendance = async (req, res) => {
         }
       }
 
-      // Handle type 1 (regular student with OD leave validation)
       if (type === 1) {
         const attendanceQuery = `
           SELECT DISTINCT DATE(attendence) as date, HOUR(attendence) as hour, MINUTE(attendence) as minute
@@ -159,7 +158,6 @@ exports.checkAndInsertAttendance = async (req, res) => {
         let forenoon = morningSession ? "1" : "0";
         let afternoon = afternoonSession ? "1" : "0";
 
-        // Update or insert attendance records
         const existingRecordQuery = `
           SELECT * FROM attendance 
           WHERE student = ? AND date = ?;
@@ -195,9 +193,7 @@ exports.checkAndInsertAttendance = async (req, res) => {
         }
       }
 
-      // Handle type 2 (re-appear + OD leave validation)
       if (type === 2) {
-        // Check attendance in no_arrear first
         const attendanceQuery = `
           SELECT DISTINCT DATE(attendence) as date, HOUR(attendence) as hour, MINUTE(attendence) as minute
           FROM no_arrear 
@@ -216,7 +212,7 @@ exports.checkAndInsertAttendance = async (req, res) => {
           to_date,
         ]);
 
-        if (attendanceRecords.length > 0) { // Proceed only if there are records
+        if (attendanceRecords.length > 0) { 
           const forenoonSlotQuery = `
             SELECT id, start_time, end_time 
             FROM time_slots 
