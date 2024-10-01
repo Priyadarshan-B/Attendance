@@ -58,8 +58,17 @@ router.get(
         const routes = allowedRoutes.map((route) => route.path);
         setEncryptedCookie(res, "allowedRoutes", JSON.stringify(routes));
 
-        const redirectPath = routes[0];
-        res.redirect(`${process.env.CLIENT_URL}${redirectPath}`);
+        // const redirectPath = routes[0];
+        // res.redirect(`${process.env.CLIENT_URL}${redirectPath}`);
+        if(role === 1){
+          res.redirect(`${process.env.CLIENT_URL}/mdashboard`);
+        }
+        else if(role === 2){
+          res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+        }
+        else if (role === 3){
+          res.redirect(`${process.env.CLIENT_URL}/mdashboard`);
+        }
       } else {
         res.redirect(`${process.env.CLIENT_URL}/attendance/error`);
       }
