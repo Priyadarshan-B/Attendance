@@ -47,6 +47,7 @@ router.get(
 
     try {
       const role = req.user.role_id;
+      
       const response = await axios.get(
         `${process.env.API_URL}/auth/resources?role=${role}`
       );
