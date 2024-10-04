@@ -98,6 +98,7 @@ router.get('/sem-dates', semDates.get_sem_dates)
 router.post('/sem-dates',semDates.post_sem_dates)
 router.put('/sem-dates', semDates.update_dates)
 router.put('/sem-date',semDates.delete_dates)
+
 //percentage
 router.get('/percent',percentage.get_attendance_details)
 

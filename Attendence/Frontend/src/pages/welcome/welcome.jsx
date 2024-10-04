@@ -7,6 +7,7 @@ import requestApi from "../../components/utils/axios";
 const Welcome = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const basePath = import.meta.env.VITE_BASE_PATH
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -40,7 +41,7 @@ const Welcome = () => {
             const routes = response.data.map(route => route.path); 
             setEncryptedCookie("allowedRoutes", JSON.stringify(routes));
 
-            const redirectPath = routes.length > 0 ? routes[0] : "/attendance/error";
+            const redirectPath = routes.length > 0 ? `${basePath}${routes[0]}` : "/attendance/error";
             setTimeout(() => {
               navigate(redirectPath);
             }, 200);

@@ -1,18 +1,24 @@
 const { get_database, post_database } = require("../../config/db_utils");
 
 exports.get_slots = async (req, res) => {
-    const { year } = req.query; 
+    const { year, date } = req.query;  
     try {
         const query = `
             SELECT * FROM time_slots 
             WHERE year = ? 
             AND (
-                (CURRENT_TIME >= start_time AND CURRENT_TIME <= end_time) OR
-                (CURRENT_TIME > end_time)
+                (
+                    DATE(?) = CURRENT_DATE  
+                    AND (
+                        (CURRENT_TIME >= start_time AND CURRENT_TIME <= end_time) OR
+                        (CURRENT_TIME > end_time)
+                    )
+                ) OR
+                DATE(?) < CURRENT_DATE  
             )
             AND status = '1'
         `;
-        const slots = await get_database(query, [year]);
+        const slots = await get_database(query, [year, date, date]);
 
         res.json(slots);
     } catch (err) {
@@ -20,6 +26,7 @@ exports.get_slots = async (req, res) => {
         res.status(500).json({ error: "Error fetching Slots" });
     }
 };
+
 
 exports.get_slotsYear = async (req, res) => {
     const  year  = req.query.year; 

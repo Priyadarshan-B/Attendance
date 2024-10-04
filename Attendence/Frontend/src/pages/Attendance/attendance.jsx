@@ -20,6 +20,9 @@ import noresult from "../../assets/no-results.png";
 import Logs from "./logs";
 import customStyles from "../../components/applayout/selectTheme";
 import { getDecryptedCookie } from "../../components/utils/encrypt";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import format from "date-fns/format";
 
 function Attendance() {
   return <Body />;
@@ -37,7 +40,6 @@ function Body() {
   const [searchQuery, setSearchQuery] = useState("");
   const [logs, setLogs] = useState(false);
   const [attDate, setAttDate] = useState(moment());
-
   const facultyId = getDecryptedCookie("id");
 
   const yearOptions = [
@@ -47,18 +49,34 @@ function Body() {
     { value: "IV", label: "IV" },
   ];
 
-  const handleYearChange = async (selectedOption) => {
-    setSelectedYear(selectedOption);
-    if (selectedOption) {
+  const fetchTimeSlots = async (year, date) => {
+    if (year && date) {
       try {
+        const formattedDate = moment(date).format("YYYY-MM-DD");
         const response = await requestApi(
           "GET",
-          `/slots?year=${selectedOption.value}`
+          `/slots?year=${year}&date=${formattedDate}`
         );
         setTimeSlots(response.data);
       } catch (error) {
         console.error("Error fetching time slots:", error);
       }
+    }
+  };
+
+  const handleYearChange = async (selectedOption) => {
+    setSelectedYear(selectedOption);
+    setSelectedTimeSlots([]);
+    if (selectedOption) {
+      fetchTimeSlots(selectedOption.value, attDate);
+    }
+  };
+
+  const handleDateChange = (newDate) => {
+    setAttDate(moment(newDate));
+    setSelectedTimeSlots([]);
+    if (selectedYear) {
+      fetchTimeSlots(selectedYear.value, newDate);
     }
   };
 
@@ -146,21 +164,22 @@ function Body() {
     if (selectedStudents.length === 0) {
       return toast.error("Please select at least one student.");
     }
-    // const formattedDate = attDate ? moment(attDate).format("YYYY-MM-DD") : null;
-    // const currentTime = moment().format("HH:mm:ss");
-    // const combinedDateTime = formattedDate
-    //   ? `${formattedDate} ${currentTime}`
-    //   : null;
+    const formattedDate = attDate ? moment(attDate).format("YYYY-MM-DD") : null;
+    const currentTime = moment().format("HH:mm:ss");
+    const combinedDateTime = formattedDate
+      ? `${formattedDate} ${currentTime}`
+      : null;
 
     try {
       const payload = {
         faculty: facultyId,
         timeslots: selectedTimeSlots,
         students: selectedStudents,
-        // att_date: combinedDateTime,
+        att_date: combinedDateTime,
       };
       await requestApi("POST", "/arr-attendence", payload);
       toast.success("Attendance submitted successfully");
+      setSelectedTimeSlots([]);
     } catch (error) {
       toast.error("Failed to submit attendance");
       console.error("Error submitting attendance:", error);
@@ -200,9 +219,21 @@ function Body() {
               isClearable
             />
           </div>
-
+          <br />
           {selectedYear ? (
             <div className="time-slots-container">
+              <div>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    value={attDate.toDate()}
+                    onChange={(newValue) => handleDateChange(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                    slotProps={{ textField: { size: "small" } }}
+                    format="dd-MM-yyyy"
+                    maxDate={new Date()} // Max date is today
+                  />
+                </LocalizationProvider>
+              </div>
               <h4>Select Time Slots</h4>
               <div className="time-slots">
                 {timeSlots.length > 0 ? (
@@ -221,7 +252,7 @@ function Body() {
                             <use xlinkHref="#check-4"></use>
                           </svg>
                         </span>
-                        <span style={{fontSize:'16px'}}>{slot.label}</span>
+                        <span style={{ fontSize: "16px" }}>{slot.label}</span>
                       </label>
                       <svg className="inline-svg">
                         <symbol id="check-4" viewBox="0 0 12 10">
@@ -241,7 +272,7 @@ function Body() {
                 display: "flex",
                 flexDirection: "column-reverse",
                 alignItems: "center",
-                height:'40vh'
+                height: "40vh",
               }}
             >
               <p>Please select a year..</p>
@@ -278,21 +309,12 @@ function Body() {
                   onChange={handleSearch}
                   style={{ width: "50%" }}
                 />
-                {/* <div>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                      value={attDate.toDate()}
-                      onChange={(newValue) => setAttDate(moment(newValue))}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </LocalizationProvider>
-                </div> */}
               </div>
               <div className="table-container">
                 <Paper>
                   <TableContainer>
                     <Table aria-label="students table" className="custom-table">
-                      <TableHead sx={{whiteSpace:'nowrap'}}>
+                      <TableHead sx={{ whiteSpace: "nowrap" }}>
                         <TableRow>
                           {!showFavourites && <TableCell>Favourite</TableCell>}
                           <TableCell>Year</TableCell>
@@ -301,7 +323,9 @@ function Body() {
                           <TableCell>Attendance</TableCell>
                         </TableRow>
                       </TableHead>
-                      <TableBody sx={{whiteSpace:'nowrap', textAlign:'center'}}>
+                      <TableBody
+                        sx={{ whiteSpace: "nowrap", textAlign: "center" }}
+                      >
                         {!shouldShowTable ? (
                           <TableRow>
                             <TableCell colSpan={6} className="no-results">
@@ -388,7 +412,7 @@ function Body() {
                         backgroundColor: "var(--text)",
                         ".MuiTablePagination-toolbar": {
                           backgroundColor: "var(--background-1)",
-                          padding:"0px"
+                          padding: "0px",
                         },
                       }}
                     />

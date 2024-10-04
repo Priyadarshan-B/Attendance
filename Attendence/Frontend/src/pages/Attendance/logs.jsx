@@ -7,11 +7,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
-import moment from "moment";  
+import moment from "moment";
 import requestApi from "../../components/utils/axios";
 import InputBox from "../../components/TextBox/textbox";
 import "./attendance.css";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { getDecryptedCookie } from "../../components/utils/encrypt";
+import TextField from "@mui/material/TextField";
 
 function Logs() {
   return <Body />;
@@ -23,13 +26,17 @@ function Body() {
   const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [reqDate, setReqDate] = useState(moment()); // Default to current date
 
-
-  const facultyId = getDecryptedCookie("id")
+  const facultyId = getDecryptedCookie("id");
 
   const fetchStudents = async () => {
     try {
-      const response = await requestApi("GET", `/logs?faculty=${facultyId}`);
+      const formattedDate = reqDate.format("YYYY-MM-DD"); // Format date as YYYY-MM-DD
+      const response = await requestApi(
+        "GET",
+        `/logs?faculty=${facultyId}&att_session=${formattedDate}` // Corrected query string
+      );
       setStudents(response.data);
       setFilteredStudents(response.data);
     } catch (err) {
@@ -59,19 +66,34 @@ function Body() {
 
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [reqDate]);
 
   return (
     <div>
       <h3>Logged Attendance</h3>
       <br />
-      <div>
-        <InputBox
-          value={searchTerm}
-          onChange={handleSearch}
-          placeholder="Search.."
-          style={{ width: "300px" }}
-        />
+      <div className="date-search" >
+        <div>
+          <InputBox
+            value={searchTerm}
+            onChange={handleSearch}
+            placeholder="Search.."
+            style={{ width: "300px" }}
+          />
+        </div>
+        <br />
+        <div>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              value={reqDate.toDate()}
+              onChange={(newValue) => setReqDate(moment(newValue))}
+              renderInput={(params) => <TextField {...params} />}
+              slotProps={{ textField: { size: 'small' } }}
+              format="dd-MM-yyyy"
+              maxDate={new Date()}
+            />
+          </LocalizationProvider>
+        </div>
       </div>
       <br />
       <div className="table-container">
@@ -80,7 +102,6 @@ function Body() {
             <Table className="custom-table">
               <TableHead sx={{ whiteSpace: "nowrap" }}>
                 <TableRow>
-                  {/* <TableCell>S.No</TableCell> */}
                   <TableCell>Name</TableCell>
                   <TableCell>Register Number</TableCell>
                   <TableCell>Session</TableCell>
@@ -88,20 +109,28 @@ function Body() {
                 </TableRow>
               </TableHead>
               <TableBody sx={{ whiteSpace: "nowrap" }}>
-                {filteredStudents
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((student, index) => (
-                    <TableRow key={student.id}>
-                      {/* <TableCell>{index + 1}</TableCell> */}
-                      <TableCell>{student.name}</TableCell>
-                      <TableCell>{student.register_number}</TableCell>
-                      <TableCell>{student.label}</TableCell>
-                      <TableCell>
-                        {moment(student.att_session).format("DD-MM-YYYY HH:mm:ss")}
-                      </TableCell> 
-                    </TableRow>
-                  ))}
-              </TableBody>
+  {filteredStudents.length === 0 ? (
+    <TableRow>
+      <TableCell colSpan={4} align="center">
+        No records
+      </TableCell>
+    </TableRow>
+  ) : (
+    filteredStudents
+      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      .map((student, index) => (
+        <TableRow key={student.id}>
+          <TableCell>{student.name}</TableCell>
+          <TableCell>{student.register_number}</TableCell>
+          <TableCell>{student.label}</TableCell>
+          <TableCell>
+            {moment(student.att_session).format("DD-MM-YYYY HH:mm:ss")}
+          </TableCell>
+        </TableRow>
+      ))
+  )}
+</TableBody>
+
             </Table>
           </TableContainer>
           <TablePagination

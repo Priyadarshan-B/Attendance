@@ -216,6 +216,7 @@ color: #5775e441;
     height: 100px;
     width: 100px;
   }
+
 }
 @-moz-keyframes wave-4 {
   50% {
@@ -424,4 +425,10 @@ input[type="checkbox"]:disabled + .cbx {
 .favourites:hover{
   background-color: #ffe3e3;
 box-shadow: 0px 0px 2px  #ff1818;
+}
+
+.date-search{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
 }

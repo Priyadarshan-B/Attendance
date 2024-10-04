@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children }) => {
       const token = getDecryptedCookie("token"); 
       const allowedRoutes = getDecryptedCookie("allowedRoutes");  
       const currentPath = window.location.pathname;
-      console.log(currentPath)
+      // console.log(currentPath)
       // console.log(currentPath.replace(basePath, ""))
 
       if (token && allowedRoutes) {

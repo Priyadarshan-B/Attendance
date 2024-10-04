@@ -47,9 +47,9 @@ exports.get_arrear_att = async (req, res) => {
 };
 
 exports.post_arrear_stu_att = async (req, res) => {
-  const { faculty, students, timeslots } = req.body;
+  const { faculty, students, timeslots, att_date } = req.body;
 
-  if (!faculty || !students || !timeslots || students.length === 0 || timeslots.length === 0 ) {
+  if (!faculty ||!att_date || !students || !timeslots || students.length === 0 || timeslots.length === 0 ) {
     return res.status(400).json({ error: "Faculty, students,date and timeslots are required." });
   }
   try {
@@ -66,9 +66,9 @@ exports.post_arrear_stu_att = async (req, res) => {
         if (validate && (validate.att_status === '1' || validate.att_status === '0')) {
           const query = `
             INSERT INTO re_appear (faculty, student, slot, att_session)
-            VALUES (?, ?, ?, CURRENT_TIMESTAMP);
+            VALUES (?, ?, ?, ?);
           `;
-          await post_database(query, [faculty, student, slot]);
+          await post_database(query, [faculty, student, slot, att_date]);
         } else {
           return res.status(400).json({ error: `Student ID ${student} has an invalid status for attendance.` });
         }
