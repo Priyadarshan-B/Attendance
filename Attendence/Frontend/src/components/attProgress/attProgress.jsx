@@ -12,15 +12,13 @@ import {
 } from "@mui/material";
 import moment from "moment";
 
-const TableLayout = ({ studentId, date, year, register_number, type }) => {
+const TableLayout = ({ studentId, date, year, register_number }) => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [timeSlots, setTimeSlots] = useState([]);
   const [progressValue1, setProgressValue1] = useState(0);
   const [progressValue2, setProgressValue2] = useState(0);
   const [tooltipTime1, setTooltipTime1] = useState("");
   const [tooltipTime2, setTooltipTime2] = useState("");
-  const today = moment().format("YYYY-MM-DD");
-  const currentTime = moment();
 
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -66,19 +64,18 @@ const TableLayout = ({ studentId, date, year, register_number, type }) => {
           const time = attendanceDateTime.format("HH:mm:ss");
 
           if (time >= "08:00:00" && time <= "08:45:00") {
-            progress1 = 1;
+            progress1 = 100;
             setTooltipTime1(detail.time); // Set tooltip time for morning session
             foundProgress1 = true;
           }
           if (time >= "12:00:00" && time <= "14:00:00") {
-            progress2 = 1;
+            progress2 = 100;
             setTooltipTime2(detail.time); // Set tooltip time for afternoon session
             foundProgress2 = true;
           }
         }
       });
 
-      // If no data found for progress1 or progress2, set to "No Data"
       if (!foundProgress1) setTooltipTime1("No Data");
       if (!foundProgress2) setTooltipTime2("No Data");
 
@@ -88,6 +85,8 @@ const TableLayout = ({ studentId, date, year, register_number, type }) => {
 
     fetchAttendanceDetails();
   }, [register_number, date]); // Ensure it runs when date changes
+
+
 
   useEffect(() => {
     const fetchTimeSlots = async () => {
@@ -134,64 +133,7 @@ const TableLayout = ({ studentId, date, year, register_number, type }) => {
 
     if (!slotData) return null;
 
-    const slotTime = moment(slotStartTime, "HH:mm:ss");
     const tooltip = <p style={{ color: 'white' }}>{faculty}</p>;
-
-    if (type === 1 && date === today) {
-      if (
-        slotTime.isBefore(currentTime) &&
-        progressValue1 === 1 &&
-        !isAfternoon(slotStartTime)
-      ) {
-        return (
-          <Tooltip title={tooltip}>
-            <img src={approve} alt="Present" height="20px" />
-          </Tooltip>
-        );
-      }
-      if (
-        slotTime.isBefore(currentTime) &&
-        progressValue2 === 1 &&
-        isAfternoon(slotStartTime)
-      ) {
-        return (
-          <Tooltip title={tooltip}>
-            <img src={approve} alt="Present" height="20px" />
-          </Tooltip>
-        );
-      }
-      if (progressValue1 === 0 && !isAfternoon(slotStartTime)) {
-        return (
-          <Tooltip title={tooltip}>
-            <img src={decline} alt="Absent" height="20px" />
-          </Tooltip>
-        );
-      }
-      if (progressValue2 === 0 && isAfternoon(slotStartTime)) {
-        return (
-          <Tooltip title={tooltip}>
-            <img src={decline} alt="Absent" height="20px" />
-          </Tooltip>
-        );
-      }
-    }
-
-    if (date !== today) {
-      if (progressValue1 === 1 && !isAfternoon(slotStartTime)) {
-        return (
-          <Tooltip title={tooltip}>
-            <img src={approve} alt="Present" height="20px" />
-          </Tooltip>
-        );
-      }
-      if (progressValue2 === 1 && isAfternoon(slotStartTime)) {
-        return (
-          <Tooltip title={tooltip}>
-            <img src={approve} alt="Present" height="20px" />
-          </Tooltip>
-        );
-      }
-    }
 
     return slotData.is_present === 1 ? (
       <Tooltip title={tooltip}>
@@ -248,7 +190,7 @@ const TableLayout = ({ studentId, date, year, register_number, type }) => {
                   <Box sx={{ flexGrow: 1 }}>
                     <BorderLinearProgress
                       variant="determinate"
-                      value={progressValue1 * 100}
+                      value={progressValue1}
                     />
                   </Box>
                 </Tooltip>
@@ -258,7 +200,7 @@ const TableLayout = ({ studentId, date, year, register_number, type }) => {
                   <Box sx={{ flexGrow: 1 }}>
                     <BorderLinearProgress
                       variant="determinate"
-                      value={progressValue2 * 100}
+                      value={progressValue2}
                     />
                   </Box>
                 </Tooltip>

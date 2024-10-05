@@ -230,7 +230,7 @@ function Body() {
                     renderInput={(params) => <TextField {...params} />}
                     slotProps={{ textField: { size: "small" } }}
                     format="dd-MM-yyyy"
-                    maxDate={new Date()} // Max date is today
+                    maxDate={new Date()} 
                   />
                 </LocalizationProvider>
               </div>

@@ -893,8 +893,9 @@ function Body({ id, roll }) {
                   value={selectedDate}
                   onChange={(newValue) => setSelectedDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
-                  format="YYYY-MM-DD"
+                  format="DD-MM-YYYY"
                   slotProps={{ textField: { size: "small" } }}
+                  maxDate={dayjs()}
                 />
               </div>
 
