@@ -56,9 +56,9 @@ const AbsentTable = ({ mentorId }) => {
         <Table className="custom-table">
           <TableHead sx={{ backgroundColor: '#2a3645' }}>
             <TableRow>
-              <TableCell sx={{ color: 'white', fontWeight: '700', fontSize: '18px' }}>S.No</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: '700', fontSize: '18px' }}>Name</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: '700', fontSize: '18px' }}>Register Number</TableCell>
+              <TableCell sx={{ color: 'white',  }}>S.No</TableCell>
+              <TableCell sx={{ color: 'white',  }}>Name</TableCell>
+              <TableCell sx={{ color: 'white', }}>Register Number</TableCell>
             </TableRow>
           </TableHead>
           {data.length>0 ?(<TableBody>

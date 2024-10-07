@@ -53,7 +53,6 @@ const placeholders = holidays.length > 0 ? holidays.map(() => '?').join(',') : 0
     ]);
     const totalDays = totalDaysData[0].total_days;
 
-    // Calculate the number of days from from_date to the current date excluding Sundays and holidays
     const currentDate = new Date().toISOString().split('T')[0];
     const currentDaysQuery = `
       SELECT COUNT(*) AS current_days
@@ -81,7 +80,6 @@ const placeholders = holidays.length > 0 ? holidays.map(() => '?').join(',') : 0
     ]);
     const currentDays = currentDaysData[0].current_days;
 
-    // Fetch attendance data for the student
     const attendanceQuery = `
       SELECT 
         SUM(CASE WHEN forenoon = '1' AND afternoon = '1' THEN 1
@@ -100,7 +98,7 @@ const placeholders = holidays.length > 0 ? holidays.map(() => '?').join(',') : 0
     ]);
     const { present_days, counted_days } = attendanceData[0];
 
-    const absentDays = currentDays - counted_days;
+    const absentDays = currentDays - present_days;
     const attendancePercentage = (present_days / currentDays) * 100;
 
     const presentAbsent = `

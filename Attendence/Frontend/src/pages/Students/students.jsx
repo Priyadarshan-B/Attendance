@@ -570,7 +570,7 @@ function Body({ id, roll }) {
                     marginTop: "10px",
                   }}
                 >
-                  <b>{attendancePercent.absent_days}</b>
+                  <b>{attendancePercent?.absent_days? attendancePercent.absent_days:"--"}</b>
                 </div>
               </div>
             </div>
@@ -611,7 +611,7 @@ function Body({ id, roll }) {
                     marginTop: "10px",
                   }}
                 >
-                  <b>{attendancePercent.current_days}</b>
+                  <b>{attendancePercent?.current_days? attendancePercent.current_days:"--"}</b>
                 </div>
               </div>
             </div>
@@ -645,7 +645,7 @@ function Body({ id, roll }) {
                     marginTop: "10px",
                   }}
                 >
-                  <b>{attendancePercent.total_days}</b>
+                  <b>{attendancePercent?.total_days? attendancePercent.total_days:"--"}</b>
                 </div>
               </div>
             </div>
@@ -686,7 +686,7 @@ function Body({ id, roll }) {
                     marginTop: "10px",
                   }}
                 >
-                  <b>{attendancePercent.attendance_percentage}</b>
+                  <b>{attendancePercent?.attendance_percentage? attendancePercent.attendance_percentage:'0'}</b>
                 </div>
               </div>
             </div>
@@ -726,7 +726,7 @@ function Body({ id, roll }) {
                     color: "#875eff",
                   }}
                 >
-                  <b>{placement.placement_rank}</b>
+                  <b>{placement?.placement_rank? placement.placement_rank:"--"}</b>
                 </div>
               </div>
             </div>
@@ -765,7 +765,7 @@ function Body({ id, roll }) {
                     marginTop: "10px",
                   }}
                 >
-                  <b>{placement.placement_group}</b>
+                  <b>{placement?.placement_group ? placement.placement_group : '--'}</b>
                 </div>
               </div>
             </div>
@@ -803,7 +803,7 @@ function Body({ id, roll }) {
                     marginTop: "10px",
                   }}
                 >
-                  <b>{placement.placement_score}</b>
+                  <b>{placement?.placement_score ? placement.placement_score:'--'}</b>
                 </div>
               </div>
             </div>
@@ -848,7 +848,7 @@ function Body({ id, roll }) {
                         color: "var(--text)",
                         fontSize: "30px",
                       }}
-                      end={placement.reward_points}
+                      end={placement?.reward_points? placement.reward_points:"--"}
                       duration={2}
                     />
                   </b>

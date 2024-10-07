@@ -231,6 +231,7 @@
     /* border-left: 5px solid #493d88; */
     color:white;
     transition: all 0.5s;
+
    
 }
 
@@ -249,6 +250,7 @@
     transition: all 0.3s;
     margin-left: 20px;
     gap: 10px;
+    width: 100%;
 }
 
 .logout-buttons {
