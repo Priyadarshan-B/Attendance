@@ -176,23 +176,33 @@ ORDER BY
 
     } else if (slot === 'AllSlots') {
       detailsQuery = `
-        SELECT DISTINCT
-          r.student AS student_id,
-          s.name AS student_name,
-          s.register_number,
-          s.gmail AS mail,
-          ts1.label AS slot,
-          ms.mentor AS mentor,
-          mf.name AS faculty_name
-        FROM re_appear r
-        LEFT JOIN students s ON r.student = s.id
-        LEFT JOIN time_slots ts1 ON r.slot = ts1.id
-        LEFT JOIN mentor_student ms ON s.id = ms.student AND ms.status = '1'
-        LEFT JOIN mentor m ON ms.mentor = m.id
-        LEFT JOIN mentor mf ON r.faculty = mf.id
-        WHERE DATE(r.att_session) = ?
-        AND ts1.year = ?
-        AND ts1.status = '1';
+        SELECT 
+    r.student AS student_id,
+    s.name AS student_name,
+    s.register_number,
+    s.gmail AS mail,
+    GROUP_CONCAT(DISTINCT ts1.label SEPARATOR ', ') AS slot,  
+    ms.mentor AS mentor,
+    GROUP_CONCAT(DISTINCT mf.name SEPARATOR ', ') AS faculty_name  
+FROM 
+    re_appear r
+LEFT JOIN 
+    students s ON r.student = s.id
+LEFT JOIN 
+    time_slots ts1 ON r.slot = ts1.id
+LEFT JOIN 
+    mentor_student ms ON s.id = ms.student AND ms.status = '1'
+LEFT JOIN 
+    mentor m ON ms.mentor = m.id
+LEFT JOIN 
+    mentor mf ON r.faculty = mf.id
+WHERE 
+    DATE(r.att_session) = ?
+    AND ts1.year = ?
+    AND ts1.status = '1'
+GROUP BY 
+    r.student, s.name, s.register_number, s.gmail, ms.mentor;
+
       `;
 
       countQuery = `

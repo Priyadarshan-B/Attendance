@@ -110,7 +110,7 @@ function Body() {
       console.error("Error adding to favourites:", error);
     }
   };
-
+ 
   const fetchStudents = async () => {
     try {
       const response = await requestApi(
@@ -180,6 +180,7 @@ function Body() {
       await requestApi("POST", "/arr-attendence", payload);
       toast.success("Attendance submitted successfully");
       setSelectedTimeSlots([]);
+      setSelectedStudents([])
     } catch (error) {
       toast.error("Failed to submit attendance");
       console.error("Error submitting attendance:", error);
@@ -197,8 +198,6 @@ function Body() {
 
   return (
     <div className="attendance-container">
-      {/* <h2>Students Attendance (Hour)</h2> */}
-
       <button className="favourites" onClick={() => setLogs(!logs)}>
         {logs ? "Show All Students" : "Attendance Logs"}
       </button>
@@ -370,7 +369,7 @@ function Body() {
                                     />
                                   </TableCell>
                                 )}
-                                <TableCell>{selectedYear.value}</TableCell>
+                                <TableCell>{student.year}</TableCell>
                                 <TableCell>{student.name}</TableCell>
                                 <TableCell>{student.register_number}</TableCell>
                                 <TableCell>

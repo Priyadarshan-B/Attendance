@@ -134,15 +134,14 @@ WHERE ra.id IS NULL
     s.register_number,
     s.gmail AS mail,
     m.name AS mentor_name,
-    ts.label AS slot
+    GROUP_CONCAT(ts.label SEPARATOR ', ') AS slot
 FROM 
     students s
 CROSS JOIN time_slots ts
-ON ts.year = ?
 LEFT JOIN re_appear r
     ON s.id = r.student 
     AND r.slot = ts.id
-    AND DATE(r.att_session) = ? 
+    AND DATE(r.att_session) = ?
 LEFT JOIN mentor_student ms
     ON s.id = ms.student 
     AND ms.status = '1'
@@ -150,7 +149,12 @@ LEFT JOIN mentor m
     ON ms.mentor = m.id
 WHERE s.year = ?
 AND s.type = '2'
-AND r.id IS NULL;
+AND ts.status = '1'
+AND ts.year = s.year 
+AND r.id IS NULL 
+GROUP BY 
+    s.id, s.name, s.register_number, s.gmail, m.name;
+
         `
         countQuery=`
         SELECT 
@@ -170,7 +174,7 @@ WHERE s.year = ?
 AND s.type = '2'
 AND r.id IS NULL;
         `
-        detailsParams = [year ,date, year]
+        detailsParams = [ date, year]
         countParams = [year ,date, year]
 
       }
