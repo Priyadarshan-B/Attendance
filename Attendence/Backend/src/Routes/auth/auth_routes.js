@@ -6,6 +6,7 @@ const axios = require("axios");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 const {
   setEncryptedCookie,
+  encryptData,
   getDecryptedCookie,
   removeEncryptedCookie,
 } = require("../../config/encrpyt");
@@ -123,8 +124,9 @@ router.get("/google/callback", passport.authenticate("google", { failureRedirect
       profile:req.user.profilePhoto
     };
     console.log(responseJson)
-  
-    res.redirect(`${process.env.CLIENT_URL}/welcome?data=${encodeURIComponent(JSON.stringify(responseJson))}`);
+    const encryptedData = encryptData(responseJson);
+
+    res.redirect(`${process.env.CLIENT_URL}/welcome?data=${encodeURIComponent(JSON.stringify(encryptedData))}`);
 });
 
 const generateToken = (user, expiresIn, name, roll, role_id, id, gmail, profile) => {

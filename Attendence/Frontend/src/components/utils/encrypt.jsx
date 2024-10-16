@@ -21,6 +21,21 @@ export const decryptData = (encryptedData) => {
     return null;
   }
 };
+// export const decryptURIData = (encryptedData) => {
+//   try {
+//     // Ensure the data is decoded properly
+//     const decodedData = decodeURIComponent(encryptedData);
+//     const bytes = CryptoJS.AES.decrypt(decodedData, secretKey);
+//     const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+
+//     // Attempt to parse the decrypted data as JSON
+//     return JSON.parse(decryptedData);
+//   } catch (error) {
+//     console.error("Decryption failed or invalid data format:", error);
+//     return null;
+//   }
+// };
+
 
 export const setEncryptedCookie = (key, value) => {
   const hashedKey = hashName(key);   
