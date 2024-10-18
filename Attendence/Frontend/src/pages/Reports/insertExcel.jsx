@@ -5,19 +5,20 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination
 } from '@mui/material';
 import './report.css'
+import '../Approvals/approval.css'
+import Button from "../../components/Button/Button";
+import toast from "react-hot-toast";
 
 const ExcelBio = () => {
   const [excelData, setExcelData] = useState([]);
-  const [page, setPage] = useState(0); // Page state for pagination
-  const [rowsPerPage, setRowsPerPage] = useState(10); // Rows per page, default 10
+  const [page, setPage] = useState(0); 
+  const [rowsPerPage, setRowsPerPage] = useState(10); 
 
-  // Helper function to convert Excel serial date to JavaScript Date (YYYY-MM-DD hh:mm:ss)
   const excelDateToJSDate = (serial) => {
-    const utc_days = Math.floor(serial - 25569); // Excel's epoch date is 1899-12-30, 25569 corresponds to 1970-01-01
-    const utc_value = utc_days * 86400; // 86400 seconds in a day
+    const utc_days = Math.floor(serial - 25569);
+    const utc_value = utc_days * 86400; 
     const date_info = new Date(utc_value * 1000);
 
-    // Adding fractional time (if any)
     const fractional_day = serial - Math.floor(serial);
     let total_seconds = Math.floor(86400 * fractional_day);
     const seconds = total_seconds % 60;
@@ -29,7 +30,6 @@ const ExcelBio = () => {
     date_info.setMinutes(minutes);
     date_info.setSeconds(seconds);
 
-    // Convert to readable format
     return date_info.toISOString().slice(0, 19).replace('T', ' ');
   };
 
@@ -45,7 +45,7 @@ const ExcelBio = () => {
       
       const formattedData = parsedData.slice(1).map((row) => ({
         enroll_id: row[0],
-        device_time: excelDateToJSDate(row[1]), // Converting serial date to human-readable format
+        device_time: excelDateToJSDate(row[1]),
         roll_no: row[2],
         student_name: row[3],
         batch: row[4],
@@ -64,13 +64,12 @@ const ExcelBio = () => {
         time: row.device_time,
       }));
 
-      const response = await requestApi("POST","/upload", formattedData);
-      if (response.status === 200) {
-        alert("Data uploaded successfully");
-      }
+       await requestApi("POST","/upload", formattedData);
+      toast.success("Data uploaded successfully");
+      
     } catch (error) {
       console.error("Error uploading data", error);
-      alert("Error uploading data");
+      toast.error("Error uploading data");
     }
   };
 
@@ -84,48 +83,63 @@ const ExcelBio = () => {
   };
 
   return (
-    <div className="App">
-      <h1>Upload Excel File</h1>
+    <div className="excel-bio">
+      <h3>Upload Biometrics (Daily)</h3>
+      <br />
       <input type="file" onChange={handleFileUpload} />
-      <button onClick={handleSubmit}>Submit</button>
-
+      <Button onClick={handleSubmit} label = "Submit"/>
+      <br />
       {excelData.length > 0 && (
-        <>
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Enroll ID</TableCell>
-                  <TableCell>Device Time</TableCell>
-                  <TableCell>Roll No</TableCell>
-                  <TableCell>Student Name</TableCell>
-                  <TableCell>Batch</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {excelData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{row.enroll_id}</TableCell>
-                    <TableCell>{row.device_time}</TableCell>
-                    <TableCell>{row.roll_no}</TableCell>
-                    <TableCell>{row.student_name}</TableCell>
-                    <TableCell>{row.batch}</TableCell>
+        <div className="table-container">
+          <Paper>
+            <TableContainer >
+              <Table className="custom-table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Enroll ID</TableCell>
+                    <TableCell>Device Time</TableCell>
+                    <TableCell>Roll No</TableCell>
+                    <TableCell>Student Name</TableCell>
+                    <TableCell>Batch</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50]}
-            component="div"
-            count={excelData.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </>
+                </TableHead>
+                <TableBody>
+                  {excelData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{row.enroll_id}</TableCell>
+                      <TableCell>{row.device_time}</TableCell>
+                      <TableCell>{row.roll_no}</TableCell>
+                      <TableCell>{row.student_name}</TableCell>
+                      <TableCell>{row.batch}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 50]}
+              component="div"
+              count={excelData.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              sx={{
+                backgroundColor: "var(--text)",
+                ".MuiTablePagination-toolbar": {
+                  backgroundColor: "var(--background-1)",
+                  padding:"0px"
+                },
+                ".MuiTablePagination-actions svg": {
+                  color: "var(--text)",
+                },
+                ".MuiSelect-icon": {
+                  color: "var(--text)",
+                },
+              }}
+            />
+          </Paper>
+        </div>
       )}
     </div>
   );

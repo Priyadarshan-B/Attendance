@@ -72,23 +72,33 @@ const runAttendanceUpdate = async () => {
 
 // Define the cron jobs
 const scheduleCronJobs = () => {
-  cron.schedule('0 0 * * 3', async () => {
-    try {
-      console.log('Executing update_7_days cron job...');
-      await update_7_days();
-    } catch (error) {
-      console.error('Error during scheduled update_7_days:', error);
-    }
-  });
-  cron.schedule('10 07 * * *', async () => {
-    try {
-      console.log('Executing update_biometrics cron job...');
-      await processAttendanceForAllStudents();
-    } catch (error) {
-      console.error('Error during scheduled update_biometrics:', error);
-    }
-  });
-  cron.schedule('00 15 * * *', async () => {
+  // cron.schedule('0 0 * * 3', async () => {
+  //   try {
+  //     console.log('Executing update_7_days cron job...');
+  //     await update_7_days();
+  //   } catch (error) {
+  //     console.error('Error during scheduled update_7_days:', error);
+  //   }
+  // });
+  // cron.schedule('10 07 * * *', async () => {
+  //   try {
+  //     console.log('Executing update_biometrics cron job...');
+  //     await processAttendanceForAllStudents();
+  //   } catch (error) {
+  //     console.error('Error during scheduled update_biometrics:', error);
+  //   }
+  // });
+  // cron.schedule('00 15 * * *', async () => {
+  //   try {
+  //     console.log('Executing update_biometrics cron job...');
+  //     await update_biometrics();
+  //     await processAttendanceForAllStudents();
+  //   } catch (error) {
+  //     console.error('Error during scheduled update_biometrics:', error);
+  //   }
+  // });
+
+  cron.schedule('00 21 * * *', async () => {
     try {
       console.log('Executing update_biometrics cron job...');
       await update_biometrics();
@@ -98,19 +108,9 @@ const scheduleCronJobs = () => {
     }
   });
 
-  cron.schedule('47 00 * * *', async () => {
-    try {
-      console.log('Executing update_biometrics cron job...');
-      await update_biometrics();
-      await processAttendanceForAllStudents();
-    } catch (error) {
-      console.error('Error during scheduled update_biometrics:', error);
-    }
-  });
-
-  cron.schedule('30 12 * * *', runAttendanceUpdate); 
-  cron.schedule('30 16 * * *', runAttendanceUpdate); 
-  cron.schedule('00 20 * * *', runAttendanceUpdate); 
+  // cron.schedule('30 12 * * *', runAttendanceUpdate); 
+  // cron.schedule('30 16 * * *', runAttendanceUpdate); 
+  cron.schedule('00 23 * * *', runAttendanceUpdate); 
 
   console.log("Cron jobs scheduled for update_7_days, biometrics, and attendance update.");
 };

@@ -8,51 +8,57 @@ const hashName = (name) => {
 };
 
 export const encryptData = (data) => {
-  return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+  try {
+    const stringifiedData = JSON.stringify(data);  
+    return CryptoJS.AES.encrypt(stringifiedData, secretKey).toString(); 
+  } catch (error) {
+    console.error("Encryption failed", error);
+    return null;
+  }
 };
 
 export const decryptData = (encryptedData) => {
-  const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
-  const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
   try {
-    return JSON.parse(decryptedData);
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey); 
+    const decryptedData = bytes.toString(CryptoJS.enc.Utf8); 
+    return JSON.parse(decryptedData);  
   } catch (error) {
     console.error("Decryption failed", error);
     return null;
   }
 };
-// export const decryptURIData = (encryptedData) => {
-//   try {
-//     // Ensure the data is decoded properly
-//     const decodedData = decodeURIComponent(encryptedData);
-//     const bytes = CryptoJS.AES.decrypt(decodedData, secretKey);
-//     const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-
-//     // Attempt to parse the decrypted data as JSON
-//     return JSON.parse(decryptedData);
-//   } catch (error) {
-//     console.error("Decryption failed or invalid data format:", error);
-//     return null;
-//   }
-// };
-
 
 export const setEncryptedCookie = (key, value) => {
-  const hashedKey = hashName(key);   
-  const encryptedValue = encryptData(value); 
-  Cookies.set(hashedKey, encryptedValue, { expires: 1 / 12 });
+  try {
+    const hashedKey = hashName(key);  
+    const encryptedValue = encryptData(value);  
+    if (encryptedValue) {
+      Cookies.set(hashedKey, encryptedValue, { expires: 1 / 12 });  
+    }
+  } catch (error) {
+    console.error("Failed to set encrypted cookie", error);
+  }
 };
 
 export const getDecryptedCookie = (key) => {
-  const hashedKey = hashName(key);
-  const encryptedValue = Cookies.get(hashedKey); 
-  if (encryptedValue) {
-    return decryptData(encryptedValue); 
+  try {
+    const hashedKey = hashName(key);  
+    const encryptedValue = Cookies.get(hashedKey); 
+    if (encryptedValue) {
+      return decryptData(encryptedValue); 
+    }
+    return null;
+  } catch (error) {
+    console.error("Failed to get decrypted cookie", error);
+    return null;
   }
-  return null;
 };
 
 export const removeEncryptedCookie = (key) => {
-  const hashedKey = hashName(key);
-  Cookies.remove(hashedKey);
+  try {
+    const hashedKey = hashName(key); 
+    Cookies.remove(hashedKey);  
+  } catch (error) {
+    console.error("Failed to remove encrypted cookie", error);
+  }
 };

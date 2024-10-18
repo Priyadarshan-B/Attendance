@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/loader";
-import CryptoJS from "crypto-js";
 import { setEncryptedCookie, getDecryptedCookie, removeEncryptedCookie } from "../../components/utils/encrypt";
 import requestApi from "../../components/utils/axios";
 
@@ -9,7 +8,6 @@ const Welcome = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const basePath = import.meta.env.VITE_BASE_PATH
-  const encryptionKey = import.meta.env.VITE_ENCRYPT_KEY;
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -18,8 +16,7 @@ const Welcome = () => {
       if (dataParam) {
         console.log(dataParam)
         try {
-          const decryptedData = CryptoJS.AES.decrypt(decodeURIComponent(dataParam), encryptionKey).toString(CryptoJS.enc.Utf8);
-          const parsedData = JSON.parse(decryptedData);
+          const parsedData = JSON.parse(dataParam);
           const { token, name, role, roll, id, gmail, profile } = parsedData;
 
           setEncryptedCookie("token", token);
@@ -36,7 +33,7 @@ const Welcome = () => {
           if (!areCookiesSet) {
             throw new Error("One or more cookies were not set properly.");
           }
-
+ 
           const decryptedRole = getDecryptedCookie("role");
           const response = await requestApi("GET", `/auth/resources?role=${decryptedRole}`);
 

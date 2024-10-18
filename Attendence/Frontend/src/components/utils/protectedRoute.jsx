@@ -20,7 +20,7 @@ const ProtectedRoute = ({ children }) => {
 
       if (token && allowedRoutes) {
         const adjustedCurrentPath = currentPath.replace(basePath, ""); 
-        console.log(adjustedCurrentPath)
+        // console.log(adjustedCurrentPath)
 
         if (allowedRoutes.includes(adjustedCurrentPath)) {
           setIsAuthenticated(true);  

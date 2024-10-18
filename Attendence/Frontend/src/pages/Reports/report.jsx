@@ -495,6 +495,7 @@ const [conYear, setConYear] = useState();
           </div>
         </div>
       </div>
+      <br />
       <div>
         <ExcelBio/>
       </div>

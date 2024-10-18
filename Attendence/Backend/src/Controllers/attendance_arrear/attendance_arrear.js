@@ -51,8 +51,8 @@ const updateAttendanceForStudentArrear = async (studentId, year) => {
         INSERT INTO attendance (register_number, date, forenoon, afternoon) 
         VALUES (?, CURRENT_DATE(), ?, ?) 
         ON DUPLICATE KEY UPDATE 
-          forenoon = VALUES(forenoon), 
-          afternoon = VALUES(afternoon);
+        forenoon = VALUES(forenoon), 
+        afternoon = VALUES(afternoon);
       `;
       await post_database(query, [
         registerNumberForenoon || registerNumberAfternoon,
