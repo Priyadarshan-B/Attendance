@@ -9,6 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import TextField from "@mui/material/TextField";
 import customStyles from "../../components/applayout/selectTheme";
 import moment from "moment";
+import ExcelBio from "./insertExcel";
 import "./report.css";
 
 function ReportPage() {
@@ -493,6 +494,9 @@ const [conYear, setConYear] = useState();
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        <ExcelBio/>
       </div>
     </div>
   );
