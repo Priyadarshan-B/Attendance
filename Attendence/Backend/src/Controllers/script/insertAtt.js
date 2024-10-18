@@ -9,55 +9,72 @@ async function insertAttendance() {
   });
 
   try {
-    // Fetch students
-    const [students] = await connection.execute(
-      "SELECT id, register_number FROM students"
-    );
+    const [students] = await connection.execute(`SELECT id, register_number FROM students WHERE YEAR = 'III' AND TYPE = 2`);
 
     for (const student of students) {
       const studentId = student.id;
       const registerNumber = student.register_number;
 
-      // Fetch all attendance records for this student
       const [attendanceRecords] = await connection.execute(
-        `SELECT attendence 
-FROM no_arrear 
-WHERE student = ? 
-AND attendence IS NOT NULL 
-AND attendence BETWEEN '2024-09-04 00:00:00' AND '2024-09-28 23:59:59';
-`,
-        [registerNumber]
+        `SELECT no_arrear.attendence
+         FROM no_arrear
+         WHERE no_arrear.student = ?
+         AND no_arrear.attendence IS NOT NULL
+         AND DATE(no_arrear.attendence) BETWEEN '2024-10-02' AND '2024-10-05'`,
+        [registerNumber] 
       );
 
-      // Process each attendance record
+      if (attendanceRecords.length === 0) {
+        continue;
+      }
+
+      const attendanceByDate = {};
       for (const record of attendanceRecords) {
         const attendenceTime = new Date(record.attendence);
-        const date = attendenceTime.toISOString().split("T")[0]; // Extract date in YYYY-MM-DD format
+        const date = attendenceTime.toISOString().split('T')[0];
+
+        if (!attendanceByDate[date]) {
+          attendanceByDate[date] = [];
+        }
+        attendanceByDate[date].push(attendenceTime);
+      }
+
+      for (const date in attendanceByDate) {
+        const recordsForDate = attendanceByDate[date];
+
+        recordsForDate.sort((a, b) => a - b);
 
         let forenoon = "0";
         let afternoon = "0";
 
-        const hours = attendenceTime.getHours();
-        const minutes = attendenceTime.getMinutes();
+        let forenoonFound = false;
+        let afternoonFound = false;
 
-        // Check for forenoon slot (8:00 AM to 8:45 AM)
-        if (hours === 8 && minutes >= 0 && minutes <= 45) {
-          forenoon = "1";
+        for (const record of recordsForDate) {
+          const hours = record.getHours();   
+          const minutes = record.getMinutes();
+
+          if (!forenoonFound && hours === 8 && minutes >= 0 && minutes <= 45) {
+            forenoon = "1";
+            forenoonFound = true;  
+          }
+
+          if (!afternoonFound && hours >= 12 && hours < 14) {
+            afternoon = "1";  
+            afternoonFound = true;  
+          }
+
+          if (forenoonFound && afternoonFound) {
+            break;
+          }
         }
 
-        // Check for afternoon slot (12:00 PM to 2:00 PM)
-        else if (hours >= 12 && hours < 14) {
-          afternoon = "1";
-        }
-
-        // Now check if a record already exists for the student and the date
         const [existingRecords] = await connection.execute(
           `SELECT id, forenoon, afternoon FROM attendance WHERE student = ? AND date = ?`,
           [studentId, date]
         );
 
         if (existingRecords.length > 0) {
-          // If the record exists, update forenoon and afternoon fields only
           const existingRecord = existingRecords[0];
           let updateQuery = "";
           let queryParams = [];
@@ -81,7 +98,6 @@ AND attendence BETWEEN '2024-09-04 00:00:00' AND '2024-09-28 23:59:59';
             );
           }
         } else {
-          // If no record exists, insert a new one
           await connection.execute(
             `INSERT INTO attendance (student, date, forenoon, afternoon, status)
              VALUES (?, ?, ?, ?, '1')`,
@@ -97,6 +113,6 @@ AND attendence BETWEEN '2024-09-04 00:00:00' AND '2024-09-28 23:59:59';
   } finally {
     await connection.end();
   }
-}
+} 
 
 insertAttendance();
