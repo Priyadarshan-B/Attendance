@@ -47,11 +47,11 @@ app.use(morgan_config);
 // routes
 scheduleCronJobs();
 
-// app.use(RestrictOrigins)
+app.use(RestrictOrigins)
 app.use("/attendance/api/auth", resources_route);
 app.use("/attendance/api/auth", auth_route);
-// app.use(limiter);
-// app.use(authenticateGoogleJWT);
+app.use(limiter);
+app.use(authenticateGoogleJWT);
 app.use("/attendance/api", routes);
 
 
