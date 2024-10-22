@@ -30,3 +30,9 @@
     display: flex;
     
 }
+
+@media (max-width:999px){
+    .sem-dates{
+        flex-direction: column;
+    }
+}

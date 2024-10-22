@@ -3,8 +3,9 @@ const { get_database, post_database } = require("../../config/db_utils");
 exports.get_mentor = async(req, res)=>{
   try{
     const query = `
-    SELECT * FROM mentor
-    WHERE status = '1';
+    SELECT m.id, m.name , m.staff_id , m.gmail, r.name as role, m.status FROM mentor m
+    LEFT JOIN roles r ON r.id = m.role_id
+    WHERE m.status = '1';
     `
     const mentor = await get_database(query)
     res.json(mentor);

@@ -3,6 +3,7 @@
     padding: 10px;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 10px;
     border-radius: 5px;
 }
@@ -10,6 +11,16 @@
 .nip{
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     flex: 1;
     gap: 10px;
+}
+
+@media (max-width :999px){
+    .nip-form{
+        flex-direction: column;
+    }
+    .nip{
+        flex-direction: column;
+    }
 }

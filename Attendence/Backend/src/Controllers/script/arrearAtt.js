@@ -107,7 +107,7 @@ const updateAllType2Students = async () => {
     const query = `
       SELECT id, year, register_number
       FROM students
-      WHERE type = 2 AND status = '1';
+      WHERE type = 2 AND year = 'III' AND status = '1';
     `;
 
     const students = await executeSelectQuery(query);
@@ -121,7 +121,7 @@ const updateAllType2Students = async () => {
     const endDate = new Date('2024-10-18');
  
     for (let currentDate = startDate; currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
-      const formattedDate = currentDate.toISOString().slice(0, 10); // Format date as YYYY-MM-DD
+      const formattedDate = currentDate.toISOString().slice(0, 10); 
 
       for (const student of students) {
         const { id, year, register_number } = student;

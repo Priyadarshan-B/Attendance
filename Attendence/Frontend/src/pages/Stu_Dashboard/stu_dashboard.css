@@ -90,6 +90,9 @@
     .att_det{
         flex-direction: column;
     }
+    .dropdown{
+        flex-direction: column;
+    }
 }
 .no-stu{
     height: 70vh;

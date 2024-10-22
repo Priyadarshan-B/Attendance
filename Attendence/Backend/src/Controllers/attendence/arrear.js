@@ -4,10 +4,11 @@ exports.get_arrear_att = async (req, res) => {
   try {
     const query = `
         SELECT re_appear.id, students.name, students.register_number,
-        slot,att_session
+        slot,att_session, ts.label
         FROM re_appear
         INNER JOIN students
         ON re_appear.student = students.id
+        LEFT JOIN time_slots ts ON ts.id = re_appear.slot
         WHERE 
         re_appear.status = '1';
         `;
@@ -25,6 +26,7 @@ exports.get_arrear_att = async (req, res) => {
         const hours12 = hours24 % 12 || 12;
         const period = hours24 < 12 ? "AM" : "PM";
         const formattedDate = `${day} / ${month} / ${year}`;
+        const formattedDB_date = `${year}-${month}-${day}`
         const formattedTime = `${String(hours12).padStart(
           2,
           "0"
@@ -33,6 +35,7 @@ exports.get_arrear_att = async (req, res) => {
         return {
           ...detail,
           date: formattedDate,
+          dbDate: formattedDB_date,
           time: formattedTime,
         };
       });

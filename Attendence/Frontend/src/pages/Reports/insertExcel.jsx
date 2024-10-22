@@ -18,20 +18,24 @@ const ExcelBio = () => {
     const utc_days = Math.floor(serial - 25569);
     const utc_value = utc_days * 86400; 
     const date_info = new Date(utc_value * 1000);
-
+  
     const fractional_day = serial - Math.floor(serial);
     let total_seconds = Math.floor(86400 * fractional_day);
     const seconds = total_seconds % 60;
     total_seconds = (total_seconds - seconds) / 60;
     const minutes = total_seconds % 60;
     const hours = (total_seconds - minutes) / 60;
-
+  
     date_info.setHours(hours);
     date_info.setMinutes(minutes);
     date_info.setSeconds(seconds);
-
+  
+    date_info.setHours(date_info.getHours() + 5); 
+    date_info.setMinutes(date_info.getMinutes() + 30); 
+  
     return date_info.toISOString().slice(0, 19).replace('T', ' ');
   };
+  
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -58,6 +62,9 @@ const ExcelBio = () => {
   };
 
   const handleSubmit = async () => {
+    if(excelData.length === 0){
+      return toast.error("No rows...")
+    }
     try {
       const formattedData = excelData.map((row) => ({
         roll_no: row.roll_no,
@@ -66,6 +73,7 @@ const ExcelBio = () => {
 
        await requestApi("POST","/upload", formattedData);
       toast.success("Data uploaded successfully");
+      setExcelData([])
       
     } catch (error) {
       console.error("Error uploading data", error);

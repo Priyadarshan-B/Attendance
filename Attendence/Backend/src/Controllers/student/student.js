@@ -36,8 +36,9 @@ exports.get_student_details = async (req, res) => {
 exports.get_all_students = async (req, res) => {
   const year = req.query.year;
     let query = `
-    SELECT * FROM students
-    WHERE status = '1'
+    SELECT s.* , r.name AS role FROM students s 
+    LEFT JOIN roles r ON r.id = s.role_id
+    WHERE s.status = '1'
   `;
   const queryParams = [];
   if (year) {
