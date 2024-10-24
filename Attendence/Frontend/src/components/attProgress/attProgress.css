@@ -6,8 +6,8 @@
   width: 100%;
   border-collapse: collapse;
   border: 1px solid rgb(233, 233, 233);
-  border-radius: 5px; /* Add border-radius to the entire table */
-  overflow: hidden; /* Ensure rounded corners apply to the contents */
+  border-radius: 5px; 
+  overflow: hidden; 
 }
 
 .container1 th, .container1 td {
@@ -24,7 +24,6 @@
   color: var(--text);
 }
 
-/* Remove individual border-radius from the first and last child */
 .container1 th:first-child, 
 .container1 th:last-child,
 .container1 .footer:first-child,
@@ -37,7 +36,6 @@
   font-weight: bold;
 }
 
-/* Class to remove borders for specific rows */
 .no-border td {
   border: none;
 }

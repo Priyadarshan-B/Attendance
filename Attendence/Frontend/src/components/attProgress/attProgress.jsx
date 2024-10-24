@@ -9,6 +9,8 @@ import {
   Box,
   linearProgressClasses,
   Tooltip,
+  ClickAwayListener,
+  Button,
 } from "@mui/material";
 import moment from "moment";
 
@@ -19,6 +21,9 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
   const [progressValue2, setProgressValue2] = useState(0);
   const [tooltipTime1, setTooltipTime1] = useState("");
   const [tooltipTime2, setTooltipTime2] = useState("");
+  const [tooltipOpen1, setTooltipOpen1] = useState(false); // Tooltip for bar chart
+  const [tooltipOpen2, setTooltipOpen2] = useState(false); // Tooltip for bar chart
+  const [facultyTooltipOpen, setFacultyTooltipOpen] = useState({}); // Tooltip for images
 
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -35,7 +40,6 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
   useEffect(() => {
     const fetchAttendanceDetails = async () => {
       try {
-        // Reset tooltip values and progress bars when date changes
         setTooltipTime1("");
         setTooltipTime2("");
         setProgressValue1(0);
@@ -65,12 +69,12 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
 
           if (time >= "08:00:00" && time <= "08:45:00") {
             progress1 = 100;
-            setTooltipTime1(detail.time); // Set tooltip time for morning session
+            setTooltipTime1(detail.time); 
             foundProgress1 = true;
           }
           if (time >= "12:00:00" && time <= "14:00:00") {
             progress2 = 100;
-            setTooltipTime2(detail.time); // Set tooltip time for afternoon session
+            setTooltipTime2(detail.time);
             foundProgress2 = true;
           }
         }
@@ -84,9 +88,7 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
     };
 
     fetchAttendanceDetails();
-  }, [register_number, date]); // Ensure it runs when date changes
-
-
+  }, [register_number, date]); 
 
   useEffect(() => {
     const fetchTimeSlots = async () => {
@@ -127,6 +129,14 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
     return romanNumerals[index % romanNumerals.length];
   });
 
+  const handleTooltipOpen = (slotId) => {
+    setFacultyTooltipOpen((prev) => ({ ...prev, [slotId]: true }));
+  };
+
+  const handleTooltipClose = (slotId) => {
+    setFacultyTooltipOpen((prev) => ({ ...prev, [slotId]: false }));
+  };
+
   const renderAttendanceStatus = (slotId, slotStartTime) => {
     const slotData = attendanceData.find((slot) => slot.slot_id === slotId);
     const faculty = slotData && slotData.is_present === 1 ? slotData.faculty : "No Faculty Data"; // Get faculty data
@@ -135,14 +145,23 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
 
     const tooltip = <p style={{ color: 'white' }}>{faculty}</p>;
 
-    return slotData.is_present === 1 ? (
-      <Tooltip title={tooltip}>
-        <img src={approve} alt="Present" height="20px" />
-      </Tooltip>
-    ) : (
-      <Tooltip title={tooltip}>
-        <img src={decline} alt="Absent" height="20px" />
-      </Tooltip>
+    return (
+      <ClickAwayListener onClickAway={() => handleTooltipClose(slotId)}>
+        <div>
+          <Tooltip
+            title={tooltip}
+            open={facultyTooltipOpen[slotId] || false}
+            onClick={() => handleTooltipOpen(slotId)}
+          >
+            <img
+              src={slotData.is_present === 1 ? approve : decline}
+              alt={slotData.is_present === 1 ? "Present" : "Absent"}
+              height="20px"
+              onClick={() => handleTooltipOpen(slotId)} // Open on click
+            />
+          </Tooltip>
+        </div>
+      </ClickAwayListener>
     );
   };
 
@@ -186,24 +205,40 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
             <tr>
               <th style={{ width: "20px" }}>Biometrics</th>
               <th colSpan={fnSlots.length} className="header">
-                <Tooltip title={`Attendance Time: ${tooltipTime1 || "No Data"}`}>
-                  <Box sx={{ flexGrow: 1 }}>
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={progressValue1}
-                    />
-                  </Box>
-                </Tooltip>
+                <ClickAwayListener onClickAway={() => setTooltipOpen1(false)}>
+                  <div>
+                    <Tooltip
+                      title={`Attendance Time: ${tooltipTime1 || "No Data"}`}
+                      open={tooltipOpen1}
+                      onClick={() => setTooltipOpen1((prev) => !prev)} // Toggle tooltip on click
+                    >
+                      <Box sx={{ flexGrow: 1 }}>
+                        <BorderLinearProgress
+                          variant="determinate"
+                          value={progressValue1}
+                        />
+                      </Box>
+                    </Tooltip>
+                  </div>
+                </ClickAwayListener>
               </th>
               <th colSpan={anSlots.length} className="header">
-                <Tooltip title={`Attendance Time: ${tooltipTime2 || "No Data"}`}>
-                  <Box sx={{ flexGrow: 1 }}>
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={progressValue2}
-                    />
-                  </Box>
-                </Tooltip>
+                <ClickAwayListener onClickAway={() => setTooltipOpen2(false)}>
+                  <div>
+                    <Tooltip
+                      title={`Attendance Time: ${tooltipTime2 || "No Data"}`}
+                      open={tooltipOpen2}
+                      onClick={() => setTooltipOpen2((prev) => !prev)} // Toggle tooltip on click
+                    >
+                      <Box sx={{ flexGrow: 1 }}>
+                        <BorderLinearProgress
+                          variant="determinate"
+                          value={progressValue2}
+                        />
+                      </Box>
+                    </Tooltip>
+                  </div>
+                </ClickAwayListener>
               </th>
             </tr>
           </tbody>
