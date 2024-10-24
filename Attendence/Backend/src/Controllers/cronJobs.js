@@ -37,7 +37,7 @@ const processAttendanceForAllStudents = async () => {
   } catch (error) {
     console.error("Error processing attendance for all students:", error);
   }
-};
+}; 
 
 const fetchArrearStudents = async () => {
   try {

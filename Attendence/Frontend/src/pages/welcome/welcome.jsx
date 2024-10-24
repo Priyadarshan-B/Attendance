@@ -14,7 +14,7 @@ const Welcome = () => {
       const dataParam = searchParams.get("data");
 
       if (dataParam) {
-        console.log(dataParam)
+        // console.log(dataParam)
         try {
           const parsedData = JSON.parse(dataParam);
           const { token, name, role, roll, id, gmail, profile } = parsedData;

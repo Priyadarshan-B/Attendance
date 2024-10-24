@@ -141,3 +141,20 @@ exports.update_7_days = async () => {
     }
 };
 
+exports.getBiometric = async(req, res)=>{
+    const {date} = req.body
+    if(!date){
+        return res.status(400).json({error:"Date is not specified..."})
+    }
+    try{
+        const query = `
+        SELECT * FROM no_arrear WHERE DATE(attendence) AND  status = '1';
+        `
+        const Biometric = await get_database(query)
+        res.json(Biometric)
+    }
+    catch(error){
+        console.error('Error fetching Biometric Data:', error);
+       return res.status(500).json({error:"Error fetching Biometrics Data.."})
+    }
+}
