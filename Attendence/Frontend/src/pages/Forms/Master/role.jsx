@@ -170,7 +170,7 @@ function RoleChange() {
                 {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((mentor) => (
                   <TableRow key={mentor.id}>
                     <TableCell>{mentor.name}</TableCell>
-                    <TableCell>{mentor.staff_id}</TableCell>
+                    <TableCell>{mentor.staff_id || '--'}</TableCell>
                     <TableCell>{mentor.gmail}</TableCell>
                     <TableCell>{mentor.role}</TableCell>
                     <TableCell>

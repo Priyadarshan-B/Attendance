@@ -148,9 +148,9 @@ exports.getBiometric = async(req, res)=>{
     }
     try{
         const query = `
-        SELECT * FROM no_arrear WHERE DATE(attendence) AND  status = '1';
+        SELECT * FROM no_arrear WHERE DATE(attendence) = ? AND  status = '1';
         `
-        const Biometric = await get_database(query)
+        const Biometric = await get_database(query, [date])
         res.json(Biometric)
     }
     catch(error){

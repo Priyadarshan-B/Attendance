@@ -38,7 +38,7 @@ function Biometrics() {
     };
 
     fetchData();
-  }, [selectedDate]);
+  }, [selectedDate]); 
 
   useEffect(() => {
     const filtered = data.filter((row) =>
@@ -63,9 +63,11 @@ function Biometrics() {
             <DatePicker
               label="Select Date"
               value={selectedDate}
-              onChange={(newDate) => setSelectedDate(newDate)}
+              onChange={(newDate) => setSelectedDate(newDate || new Date())} // Default to today if no date is selected
               renderInput={(params) => <TextField {...params} />}
               slotProps={{ textField: { size: 'small' } }}
+              maxDate={new Date()} 
+
             />
           </LocalizationProvider>
           <TextField
