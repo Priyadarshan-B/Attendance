@@ -14,7 +14,6 @@ function formatDate(date) {
   return `${year}-${month}-${day}`;
 }
 
-// Fetch holidays for the year
 async function getHolidays(year) {
   const query = `
     SELECT dates 
@@ -27,14 +26,12 @@ async function getHolidays(year) {
   return holidays.map(row => new Date(row.dates));
 }
 
-// Function to calculate total non-Sunday and non-holiday days
 async function calculateTotalDaysWithoutSundaysAndHolidays(fromDate, toDate, holidays) {
   let current_date = new Date(fromDate);
   const end_date = new Date(toDate);
   let total_days = 0;
 
   while (current_date <= end_date) {
-    // Skip Sundays and holidays
     if (current_date.getDay() !== 0 && !holidays.some(holiday => holiday.getTime() === current_date.getTime())) {
       total_days++;
     }
@@ -55,17 +52,14 @@ exports.get_attendance_status = async (req, res) => {
     let current_date = new Date(from_date);
     const end_date = new Date(to_date);
 
-    // Fetch holidays for the given year
     const holidays = await getHolidays(year);
 
-    // Calculate total days excluding Sundays and holidays (each day has 2 sessions: FN + AN)
     const total_days = await calculateTotalDaysWithoutSundaysAndHolidays(from_date, to_date, holidays);
 
     const all_results = []; 
     const studentAttendanceMap = {};
 
     while (current_date <= end_date) {
-      // Skip Sundays and holidays
       if (current_date.getDay() === 0 || holidays.some(holiday => holiday.getTime() === current_date.getTime())) {
         current_date = addDays(current_date, 1);
         continue;
