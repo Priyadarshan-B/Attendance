@@ -107,7 +107,7 @@ const scheduleCronJobs = () => {
       console.error('Error during scheduled update_biometrics:', error);
     }
   });
-  cron.schedule('15 30 * * *', async () => {
+  cron.schedule('30 15 * * *', async () => {
     try {
       console.log('Executing update_biometrics cron job...');
       await update_biometrics();
