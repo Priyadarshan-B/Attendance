@@ -106,7 +106,7 @@ exports.get_AttendanceCount = async (req, res) => {
       AND DATE(attendence) = ?;
     `;
     const noArrearResult = await get_database(noArrearQuery, [
-      studentId,
+      register_number,
       currentDate,
     ]);
  
@@ -352,7 +352,6 @@ exports.get_AttendanceCount = async (req, res) => {
       }
       console.log(afternoonAttendance[0].attended_slots === afternoonSlotIds.length)
     
-      // Role attendance validation logic
       let roleMapResults
       if (forenoon === "1" && afternoon === "1") {
         const roleMapQuery = `
@@ -383,7 +382,7 @@ exports.get_AttendanceCount = async (req, res) => {
           console.log(roleStudentRecords)
           if (roleStudentRecords.length === 0) {
             allRolesHaveDistinctAttendance = false;
-            break; // If any role doesn't have distinct attendance, break out of the loop
+            break; 
           }
         }}
     

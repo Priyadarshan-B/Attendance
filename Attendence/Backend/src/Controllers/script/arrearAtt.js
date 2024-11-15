@@ -117,8 +117,8 @@ const updateAllType2Students = async () => {
       return;
     }
 
-    const startDate = new Date('2024-10-07');
-    const endDate = new Date('2024-10-18');
+    const startDate = new Date('2024-09-18');
+    const endDate = new Date('2024-11-15');
  
     for (let currentDate = startDate; currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
       const formattedDate = currentDate.toISOString().slice(0, 10); 

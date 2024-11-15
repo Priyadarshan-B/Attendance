@@ -43,9 +43,8 @@ exports.checkAndInsertAttendance = async (req, res) => {
     for (let date = startDate; date.isSameOrBefore(currentDate); date.add(1, "days")) {
       const formattedDate = date.format("YYYY-MM-DD");
 
-      // Skip Sundays
       if (date.day() === 0) {
-        continue; // 0 corresponds to Sunday
+        continue; 
       }
 
       const noArrearQuery = `
@@ -55,7 +54,7 @@ exports.checkAndInsertAttendance = async (req, res) => {
         AND DATE(attendence) = ?;
       `;
       const noArrearResult = await get_database(noArrearQuery, [
-        studentId,
+        register_number,
         formattedDate,
       ]);
 

@@ -25,17 +25,17 @@ function SlotAttendance() {
       const formattedDate = moment(selectedDate).format("YYYY-MM-DD");
       const response = await requestApi("GET", `/arr-attendence?date=${formattedDate}`);
       
-      if (response && response.data) {  // Check if response and response.data are defined
+      if (response && response.data) {  
         setData(response.data);
         setFilteredData(response.data); 
       } else {
-        setData([]);  // Set data to an empty array if response.data is undefined
+        setData([]);  
         setFilteredData([]);
         console.warn("No data received from the API");
       }
     } catch (error) {
       console.error("Error fetching attendance data:", error);
-      setData([]);  // Handle errors by setting data to an empty array
+      setData([]);  
       setFilteredData([]);
     } finally {
       setLoading(false);
@@ -44,7 +44,7 @@ function SlotAttendance() {
   
   useEffect(() => {
     fetchAttendanceData();
-  }, [selectedDate]); // Fetch data when selectedDate changes
+  }, [selectedDate]); 
 
   const handleSearchChange = (event) => {
     const value = event.target.value.toLowerCase();
