@@ -38,7 +38,7 @@ FROM
 LEFT JOIN (
     SELECT 
         r.student,
-        COUNT(DISTINCT ts.id) AS attended_count,  -- Count only unique slot IDs
+        COUNT(DISTINCT ts.id) AS attended_count, 
         DATE(r.att_session) AS d,
         ts.session
     FROM 

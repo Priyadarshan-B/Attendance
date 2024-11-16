@@ -128,7 +128,7 @@ const processAttendance = async () => {
   }
 };
 
-cron.schedule("00 09 * * *", async () => {
+cron.schedule("34 09 * * *", async () => {
   console.log("Starting attendance processing for all students...");
   await processAttendance();
   console.log("Attendance processing completed for all students.");
