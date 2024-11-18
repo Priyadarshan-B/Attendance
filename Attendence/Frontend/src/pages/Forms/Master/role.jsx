@@ -106,7 +106,7 @@ function RoleChange() {
     if (selectedUserType === "faculty") {
       setFilteredData(data.filter(mentor => 
         mentor.name.toLowerCase().includes(value.toLowerCase()) ||
-        mentor.staff_id.toLowerCase().includes(value.toLowerCase()) ||
+        // mentor.staff_id.toLowerCase().includes(value.toLowerCase()) ||
         mentor.role.toLowerCase().includes(value.toLowerCase())
       ));
     } else if (selectedUserType === "student") {

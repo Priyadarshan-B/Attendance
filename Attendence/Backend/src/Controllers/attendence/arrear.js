@@ -6,9 +6,10 @@ exports.get_arrear_att = async (req, res) => {
   try {
     let query = `
       SELECT re_appear.id, students.name, students.register_number,
-      slot, att_session, ts.label
+      slot, att_session, ts.label, f.name AS faculty
       FROM re_appear
       INNER JOIN students ON re_appear.student = students.id
+      JOIN mentor f ON f.id = re_appear.faculty
       LEFT JOIN time_slots ts ON ts.id = re_appear.slot
       WHERE re_appear.status = '1'
     `;

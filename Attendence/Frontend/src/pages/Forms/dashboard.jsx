@@ -9,6 +9,7 @@ import RoleChange from "./Master/role";
 import SlotAttendance from "./Master/slotAttendance";
 import Student from "../Students/student";
 import Biometrics from "./Master/biometrics";
+import MAttendance from "./Master/Attendance";
 import './style.css';
 
 function Dashboard() {
@@ -52,6 +53,8 @@ class Body extends Component {
                 return <Student/>
             case 'bio':
                 return <Biometrics/>
+            case 'att':
+                return <MAttendance/>
             default:
                 return <div className="placeholder">Select a page to display</div>;
         }
@@ -71,6 +74,7 @@ class Body extends Component {
                     <button className="nav-button" onClick={() => this.setPage('slotAtt')}>Slot Attendance</button>
                     <button className="nav-button" onClick={() => this.setPage('student')}>Student Records</button>
                     <button className="nav-button" onClick={() => this.setPage('bio')}>Biometrics</button>
+                    <button className="nav-button" onClick={() => this.setPage('att')}>Attendance</button>
 
                 </div>
                 <div className="page-container">

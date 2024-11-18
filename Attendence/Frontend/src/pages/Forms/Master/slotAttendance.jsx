@@ -76,7 +76,8 @@ function SlotAttendance() {
       const filteredBySearchAndDate = filteredByDate.filter((item) =>
         item.name.toLowerCase().includes(searchTerm) ||
         item.register_number.toLowerCase().includes(searchTerm) ||
-        item.label.toLowerCase().includes(searchTerm)
+        item.label.toLowerCase().includes(searchTerm)||
+        item.faculty.toLowerCase().includes(searchTerm)
       );
       setFilteredData(filteredBySearchAndDate);
     } else {
@@ -131,6 +132,7 @@ function SlotAttendance() {
                   <TableCell>Name</TableCell>
                   <TableCell>Register Number</TableCell>
                   <TableCell>Slot</TableCell>
+                  <TableCell>Faculty</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>Time</TableCell>
                 </TableRow>
@@ -144,6 +146,7 @@ function SlotAttendance() {
                         <TableCell>{item.name}</TableCell>
                         <TableCell>{item.register_number}</TableCell>
                         <TableCell>{item.label}</TableCell>
+                        <TableCell>{item.faculty}</TableCell>
                         <TableCell>{moment(item.dbDate).format("DD-MM-YYYY")}</TableCell>
                         <TableCell>{item.time}</TableCell>
                       </TableRow>
