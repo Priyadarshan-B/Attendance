@@ -32,6 +32,7 @@ const Log = require('../Controllers/attendance_log/logs')
 const attProgress = require('../Controllers/attProgress/attProgress')
 const type = require('../Controllers/type/type')
 const sample = require('../Controllers/script/sampleData')
+const with_and_without_slot = require('../Controllers/Reports/with_without_slot')
 const router = express.Router()
 
 router.get("/mentor-students",mentor.get_students)
@@ -155,6 +156,7 @@ router.get('/pres-report',reportPresent.get_present_slot)
 router.get('/student-report', reportStudent.get_student_report)
 router.get('/consolidate', consolidate.get_attendance_status)
 router.post('/upload', Excel.insertBioExcel)
+router.get('/with-slot',with_and_without_slot.getAttendanceByDate)
 // logs
 router.get('/logs', Log.get_att_logs)
 
@@ -166,4 +168,5 @@ router.get('/stu-type', type.get_stu_type)
 
 // sample
 router.post('/sample', sample.insertAttendanceRecords)
+
 module.exports = router

@@ -15,7 +15,7 @@ exports.AttendanceCalc = async (studentId, register_number, year) => {
         const noArrearFNQuery = `
                 SELECT DISTINCT attendence
     FROM no_arrear
-    WHERE student = '7376221CS269' AND DATE(attendence) = '2024-12-16' AND STATUS = '1'
+    WHERE student = ? AND DATE(attendence) = ? AND STATUS = '1'
     AND (
         (HOUR(attendence) = 8 AND MINUTE(attendence) <= 44 AND SECOND(attendence) <= 59)
     )
