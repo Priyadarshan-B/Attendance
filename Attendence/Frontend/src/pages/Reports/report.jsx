@@ -10,7 +10,6 @@ import TextField from "@mui/material/TextField";
 import customStyles from "../../components/applayout/selectTheme";
 import moment from "moment";
 import ExcelBio from "./insertExcel";
-import WithSlots from "./with_slot";
 import "./report.css";
 
 function ReportPage() {
@@ -84,8 +83,8 @@ function Body() {
         fileName = `ConsolidateReport-${conYear?.value || "All"}-${formatDate(
           consolidateFDate
         )}-to-${formatDate(consolidateTDate)}.xlsx`;
-      } else if (type === "with-slot") {
-        apiEndpoint = `/with-slot?from_date=${formatDate(
+      } else if (type === "without-slot") {
+        apiEndpoint = `/without-slot?from_date=${formatDate(
           slotFDate
         )}&to_date=${formatDate(slotTDate)}&year=${wslotYear.value}`;
         fileName = `Consolidate_Slot_wise_Report-${
@@ -700,7 +699,7 @@ function Body() {
 
         {/* slot */}
         <div className="presentReport">
-          <h3>Only Slot  Report (Without Biometrics)</h3>
+          <h3>Only Slot  Report (Without Biometrics & slot Exemption)</h3>
           <br />
           <div className="select-year">
             <div
@@ -740,7 +739,7 @@ function Body() {
               <Button
                 name="Download"
                 className="save-btn"
-                onClick={() => handleDownload("with-slot")}
+                onClick={() => handleDownload("without-slot")}
                 label="Download Slot Attendance Report.."
               />
             </div>

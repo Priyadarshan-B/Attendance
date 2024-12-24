@@ -1,43 +1,53 @@
-import React, { useState } from "react";
+import React ,{useState, useEffect}from "react";
+import requestApi from "../../components/utils/axios";
+import * as XLSX from "xlsx";
 import Select from "react-select";
+import Button from "../../components/Button/Button";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import TextField from "@mui/material/TextField";
 import customStyles from "../../components/applayout/selectTheme";
 import moment from "moment";
+import "./report.css";
 
-const yearOptions = [
-  { value: "I", label: "I" },
-  { value: "II", label: "II" },
-  { value: "III", label: "III" },
-  { value: "IV", label: "IV" },
-];
 
-function ConsolidateReport() {
- const [consolidateFDate, setConsolidateFDate] = useState();
-   const [consolidateTDate, setConsolidateTDate] = useState(new Date());
-   const [conYear, setConYear] = useState();
+function WithOutSlots(){
+return <Body />;
+}
 
-   const handleDownload = async(type) => {
-    try{
-      let apiEndpoint;
-      let fileName;
-      if (type === "consolidate") {
-        apiEndpoint = `/consolidate?from_date=${formatDate(
-          consolidateFDate
-        )}&to_date=${formatDate(consolidateTDate)}&year=${conYear.value}`;
-        fileName = `ConsolidateReport-${conYear?.value || "All"}-${formatDate(
-          consolidateFDate
-        )}-to-${formatDate(consolidateTDate)}.xlsx`;
+function Body(){
+    const [slotFDate, setSlotFDate] = useState()
+      const [slotTDate, setslotTDate] = useState(new Date());
+      const [wslotYear, setWSlotYear] = useState();
+
+    const handleDownload = async(type) =>{
+
+        try{
+            let apiEndpoint
+            let fileName
+        if(type === 'with-slot'){
+            apiEndpoint = `/with-slot?from_date=${formatDate(
+                slotFDate
+              )}&to_date=${formatDate(slotTDate)}&year=${wslotYear.value}`;
+              fileName = `With_Slot_exemption_Report-${wslotYear?.value || "All"}-${formatDate(
+                slotFDate
+              )}-to-${formatDate(slotTDate)}.xlsx`;
+        }
+        if(type === 'without-slot'){
+          apiEndpoint = `/without-slot?from_date=${formatDate(
+              slotFDate
+            )}&to_date=${formatDate(slotTDate)}&year=${wslotYear.value}`;
+            fileName = `Without_Slot_exemption_Report-${wslotYear?.value || "All"}-${formatDate(
+              slotFDate
+            )}-to-${formatDate(slotTDate)}.xlsx`;
       }
-      if (!apiEndpoint || !fileName) return;
-
-      const response = await requestApi("GET", apiEndpoint);
+        if (!apiEndpoint || !fileName) return;
+        const response = await requestApi("GET", apiEndpoint);
       const data = response.data;
       let workbook = XLSX.utils.book_new();
       let worksheet;
-      if (type === "consolidate") {
+      if (type === "without-slot") {
               if (!data.attendance_details || !data.student_summary) {
                 throw new Error(
                   "Invalid data format: Missing 'attendance_details' or 'student_summary'"
@@ -131,20 +141,26 @@ function ConsolidateReport() {
             }
             XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
                   XLSX.writeFile(workbook, fileName);
-
-    }catch(error){
-      console.error(`Error downloading the ${type} report`, error);
-
+                } catch (error) {
+                  console.error(`Error downloading the ${type} report`, error);
+                }
     }
-   }
-  const formatDate = (date) => {
-    if (!date) return "";
-    return moment(date).format("YYYY-MM-DD");
-  };
+    const formatDate = (date) => {
+        if (!date) return "";
+        return moment(date).format("YYYY-MM-DD");
+      };
 
-  return (
-    <div className="presentReport">
-          <h3>Consolidate Report</h3>
+    const yearOptions = [
+        // { value: "All", label: "All" },
+        { value: "I", label: "I" },
+        { value: "II", label: "II" },
+        { value: "III", label: "III" },
+        { value: "IV", label: "IV" },
+      ];
+return(
+    <div>
+        <div className="presentReport">
+          <h3>Slot Only Report</h3>
           <br />
           <div className="select-year">
             <div
@@ -152,8 +168,8 @@ function ConsolidateReport() {
             >
               <div style={{ zIndex: "2" }}>
                 <Select
-                  value={conYear}
-                  onChange={(e) => setConYear(e)}
+                  value={wslotYear}
+                  onChange={(e) => setWSlotYear(e)}
                   options={yearOptions}
                   placeholder="Select Year"
                   styles={customStyles}
@@ -162,8 +178,8 @@ function ConsolidateReport() {
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   label="From Date"
-                  value={consolidateFDate}
-                  onChange={(newValue) => setConsolidateFDate(newValue)}
+                  value={slotFDate}
+                  onChange={(newValue) => setSlotFDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
                   slotProps={{ textField: { size: "small" } }}
                   format="dd/MM/yyyy"
@@ -173,8 +189,8 @@ function ConsolidateReport() {
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   label="To Date"
-                  value={consolidateTDate || new Date()}
-                  onChange={(newValue) => setConsolidateTDate(newValue)}
+                  value={slotTDate || new Date()}
+                  onChange={(newValue) => setslotTDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
                   slotProps={{ textField: { size: "small" } }}
                   maxDate={new Date()}
@@ -184,14 +200,19 @@ function ConsolidateReport() {
               <Button
                 name="Download"
                 className="save-btn"
-                onClick={() => handleDownload("consolidate")}
-                label="Download Consolidate Report.."
+                onClick={() => handleDownload("without-slot")}
+                label="Download (without slot-exemption)"
+              />
+              <Button
+                name="Download"
+                className="save-btn"
+                onClick={() => handleDownload("with-slot")}
+                label="Download (with slot-exemption)"
               />
             </div>
           </div>
         </div>
-
-  );
+    </div>
+)    
 }
-
-export default ConsolidateReport;
+export default WithOutSlots;
