@@ -1,12 +1,9 @@
 import React, { useState } from "react";
+import Button from "../../components/Button/Button";
+import * as XLSX from "xlsx";
 import Select from "react-select";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import TextField from "@mui/material/TextField";
-// import ExcelGenerator from "./ExcelGenerator";
+import requestApi from "../../components/utils/axios";
 import customStyles from "../../components/applayout/selectTheme";
-// import moment from "moment";
 
 const yearOptions = [
   { value: "I", label: "I" },
@@ -18,7 +15,7 @@ const yearOptions = [
 function StudentReport() {
     const [selectedYear, setSelectedYear] = useState(null);
   
-    const handleDownload = async()=>{
+    const handleDownload = async(type)=>{
       try{
         let apiEndpoint;
       let fileName;
@@ -31,8 +28,12 @@ function StudentReport() {
 
         const response = await requestApi("GET", apiEndpoint);
         const data = response.data;
-        let workbook = XLSX.utils.book_new();
-        let worksheet;
+        const filteredData = data.map(({ status, id, student, ...rest }) => rest);
+
+        const worksheet = XLSX.utils.json_to_sheet(filteredData);
+    
+        const workbook = XLSX.utils.book_new();
+
          XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
               XLSX.writeFile(workbook, fileName);
       }catch(error){
@@ -40,11 +41,6 @@ function StudentReport() {
         
       }
     }
-
-  // const formatDate = (date) => {
-  //   if (!date) return "";
-  //   return moment(date).format("YYYY-MM-DD");
-  // };
 
   return (
     <div className="presentReport">

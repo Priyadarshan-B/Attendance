@@ -69,50 +69,30 @@ exports.get_attendance_status = async (req, res) => {
       const yearCondition = isNaN(year) ? `'${year}'` : year;
 
       const query = `
-        SELECT 
-          final.student_id,
-          final.student_name,
-          final.register_number,
-          final.gmail,
-          MAX(final.attended_fn) AS attended_fn,
-          MAX(final.attended_an) AS attended_an,
-          CASE
-            WHEN MAX(final.attended_fn) = 0 THEN 'AB' ELSE 'PR'
-          END AS forenoon_status,
-          CASE
-            WHEN MAX(final.attended_an) = 0 THEN 'AB' ELSE 'PR'
-          END AS afternoon_status
-        FROM (
-          SELECT
-            s.id AS student_id,
-            s.name AS student_name,
-            s.register_number,
-            s.gmail,
-            CASE 
-              WHEN ts.session = 'FN' THEN 
-                (CASE WHEN COALESCE(r.status, '0') = '1' THEN 1 ELSE 0 END)
-              ELSE 0
-            END AS attended_fn,
-            CASE 
-              WHEN ts.session = 'AN' THEN 
-                (CASE WHEN COALESCE(r.status, '0') = '1' THEN 1 ELSE 0 END)
-              ELSE 0
-            END AS attended_an
-          FROM students s
-          JOIN (
-            SELECT DISTINCT ts.year AS student_year, ts.id AS slot_id, ts.session
-            FROM time_slots ts
-          ) ts ON s.year = ts.student_year
-          LEFT JOIN re_appear r
-            ON s.id = r.student
-            AND ts.slot_id = r.slot
-            AND DATE(r.att_session) = '${formatted_date}'
-          WHERE s.type = 2
-            AND s.year = ${yearCondition}
-        ) AS final
-        GROUP BY final.student_id, final.student_name, final.register_number, final.gmail
-        ORDER BY final.student_id;
-      `;
+  SELECT 
+    s.id AS student_id,
+    s.name AS student_name,
+    s.register_number,
+    s.gmail,
+    MAX(CASE WHEN a.forenoon = '1' THEN 1 ELSE 0 END) AS attended_fn,
+    MAX(CASE WHEN a.afternoon = '1' THEN 1 ELSE 0 END) AS attended_an,
+    CASE
+      WHEN MAX(CASE WHEN a.forenoon = '1' THEN 1 ELSE 0 END) = 0 THEN 'AB' ELSE 'PR'
+    END AS forenoon_status,
+    CASE
+      WHEN MAX(CASE WHEN a.afternoon = '1' THEN 1 ELSE 0 END) = 0 THEN 'AB' ELSE 'PR'
+    END AS afternoon_status
+  FROM students s
+  LEFT JOIN attendance a
+    ON s.id = a.student
+    AND DATE(a.date) = '${formatted_date}'
+    AND a.status = '1'
+  WHERE s.type = 2
+    AND s.year = ${yearCondition}
+  GROUP BY s.id, s.name, s.register_number, s.gmail
+  ORDER BY s.id;
+`;
+
 
       const attendanceStatus = await get_database(query);
 
