@@ -4,14 +4,14 @@ const path = require('path');
 const morgan = require('morgan');
 const session = require("express-session");
 const passport = require("./config/passport");
+const hpp = require("hpp");
+const helmet = require("helmet")
+const xss = require("xss-clean");
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
-
 const { scheduleCronJobs } = require('./Controllers/cronJobs');
-//routes
 const routes = require('./Routes/routes');
 const auth_route = require('./Routes/auth/auth_routes');
 const resources_route = require('./Routes/auth/res_route');
-// middleware
 const authenticateGoogleJWT = require('./middleware/authenticate');
 const limiter = require('./middleware/rateLimiter')
 const RestrictOrigins = require('./middleware/restrictOrigins')
@@ -47,6 +47,9 @@ app.use(morgan_config);
 scheduleCronJobs();
 
 app.use(RestrictOrigins)
+app.use(hpp());
+app.use(helmet());
+app.use(xss());
 app.use("/attendance/api/auth", resources_route);
 app.use("/attendance/api/auth", auth_route);
 app.use(limiter);
