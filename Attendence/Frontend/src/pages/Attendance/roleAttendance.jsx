@@ -3,12 +3,10 @@ import requestApi from "../../components/utils/axios";
 import InputBox from "../../components/TextBox/textbox";
 import toast from "react-hot-toast";
 import "./attendance.css";
-import { getDecryptedCookie } from "../../components/utils/encrypt";
+import { decryptData } from "../../components/utils/encrypt";
 
-function RoleAttendance(){
-  return (
-  <Body />
-);
+function RoleAttendance() {
+  return <Body />;
 }
 
 function Body() {
@@ -20,10 +18,10 @@ function Body() {
   const [sessions, setSessions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const id = getDecryptedCookie("id")
-
-
-  const role = getDecryptedCookie("role")
+  const encryptedData = localStorage.getItem("D!");
+  const decryptedData = decryptData(encryptedData);
+  const { id: id } = decryptedData;
+  const { role: role } = decryptedData;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,11 +74,11 @@ function Body() {
 
       if (!isChecked) {
         await requestApi("POST", "/role-student", {
-          role: role, 
+          role: role,
           student: studentId,
           session: sessionId,
         });
-        console.log(role, studentId, sessionId)
+        console.log(role, studentId, sessionId);
         toast.success("Attendance Logged");
       } else {
         toast.error("Attendance already logged");
@@ -142,59 +140,68 @@ function Body() {
             </tr>
           </thead>
           <tbody>
-          {filterData
-  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-  .map((row, index) => (
-    <tr key={row.id}>
-      <td>{page * rowsPerPage + index + 1}</td>
-      <td>{row.name}</td>
-      <td>{row.register_number}</td>
-      {sessions.map((session) => (
-        <td key={session.id}>
-          <div className="checkbox-wrapper-12">
-            <div className="cbx">
-              <input
-                id={`cbx-${row.id}-${session.id}`}
-                type="checkbox"
-                checked={attendanceData.some(
-                  (record) =>
-                    record.student === row.id &&
-                    record.session === session.id
-                )}
-                onChange={(event) =>
-                  handleCheckboxClick(event, row.id, session.id)
-                }
-                disabled={false}
-              />
-              <label htmlFor={`cbx-${row.id}-${session.id}`}></label>
-              <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
-                <path d="M2 8.36364L6.23077 12L13 2"></path>
-              </svg>
-            </div>
-            <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-              <defs>
-                <filter id="goo-12">
-                  <feGaussianBlur
-                    in="SourceGraphic"
-                    stdDeviation="4"
-                    result="blur"
-                  ></feGaussianBlur>
-                  <feColorMatrix
-                    in="blur"
-                    mode="matrix"
-                    values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7"
-                    result="goo-12"
-                  ></feColorMatrix>
-                  <feBlend in="SourceGraphic" in2="goo-12"></feBlend>
-                </filter>
-              </defs>
-            </svg>
-          </div>
-        </td>
-      ))}
-    </tr>
-  ))}
-
+            {filterData
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => (
+                <tr key={row.id}>
+                  <td>{page * rowsPerPage + index + 1}</td>
+                  <td>{row.name}</td>
+                  <td>{row.register_number}</td>
+                  {sessions.map((session) => (
+                    <td key={session.id}>
+                      <div className="checkbox-wrapper-12">
+                        <div className="cbx">
+                          <input
+                            id={`cbx-${row.id}-${session.id}`}
+                            type="checkbox"
+                            checked={attendanceData.some(
+                              (record) =>
+                                record.student === row.id &&
+                                record.session === session.id
+                            )}
+                            onChange={(event) =>
+                              handleCheckboxClick(event, row.id, session.id)
+                            }
+                            disabled={false}
+                          />
+                          <label
+                            htmlFor={`cbx-${row.id}-${session.id}`}
+                          ></label>
+                          <svg
+                            width="15"
+                            height="14"
+                            viewBox="0 0 15 14"
+                            fill="none"
+                          >
+                            <path d="M2 8.36364L6.23077 12L13 2"></path>
+                          </svg>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                          <defs>
+                            <filter id="goo-12">
+                              <feGaussianBlur
+                                in="SourceGraphic"
+                                stdDeviation="4"
+                                result="blur"
+                              ></feGaussianBlur>
+                              <feColorMatrix
+                                in="blur"
+                                mode="matrix"
+                                values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7"
+                                result="goo-12"
+                              ></feColorMatrix>
+                              <feBlend
+                                in="SourceGraphic"
+                                in2="goo-12"
+                              ></feBlend>
+                            </filter>
+                          </defs>
+                        </svg>
+                      </div>
+                    </td>
+                  ))}
+                </tr>
+              ))}
           </tbody>
         </table>
         <div className="pagination">

@@ -24,7 +24,7 @@ import LeaveDetails from "./leave_approval";
 import "./approval.css";
 import approve from "../../assets/approve.png";
 import reject from "../../assets/decline.png";
-import { getDecryptedCookie } from "../../components/utils/encrypt";
+import { getDecryptedCookie, decryptData } from "../../components/utils/encrypt";
 import TableLayout from "../../components/attProgress/attProgress";
 
 function calculateTimeLeft(dueDate) {
@@ -65,7 +65,9 @@ function Body() {
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const id = getDecryptedCookie("id");
+  const encryptedData = localStorage.getItem('D!');
+        const decryptedData = decryptData(encryptedData);
+        const { id: id } = decryptedData; 
   const [searchTerm, setSearchTerm] = useState("");
   const [openApprovePopup, setOpenApprovePopup] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);

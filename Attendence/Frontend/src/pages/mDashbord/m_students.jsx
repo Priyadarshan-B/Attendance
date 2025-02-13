@@ -5,15 +5,16 @@ import requestApi from "../../components/utils/axios";
 import StudentDashboard from "../Students/students";
 import noresult from "../../assets/no-results.png";
 import customStyles from "../../components/applayout/selectTheme";
-import { getDecryptedCookie } from "../../components/utils/encrypt";
+import { decryptData } from "../../components/utils/encrypt";
 
 function MStudent() {
   return <Body />;
 }
 
 function Body() {
-  const id = getDecryptedCookie("id");
-
+  const encryptedData = localStorage.getItem("D!");
+  const decryptedData = decryptData(encryptedData);
+  const { id: id } = decryptedData;
   const [studentOptions, setStudentOptions] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
 

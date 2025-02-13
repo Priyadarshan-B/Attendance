@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import HikingRoundedIcon from "@mui/icons-material/HikingRounded";
@@ -13,7 +13,7 @@ import AddTaskIcon from '@mui/icons-material/AddTask';
 import SummarizeTwoToneIcon from '@mui/icons-material/SummarizeTwoTone';
 import requestApi from "../utils/axios";
 import "./styles.css";
-import { getDecryptedCookie } from "../utils/encrypt";
+import { decryptData } from "../utils/encrypt";
 
 function getIconComponent(iconPath) {
   switch (iconPath) {
@@ -48,38 +48,28 @@ function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
   const [activeItem, setActiveItem] = useState("");
   const [sidebarItems, setSidebarItems] = useState([]);
   const location = useLocation();
-  const navigate = useNavigate();
   const basePath = import.meta.env.VITE_BASE_PATH
+
   useEffect(() => {
-    const fetchSidebarItems = async () => {
+ const fetchSidebarItems = async () => {
       try {
-        const role = getDecryptedCookie("role");
+        const encryptedData = localStorage.getItem('D!');
+        const decryptedData = decryptData(encryptedData);
+        const { role: role } = decryptedData; 
 
-        if (!role) {
-          navigate('/attendance/login');
-          return;
-        }
-        const response = await requestApi("GET", `/auth/resources?role=${role}`);
-
-        if (response.status === 400) {
-          navigate("/attendance/login");
-          return;
-        }
-
+        const response = await requestApi("POST", `/auth/resources`, { role: role });
         if (response.success) {
-          setSidebarItems(response.data);
+          setSidebarItems(response.data); 
         } else {
           console.error("Error fetching sidebar items:", response.error);
-          // navigate("/attendance/login"); 
         }
       } catch (error) {
         console.error("Error fetching sidebar items:", error);
-        // navigate("/attendance/login"); 
       }
     };
 
-    fetchSidebarItems();
-  }, [resource, navigate]);
+    fetchSidebarItems(); 
+  }, [resource]);
 
   useEffect(() => {
     const pathname = location.pathname;

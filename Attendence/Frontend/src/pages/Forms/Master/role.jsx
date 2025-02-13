@@ -17,12 +17,12 @@ function RoleChange() {
   const [selectedPerson, setSelectedPerson] = useState(null); 
   const [searchTerm, setSearchTerm] = useState(""); 
   const [filteredData, setFilteredData] = useState([]); 
-  const [page, setPage] = useState(0); // Pagination page state
-  const [rowsPerPage, setRowsPerPage] = useState(10); // Rows per page state
+  const [page, setPage] = useState(0); 
+  const [rowsPerPage, setRowsPerPage] = useState(10); 
 
   const handleUserTypeChange = async (option) => {
     setSelectedUserType(option.value);
-    setPage(0); // Reset pagination when user type changes
+    setPage(0);
     if (option.value === "faculty") {
       await fetchMentors();
     } else if (option.value === "student") {

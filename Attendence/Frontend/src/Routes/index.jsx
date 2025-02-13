@@ -1,4 +1,3 @@
-// AppRoutes.js
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "../components/utils/protectedRoute";
@@ -20,10 +19,8 @@ import Nip from "../pages/Forms/nip/nip";
 import MapStudent from "../pages/Forms/mapStudent/mapStudent";
 import Leave from "../pages/Leave/leave";
 import MStudent from "../pages/mDashbord/m_students";
-import AbReport from "../pages/Reports/report";
-import ReportPage from "../pages/Reports/ReportPage";
+import Report from "../pages/Reports/report";
 import Login from "../pages/auth/Login/Login";
-import Welcome from "../pages/welcome/welcome";
 import Error from "../pages/error";
 
 const AppRoutes = () => {
@@ -32,7 +29,6 @@ const AppRoutes = () => {
       <Route path="/attendance/error" element={<Error />} />
       <Route path="/attendance" element={<Login />} />
       <Route path="/attendance/login" element={<Login />} />
-      <Route path="/attendance/welcome" element={<Welcome />} />
       <Route
         path="/attendance/*"
         element={
@@ -57,11 +53,11 @@ const AppRoutes = () => {
                   <Route path="map-student" element={<MapStudent />} />
                   <Route path="leave" element={<Leave />} />
                   <Route path="mstudent" element={<MStudent />} />
-                  <Route path="report" element={<AbReport />} />
+                  <Route path="report" element={<Report />} />
                 </Routes>
               }
             />
-            </ProtectedRoute>
+             </ProtectedRoute>
         }
       />
     </Routes>

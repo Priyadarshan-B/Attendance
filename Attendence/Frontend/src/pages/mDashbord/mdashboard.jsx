@@ -5,21 +5,21 @@ import AttendanceChart from "../Chart/attendance";
 import Groups2TwoToneIcon from "@mui/icons-material/Groups2TwoTone";
 import EventAvailableTwoToneIcon from "@mui/icons-material/EventAvailableTwoTone";
 import EventBusyTwoToneIcon from "@mui/icons-material/EventBusyTwoTone";
-import MentorStudentsTable from "./students";
 import RStudentTable from "./regular";
 import AbsentTable from "./absent";
 import AttendanceTable from "./attendees";
 import Approvals from "../Approvals/approval";
 import Type2Table from "./type2";
-import { getDecryptedCookie } from "../../components/utils/encrypt";
-import Cookies from "js-cookie";
+import { decryptData } from "../../components/utils/encrypt";
 import Attendance from "../Attendance/attendance";
 
 function Mdashboard() {
   return <Body />;
 }
 function Body() {
-  const id = getDecryptedCookie("id");
+      const encryptedData = localStorage.getItem('D!');
+    const decryptedData = decryptData(encryptedData);
+    const { id: id } = decryptedData;
   const [scount, setSCount] = useState(0);
   const [tcount, setTCount] = useState(0);
   const [subCount, SetsubCount] = useState(0);

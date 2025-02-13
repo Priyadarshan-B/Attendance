@@ -157,7 +157,7 @@ const TableLayout = ({ studentId, date, year, register_number }) => {
               src={slotData.is_present === 1 ? approve : decline}
               alt={slotData.is_present === 1 ? "Present" : "Absent"}
               height="20px"
-              onClick={() => handleTooltipOpen(slotId)} // Open on click
+              onClick={() => handleTooltipOpen(slotId)} 
             />
           </Tooltip>
         </div>

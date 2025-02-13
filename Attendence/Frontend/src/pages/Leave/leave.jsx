@@ -14,7 +14,7 @@ import { format } from "date-fns";
 import toast from "react-hot-toast";
 import moment from "moment";
 import "./leave.css";
-import { getDecryptedCookie } from "../../components/utils/encrypt";
+import { getDecryptedCookie, decryptData } from "../../components/utils/encrypt";
 
 function Leave() {
   return (
@@ -33,7 +33,10 @@ function Body() {
   const [toTime, setToTime] = useState(null);
   const [reason, setReason] = useState("");
   const [leaveDetails, setLeaveDetails] = useState([]);
-  const id = getDecryptedCookie('id')
+  // const id = getDecryptedCookie('id')
+      const encryptedData = localStorage.getItem('D!');
+    const decryptedData = decryptData(encryptedData);
+    const { id: id } = decryptedData;
 
   const fetchLeaveDetails = async () => {
     try {

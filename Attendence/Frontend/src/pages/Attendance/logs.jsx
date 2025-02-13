@@ -13,7 +13,7 @@ import InputBox from "../../components/TextBox/textbox";
 import "./attendance.css";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { getDecryptedCookie } from "../../components/utils/encrypt";
+import { decryptData } from "../../components/utils/encrypt";
 import TextField from "@mui/material/TextField";
 
 function Logs() {
@@ -26,16 +26,18 @@ function Body() {
   const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [reqDate, setReqDate] = useState(moment()); // Default to current date
+  const [reqDate, setReqDate] = useState(moment());
 
-  const facultyId = getDecryptedCookie("id");
+  const encryptedData = localStorage.getItem("D!");
+  const decryptedData = decryptData(encryptedData);
+  const { id: facultyId } = decryptedData;
 
   const fetchStudents = async () => {
     try {
-      const formattedDate = reqDate.format("YYYY-MM-DD"); // Format date as YYYY-MM-DD
+      const formattedDate = reqDate.format("YYYY-MM-DD");
       const response = await requestApi(
         "GET",
-        `/logs?faculty=${facultyId}&att_session=${formattedDate}` // Corrected query string
+        `/logs?faculty=${facultyId}&att_session=${formattedDate}`
       );
       setStudents(response.data);
       setFilteredStudents(response.data);
@@ -72,7 +74,7 @@ function Body() {
     <div>
       <h3>Logged Attendance</h3>
       <br />
-      <div className="date-search" >
+      <div className="date-search">
         <div>
           <InputBox
             value={searchTerm}
@@ -88,7 +90,7 @@ function Body() {
               value={reqDate.toDate()}
               onChange={(newValue) => setReqDate(moment(newValue))}
               renderInput={(params) => <TextField {...params} />}
-              slotProps={{ textField: { size: 'small' } }}
+              slotProps={{ textField: { size: "small" } }}
               format="dd-MM-yyyy"
               maxDate={new Date()}
             />
@@ -109,28 +111,29 @@ function Body() {
                 </TableRow>
               </TableHead>
               <TableBody sx={{ whiteSpace: "nowrap" }}>
-  {filteredStudents.length === 0 ? (
-    <TableRow>
-      <TableCell colSpan={4} align="center">
-        No records
-      </TableCell>
-    </TableRow>
-  ) : (
-    filteredStudents
-      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-      .map((student, index) => (
-        <TableRow key={student.id}>
-          <TableCell>{student.name}</TableCell>
-          <TableCell>{student.register_number}</TableCell>
-          <TableCell>{student.label}</TableCell>
-          <TableCell>
-            {moment(student.att_session).format("DD-MM-YYYY HH:mm:ss")}
-          </TableCell>
-        </TableRow>
-      ))
-  )}
-</TableBody>
-
+                {filteredStudents.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={4} align="center">
+                      No records
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredStudents
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((student, index) => (
+                      <TableRow key={student.id}>
+                        <TableCell>{student.name}</TableCell>
+                        <TableCell>{student.register_number}</TableCell>
+                        <TableCell>{student.label}</TableCell>
+                        <TableCell>
+                          {moment(student.att_session).format(
+                            "DD-MM-YYYY HH:mm:ss"
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                )}
+              </TableBody>
             </Table>
           </TableContainer>
           <TablePagination

@@ -2,9 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const morgan = require('morgan');
-const passport = require("passport");
 const session = require("express-session");
-const passportConfig = require("./config/passport");
+const passport = require("./config/passport");
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 const { scheduleCronJobs } = require('./Controllers/cronJobs');
@@ -17,6 +16,7 @@ const authenticateGoogleJWT = require('./middleware/authenticate');
 const limiter = require('./middleware/rateLimiter')
 const RestrictOrigins = require('./middleware/restrictOrigins')
 
+// morgan
 const morgan_config = morgan(
   ":method :url :status :res[content-length] - :response-time ms"
 );
@@ -30,7 +30,6 @@ app.use(
     secret: "this is my secrect code",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false },
   })
 );
 app.use(passport.initialize());

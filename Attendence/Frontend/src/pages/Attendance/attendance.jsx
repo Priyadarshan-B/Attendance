@@ -19,10 +19,9 @@ import Paper from "@mui/material/Paper";
 import noresult from "../../assets/no-results.png";
 import Logs from "./logs";
 import customStyles from "../../components/applayout/selectTheme";
-import { getDecryptedCookie } from "../../components/utils/encrypt";
+import { decryptData } from "../../components/utils/encrypt";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import format from "date-fns/format";
 
 function Attendance() {
   return <Body />;
@@ -40,7 +39,9 @@ function Body() {
   const [searchQuery, setSearchQuery] = useState("");
   const [logs, setLogs] = useState(false);
   const [attDate, setAttDate] = useState(moment());
-  const facultyId = getDecryptedCookie("id");
+  const encryptedData = localStorage.getItem("D!");
+  const decryptedData = decryptData(encryptedData);
+  const { id: facultyId } = decryptedData;
 
   const yearOptions = [
     { value: "I", label: "I" },
@@ -110,7 +111,7 @@ function Body() {
       console.error("Error adding to favourites:", error);
     }
   };
- 
+
   const fetchStudents = async () => {
     try {
       const response = await requestApi(
@@ -180,7 +181,7 @@ function Body() {
       await requestApi("POST", "/arr-attendence", payload);
       toast.success("Attendance submitted successfully");
       setSelectedTimeSlots([]);
-      setSelectedStudents([])
+      setSelectedStudents([]);
     } catch (error) {
       toast.error("Failed to submit attendance");
       console.error("Error submitting attendance:", error);
@@ -229,7 +230,7 @@ function Body() {
                     renderInput={(params) => <TextField {...params} />}
                     slotProps={{ textField: { size: "small" } }}
                     format="dd-MM-yyyy"
-                    maxDate={new Date()} 
+                    maxDate={new Date()}
                   />
                 </LocalizationProvider>
               </div>

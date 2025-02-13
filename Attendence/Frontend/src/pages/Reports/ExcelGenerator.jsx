@@ -7,9 +7,8 @@ function ExcelGenerator({ apiEndpoint, year, date, fileName }) {
   const handleDownload = async () => {
     try {
       const response = await requestApi("GET", apiEndpoint);
-      // Assuming the response data is already formatted for Excel
       const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.json_to_sheet(response.data); // Replace with appropriate data format
+      const ws = XLSX.utils.json_to_sheet(response.data); 
       XLSX.utils.book_append_sheet(wb, ws, "Report");
       const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
       const blob = new Blob([excelBuffer], { type: "application/octet-stream" });

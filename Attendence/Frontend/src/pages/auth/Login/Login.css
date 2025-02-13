@@ -19,6 +19,8 @@
     min-width: 350px;
 }
 
+
+
 @media (max-width:999px){
     .login-card{
         height: fit-content;

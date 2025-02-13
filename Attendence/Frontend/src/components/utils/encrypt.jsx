@@ -27,7 +27,16 @@ export const decryptData = (encryptedData) => {
     return null;
   }
 };
-
+// export const decryptData = (encryptedData) => {
+//   const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+//   const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+//   try {
+//     return JSON.parse(decryptedData);
+//   } catch (error) {
+//     console.error("Decryption failed", error);
+//     return null;
+//   }
+// };
 export const setEncryptedCookie = (key, value) => {
   try {
     const hashedKey = hashName(key);  
@@ -54,11 +63,11 @@ export const getDecryptedCookie = (key) => {
   }
 };
 
-export const removeEncryptedCookie = (key) => {
+export const removeEncryptedCookie = () => {
   try {
-    const hashedKey = hashName(key); 
-    Cookies.remove(hashedKey);  
+   localStorage.removeItem("D!")
+   localStorage.removeItem("D!!")
   } catch (error) {
-    console.error("Failed to remove encrypted cookie", error);
+    console.error("Failed to remove encrypted data", error);
   }
 };

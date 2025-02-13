@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import Popup from "../popup/popup";
 import CustomizedSwitches from './toggleTheme'
 import "./styles.css";
-import { getDecryptedCookie, removeEncryptedCookie } from "../utils/encrypt";
+import {removeEncryptedCookie, decryptData } from "../utils/encrypt";
 
 function TopBar({ scrollElement, sidebar, selectedSidebarItem }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -17,12 +17,24 @@ function TopBar({ scrollElement, sidebar, selectedSidebarItem }) {
   const navigate = useNavigate();
   const openMenu = Boolean(anchorEl);
 
-  
-  
+  const encryptedAuthToken = localStorage.getItem("D!");
 
-  const name =  getDecryptedCookie("name");
-  const profile =  getDecryptedCookie("profile");
-  const gmail =  getDecryptedCookie("gmail");
+  let name = "Guest";
+  let profile = "";
+  let gmail = "";
+
+  if (encryptedAuthToken) {
+    try {
+      const decryptedData  =  decryptData(encryptedAuthToken);
+      name = decryptedData.name || "Guest";
+      profile = decryptedData.profile || "abc.png";
+      gmail = decryptedData.gmail || "";    } catch (error) {
+      console.error("Error decoding token", error);
+      navigate("/login");
+    }
+  } else {
+    navigate("/login");
+  }
 
   useEffect(() => {
     const scrollElementRef = scrollElement;

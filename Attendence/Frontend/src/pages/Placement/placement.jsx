@@ -13,7 +13,7 @@ import requestApi from "../../components/utils/axios";
 import InputBox from "../../components/TextBox/textbox";
 import "./placement.css";
 import PlacementSub from "./placementSub";
-import { getDecryptedCookie } from "../../components/utils/encrypt";
+import { decryptData } from "../../components/utils/encrypt";
 
 function Placement() {
   return <Body />;
@@ -24,7 +24,9 @@ function Body() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const id = getDecryptedCookie("id");
+  const encryptedData = localStorage.getItem("D!");
+  const decryptedData = decryptData(encryptedData);
+  const { id: id } = decryptedData;
 
   useEffect(() => {
     fetchPlacementData();
@@ -34,14 +36,14 @@ function Body() {
     try {
       const response = await requestApi("GET", `/placement?mentor=${id}`);
       if (response.success && response.data) {
-        setData(response.data.data || []); // Set data or an empty array if no data
+        setData(response.data.data || []);
       } else {
         console.error("No data found or error occurred:", response.error);
-        setData([]); // Set empty array if no data found
+        setData([]);
       }
     } catch (error) {
       console.error("Error fetching placement data", error);
-      setData([]); // Set empty array on error
+      setData([]);
     }
   };
 

@@ -37,7 +37,7 @@ function Body(){
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentMonthIndex(new Date().getMonth());
-        }, 60000); // Update every minute
+        }, 60000); 
 
         return () => clearInterval(interval);
     }, []);

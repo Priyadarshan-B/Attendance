@@ -15,7 +15,7 @@ const Chart = () => {
         bar: {
           borderRadius: 5,
           dataLabels: {
-            position: "top", // top, center, bottom
+            position: "top", 
           },
         },
       },

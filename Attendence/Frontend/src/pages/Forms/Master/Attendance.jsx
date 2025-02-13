@@ -19,10 +19,9 @@ import Paper from "@mui/material/Paper";
 import noresult from "../../../assets/no-results.png";
 import Logs from "../../Attendance/logs";
 import customStyles from "../../../components/applayout/selectTheme";
-import { getDecryptedCookie } from "../../../components/utils/encrypt";
+import { decryptData } from "../../../components/utils/encrypt";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-// import format from "date-fns/format";
 
 function MAttendance() {
   return <Body />;
@@ -42,7 +41,9 @@ function Body() {
   const [searchQuery, setSearchQuery] = useState("");
   const [logs, setLogs] = useState(false);
   const [attDate, setAttDate] = useState(moment());
-  const facultyId = getDecryptedCookie("id");
+  const encryptedData = localStorage.getItem("D!");
+  const decryptedData = decryptData(encryptedData);
+  const { id: facultyId } = decryptedData;
 
   const yearOptions = [
     { value: "I", label: "I" },
@@ -82,7 +83,7 @@ function Body() {
   //     }
   //   }
   const handleFacultyChange = (selectedOption) => {
-    setSelectedFaculty(selectedOption); // Save the selected faculty option
+    setSelectedFaculty(selectedOption); 
   };
 
   const handleDateChange = (newDate) => {
@@ -240,14 +241,14 @@ function Body() {
       ) : (
         <div>
           <div className="year-select">
-              <Select
-                options={faculty.map((f) => ({ value: f.id, label: f.name }))}
-                value={selectedFaculty}
-                onChange={handleFacultyChange}
-                placeholder="Select Faculty.."
-                styles={customStyles}
-                isClearable
-              />
+            <Select
+              options={faculty.map((f) => ({ value: f.id, label: f.name }))}
+              value={selectedFaculty}
+              onChange={handleFacultyChange}
+              placeholder="Select Faculty.."
+              styles={customStyles}
+              isClearable
+            />
           </div>
           <br />
           <div className="year-select">

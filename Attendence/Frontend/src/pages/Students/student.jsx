@@ -37,7 +37,7 @@ function Body() {
         const students = response.data.map((student) => ({
           value: student.id,
           label: `${student.name}-${student.register_number}`,
-          details: student, // Include all student details
+          details: student, 
         }));
         setStudentOptions(students);
       } catch (error) {

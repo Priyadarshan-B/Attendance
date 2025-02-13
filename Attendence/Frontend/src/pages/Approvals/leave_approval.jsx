@@ -7,25 +7,24 @@ import noResult from "../../assets/no-results.png";
 import Popup from "../../components/popup/popup";
 import { ThemeProviderComponent } from "../../components/applayout/dateTheme";
 import { TextField } from "@mui/material";
-import { getDecryptedCookie } from "../../components/utils/encrypt";
-
+import { decryptData } from "../../components/utils/encrypt";
 
 function LeaveDetails() {
   return (
     <ThemeProviderComponent>
-          <Body />
+      <Body />
     </ThemeProviderComponent>
-);
-
+  );
 }
 
 function Body() {
   const [leaveDetails, setLeaveDetails] = useState([]);
-  const id = getDecryptedCookie("id")
   const [open, setOpen] = useState(false);
-  const [selectedLeave, setSelectedLeave] = useState(null); 
-  const [rejectionReason, setRejectionReason] = useState(""); 
-
+  const [selectedLeave, setSelectedLeave] = useState(null);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const encryptedData = localStorage.getItem("D!");
+  const decryptedData = decryptData(encryptedData);
+  const { id: id } = decryptedData;
   const handleOpen = (leave) => {
     setSelectedLeave(leave);
     setOpen(true);
@@ -67,7 +66,6 @@ function Body() {
   };
 
   const handleReject = async () => {
-
     try {
       if (!rejectionReason.trim()) {
         toast.error("Please provide a reason for rejection.");
@@ -83,7 +81,7 @@ function Body() {
       toast.success("Leave Rejected!..");
       const response = await requestApi("GET", `/leave?mentor=${id}`);
       setLeaveDetails(response.data);
-      handleClose(); 
+      handleClose();
     } catch (error) {
       console.error("Error rejecting leave:", error);
       toast.error("Reject Failed..");
@@ -120,7 +118,9 @@ function Body() {
                 <div style={{ display: "flex", gap: "10px" }}>
                   <button
                     className="approve-button"
-                    onClick={() => handleApprove(leave.student_id, leave.leave_id)}
+                    onClick={() =>
+                      handleApprove(leave.student_id, leave.leave_id)
+                    }
                   >
                     Approve
                   </button>
@@ -151,7 +151,7 @@ function Body() {
             <div>
               <p>Are you sure?</p>
               <div>
-              <TextField
+                <TextField
                   label="Reason"
                   value={rejectionReason}
                   onChange={(e) => setRejectionReason(e.target.value)}

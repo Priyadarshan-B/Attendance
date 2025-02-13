@@ -34,8 +34,8 @@ function Body() {
     const [editRow, setEditRow] = useState(null);
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
-    const [openPopup, setOpenPopup] = useState(false); // State for the popup
-    const [deleteId, setDeleteId] = useState(null); // State to hold the ID of the item to delete
+    const [openPopup, setOpenPopup] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
     const years = [
         { value: "I", label: "I" },

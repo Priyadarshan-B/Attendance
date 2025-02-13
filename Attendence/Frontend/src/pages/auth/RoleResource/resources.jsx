@@ -1,17 +1,19 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import Cookies from "js-cookie";
+// import React from "react";
+// import { Navigate } from "react-router-dom";
+// import { decryptData } from "../../../components/utils/encrypt";
 
-const RoleCheck = (WrappedComponent, allowedRoles) => {
-  return (props) => {
-    const role = Cookies.get("role");
+// const RoleCheck = (WrappedComponent, allowedRoles) => {
+//   return (props) => {
+//         const encryptedData = localStorage.getItem('D!');
+//     const decryptedData = decryptData(encryptedData);
+//     const { role: roleid } = decryptedData;
 
-    if (allowedRoles.includes(parseInt(role))) {
-      return <WrappedComponent {...props} />;
-    } else {
-      return <Navigate to="*" />;
-    }
-  };
-};
+//     if (allowedRoles.includes(parseInt(roleid))) {
+//       return <WrappedComponent {...props} />;
+//     } else {
+//       return <Navigate to="*" />;
+//     }
+//   };
+// };
 
-export default RoleCheck;
+// export default RoleCheck;
