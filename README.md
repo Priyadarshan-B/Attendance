@@ -76,6 +76,12 @@ cd Attendance
    ```
 4. Open the application in your browser at `http://localhost:5173`
 
+## 📸 Screenshots
+### 🔹 Student Dashboard
+![Student Dashboard]("https://github.com/Priyadarshan-B/Attendance/tree/main/screenshots/student.png")
+
+### 🔹 Mentor Dashboard
+![Mentor Dashboard]("https://github.com/Priyadarshan-B/Attendance/tree/main/screenshots/mentor.png")
 
 ## 🏗 My Role
 I developed both the **frontend** and **backend** of this project, integrating React for the UI and Node.js with Express for backend logic.
